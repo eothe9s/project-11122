@@ -1,12 +1,12 @@
 {
   "name": "PROJECT 11122",
   "short_name": "11122",
-  "description": "9월 모의평가 11122 목표 학습 대시보드",
+  "description": "11122 목표 입시 학습 관리 웹앱",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f6fb",
-  "theme_color": "#121827",
+  "background_color": "#f3f5fa",
+  "theme_color": "#111827",
   "icons": [
     {
       "src": "./icon-192.png",

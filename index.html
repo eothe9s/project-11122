@@ -1,687 +1,626 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PROJECT 11122</title>
-<style>
-:root{
-  --bg:#f4f6fb;
-  --panel:#ffffff;
-  --text:#1d2433;
-  --muted:#6f7787;
-  --line:#e5e9f2;
-  --accent:#3559e0;
-  --accent2:#7d8fff;
-  --good:#1f9d69;
-  --warn:#e0a21b;
-  --danger:#d9485f;
-  --shadow:0 10px 30px rgba(31,42,68,.08);
-  --radius:18px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-button,input,select,textarea{font:inherit}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-.sidebar{
-  position:sticky;top:0;height:100vh;padding:24px 18px;
-  background:#121827;color:#fff;display:flex;flex-direction:column;gap:18px;
-}
-.brand{padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
-.brand h1{font-size:20px;margin:0 0 6px;letter-spacing:.08em}
-.brand p{margin:0;color:#aeb8cd;font-size:12px}
-.nav{display:flex;flex-direction:column;gap:8px}
-.nav button{
-  border:0;background:transparent;color:#c7cfdf;text-align:left;
-  padding:12px 14px;border-radius:12px;cursor:pointer;font-weight:700
-}
-.nav button:hover,.nav button.active{background:#26304a;color:#fff}
-.sidebar-note{
-  margin-top:auto;padding:14px;border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;color:#bdc7db;font-size:12px;line-height:1.6
-}
-.main{padding:28px;max-width:1450px;width:100%;margin:0 auto}
-.topbar{
-  display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px
-}
-.topbar h2{margin:0;font-size:26px}
-.datebox{color:var(--muted);font-size:14px}
-.section{display:none}
-.section.active{display:block}
-.grid{display:grid;gap:18px}
-.grid.cols-4{grid-template-columns:repeat(4,1fr)}
-.grid.cols-3{grid-template-columns:repeat(3,1fr)}
-.grid.cols-2{grid-template-columns:repeat(2,1fr)}
-.card{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--radius);box-shadow:var(--shadow);padding:20px
-}
-.card h3{margin:0 0 14px;font-size:17px}
-.metric .label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase}
-.metric .value{font-size:30px;font-weight:800;margin-top:8px}
-.metric .sub{font-size:12px;color:var(--muted);margin-top:6px}
-.goal-strip{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px
-}
-.goal{
-  padding:16px;border-radius:14px;background:linear-gradient(145deg,#f7f9ff,#eef2ff);
-  border:1px solid #dfe5ff;text-align:center
-}
-.goal b{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
-.goal span{font-size:24px;font-weight:900;color:var(--accent)}
-.progress{
-  height:10px;background:#edf0f7;border-radius:999px;overflow:hidden;margin-top:8px
-}
-.progress > div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:#f8f9fc;text-align:left;color:#5f6878}
-tr:last-child td{border-bottom:0}
-.badge{
-  display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;
-  background:#edf1ff;color:var(--accent)
-}
-.phase{display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
-.phase:last-child{border-bottom:0}
-.phase .date{font-weight:800}
-.phase ul{margin:0;padding-left:18px;line-height:1.75}
-.today-list{display:grid;gap:10px}
-.task{
-  display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
-  border:1px solid var(--line);border-radius:12px;background:#fff
-}
-.task input{margin-top:3px}
-.task.done{opacity:.55;text-decoration:line-through}
-.task small{display:block;color:var(--muted);margin-top:4px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.input{
-  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff
-}
-.btn{
-  border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:800
-}
-.btn.primary{background:var(--accent);color:#fff}
-.btn.ghost{background:#eef1f6;color:#2e3645}
-.btn.danger{background:#fdecef;color:var(--danger)}
-.calendar{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:8px
-}
-.cal-head{text-align:center;color:var(--muted);font-size:12px;font-weight:800}
-.day{
-  min-height:86px;padding:8px;border:1px solid var(--line);border-radius:12px;
-  background:#fff;cursor:pointer;position:relative
-}
-.day:hover{border-color:#b8c4f8}
-.day.today{outline:2px solid var(--accent)}
-.day.selected{background:#eef2ff;border-color:#9caeff}
-.day.blank{background:transparent;border:0;cursor:default}
-.day .num{font-weight:800}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--good);position:absolute;right:8px;top:8px}
-.day .mini{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.35}
-.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.score-box label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-.chart-wrap{height:280px}
-canvas{width:100%;height:100%}
-.note{
-  background:#f8f9fc;border-left:4px solid var(--accent);padding:14px 16px;border-radius:10px;
-  color:#4f5969;line-height:1.7
-}
-.kpi-table td:nth-child(n+2),.kpi-table th:nth-child(n+2){text-align:center}
-.footer-note{margin:22px 0 8px;color:var(--muted);font-size:12px;text-align:center}
-@media(max-width:1000px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:relative;height:auto}
-  .nav{display:grid;grid-template-columns:repeat(3,1fr)}
-  .sidebar-note{display:none}
-  .grid.cols-4,.grid.cols-3{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:700px){
-  .main{padding:16px}
-  .grid.cols-4,.grid.cols-3,.grid.cols-2,.goal-strip,.score-grid{grid-template-columns:1fr}
-  .calendar{grid-template-columns:repeat(7,1fr);gap:4px}
-  .day{min-height:65px;padding:5px}
-  .day .mini{display:none}
-  .nav{grid-template-columns:repeat(2,1fr)}
-}
-</style>
-
-<meta name="theme-color" content="#121827">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PROJECT 11122">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-192.png">
-
+<title>PROJECT 11122 v1.0</title>
+<style>
+:root{
+  --bg:#f3f5fa;--panel:#fff;--ink:#192131;--muted:#6f7889;--line:#e3e7ef;
+  --nav:#111827;--nav2:#1e293b;--accent:#3657db;--accentSoft:#eef2ff;
+  --good:#14885f;--goodSoft:#e8f7f1;--warn:#b7790b;--warnSoft:#fff6dd;
+  --danger:#c53d55;--dangerSoft:#fdecef;--shadow:0 10px 32px rgba(26,34,54,.08);
+  --r:18px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{touch-action:manipulation}
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;background:var(--nav);color:#fff;padding:22px 16px;display:flex;flex-direction:column;gap:18px;z-index:10}
+.brand{padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand h1{font-size:19px;letter-spacing:.08em;margin:0 0 6px}
+.brand p{font-size:12px;color:#aeb8ca;margin:0}
+.version{display:inline-block;margin-top:10px;padding:4px 8px;border-radius:999px;background:#27324a;font-size:11px;color:#d9e0ee}
+nav{display:grid;gap:7px}
+nav button{border:0;background:transparent;color:#c8d0df;padding:11px 13px;border-radius:12px;text-align:left;font-weight:760;cursor:pointer}
+nav button.active,nav button:hover{background:#26314a;color:#fff}
+.side-foot{margin-top:auto;padding:13px;border:1px solid rgba(255,255,255,.12);border-radius:13px;font-size:11px;line-height:1.6;color:#b7c1d3}
+main{width:100%;max-width:1500px;margin:0 auto;padding:26px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.top h2{margin:0;font-size:25px}
+.top .date{font-size:13px;color:var(--muted);margin-top:4px}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:19px;box-shadow:var(--shadow)}
+.card h3{font-size:16px;margin:0 0 13px}
+.metric .label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.metric .value{font-size:30px;font-weight:880;margin-top:8px}
+.metric .sub{font-size:11px;color:var(--muted);margin-top:5px}
+.progress{height:9px;background:#edf0f6;border-radius:99px;overflow:hidden;margin-top:9px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#8091ff)}
+.btn{border:0;border-radius:10px;padding:9px 13px;font-weight:800;cursor:pointer}.btn.primary{background:var(--accent);color:#fff}.btn.ghost{background:#edf0f5;color:#2c3444}.btn.good{background:var(--goodSoft);color:var(--good)}.btn.warn{background:var(--warnSoft);color:var(--warn)}.btn.danger{background:var(--dangerSoft);color:var(--danger)}.btn.small{padding:6px 9px;font-size:11px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.input{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 11px;color:var(--ink)}
+textarea.input{resize:vertical}
+.note{padding:13px 15px;border-left:4px solid var(--accent);background:#f7f9fd;border-radius:10px;color:#4f596a;line-height:1.65;font-size:13px}
+.goals{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.goal{background:linear-gradient(145deg,#fafbff,#eef2ff);border:1px solid #dfe5ff;padding:14px;border-radius:13px;text-align:center}.goal b{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}.goal span{font-size:24px;color:var(--accent);font-weight:900}
+.tasklist{display:grid;gap:9px}
+.task{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}
+.task.done{opacity:.57}.task.done .task-title{text-decoration:line-through}
+.task-main{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:flex-start}
+.task-main input[type=checkbox]{margin-top:5px;width:18px;height:18px}
+.task-title{font-weight:830}.task-meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+.task-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.timerline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.timer{font-variant-numeric:tabular-nums;font-size:16px;font-weight:900;color:var(--accent)}
+.subject{display:inline-block;padding:3px 7px;border-radius:999px;background:var(--accentSoft);color:var(--accent);font-size:10px;font-weight:900;margin-right:5px}
+.phase{display:grid;grid-template-columns:138px 1fr;gap:15px;padding:14px 0;border-bottom:1px solid var(--line)}.phase:last-child{border:0}.phase-date{font-weight:850}.phase ul{margin:0;padding-left:18px;line-height:1.7;font-size:13px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--accentSoft);color:var(--accent);font-size:10px;font-weight:900;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f7f8fb;text-align:left;color:#5d6677}tr:last-child td{border:0}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.calhead{text-align:center;color:var(--muted);font-size:11px;font-weight:800}.day{min-height:88px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px;cursor:pointer;position:relative}.day:hover{border-color:#aab7ee}.day.today{outline:2px solid var(--accent)}.day.blank{border:0;background:transparent;cursor:default}.day .n{font-weight:900}.day .mini{font-size:9px;color:var(--muted);margin-top:8px;line-height:1.4}.day .dot{position:absolute;right:8px;top:8px;width:7px;height:7px;border-radius:99px;background:var(--good)}
+.chart{height:270px}.chart canvas{width:100%;height:100%}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.kpi{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.kpi .name{font-size:11px;color:var(--muted);font-weight:800}.kpi .big{font-size:22px;font-weight:900;margin-top:6px}.kpi .small{font-size:10px;color:var(--muted);margin-top:4px}
+.schedule-row{display:grid;grid-template-columns:120px 130px 1fr auto;gap:8px;align-items:center;margin-bottom:8px}.schedule-row:last-child{margin-bottom:0}
+.report{display:grid;gap:11px}.report-block{border:1px solid var(--line);border-radius:12px;padding:13px}.report-block b{display:block;margin-bottom:5px}
+.error-tags{display:flex;gap:6px;flex-wrap:wrap}.etag{padding:4px 7px;border-radius:999px;background:#f0f2f7;color:#4e5768;font-size:10px;font-weight:760}
+.modal-back{position:fixed;inset:0;background:rgba(12,18,30,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal-back.show{display:flex}.modal{background:#fff;width:min(620px,100%);max-height:88vh;overflow:auto;border-radius:18px;padding:20px;box-shadow:0 20px 70px rgba(0,0,0,.23)}.modal h3{margin-top:0}
+.roll-item{border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:9px}
+.hidden{display:none!important}
+.footer{text-align:center;color:var(--muted);font-size:10px;margin:20px 0 4px}
+@media(max-width:1050px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.side-foot{display:none}nav{grid-template-columns:repeat(4,1fr)}.g4,.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){main{padding:14px}.g4,.g3,.g2,.goals,.kpis{grid-template-columns:1fr}.top{align-items:flex-start}.top .row{justify-content:flex-end}.calendar{gap:4px}.day{min-height:64px;padding:5px}.day .mini{display:none}.schedule-row{grid-template-columns:1fr 1fr}.schedule-row .wide{grid-column:1/-1}.task-main{grid-template-columns:auto 1fr}.task-actions{grid-column:2;justify-content:flex-start}nav{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <h1>PROJECT 11122</h1>
-      <p>8.2 → 9월 모의평가</p>
+<aside>
+  <div class="brand"><h1>PROJECT 11122</h1><p>사관학교 이후 9모까지</p><span class="version">v1.0</span></div>
+  <nav>
+    <button class="active" data-page="today">오늘</button>
+    <button data-page="roadmap">전체 계획</button>
+    <button data-page="calendar">캘린더</button>
+    <button data-page="timetable">학교 시간표</button>
+    <button data-page="scores">성적 분석</button>
+    <button data-page="weekly">주간 보고서</button>
+    <button data-page="review">일일 결산</button>
+    <button data-page="data">데이터 관리</button>
+  </nav>
+  <div class="side-foot">학교에서 공부를 끝낸다.<br>밤 10시 이후에는 밀린 분량을 보복하지 않는다.</div>
+</aside>
+
+<main>
+  <header class="top">
+    <div><h2 id="pageTitle">오늘</h2><div class="date" id="dateText"></div></div>
+    <div class="row">
+      <button class="btn warn" id="rollBtn">미완료 정리</button>
+      <button class="btn ghost" id="quickBackup">백업</button>
     </div>
-    <nav class="nav">
-      <button class="active" data-target="dashboard">대시보드</button>
-      <button data-target="roadmap">전체 계획</button>
-      <button data-target="daily">오늘 계획</button>
-      <button data-target="calendar">캘린더</button>
-      <button data-target="scores">성적 기록</button>
-      <button data-target="review">일일 결산</button>
-    </nav>
-    <div class="sidebar-note">
-      밤 10시 하교 후 추가 공부 없음.<br>
-      학교 안에서 계획을 끝내고, 집에서는 회복과 수면을 확보한다.
-    </div>
-  </aside>
+  </header>
 
-  <main class="main">
-    <div class="topbar">
-      <div>
-        <h2 id="pageTitle">대시보드</h2>
-        <div class="datebox" id="todayText"></div>
-      </div>
-      <button class="btn ghost" id="resetToday">오늘 체크 초기화</button>
+  <section class="section active" id="today">
+    <div class="grid g4">
+      <div class="card metric"><div class="label">9모</div><div class="value" id="dday">D-</div><div class="sub">2026.09.02</div></div>
+      <div class="card metric"><div class="label">오늘 순공</div><div class="value"><span id="todayHours">0.0</span>h</div><div class="sub">목표 <span id="dailyGoalText">10.5</span>시간</div></div>
+      <div class="card metric"><div class="label">과제 완료율</div><div class="value" id="completion">0%</div><div class="progress"><div id="completionBar"></div></div></div>
+      <div class="card metric"><div class="label">이번 주 누적</div><div class="value"><span id="weekHours">0.0</span>h</div><div class="sub" id="weekRange"></div></div>
     </div>
 
-    <section id="dashboard" class="section active">
-      <div class="grid cols-4">
-        <div class="card metric">
-          <div class="label">D-DAY</div>
-          <div class="value" id="dday">D-?</div>
-          <div class="sub">9월 모의평가까지</div>
-        </div>
-        <div class="card metric">
-          <div class="label">오늘 순공</div>
-          <div class="value"><span id="todayHours">0</span>h</div>
-          <div class="sub">목표 10.5시간</div>
-        </div>
-        <div class="card metric">
-          <div class="label">오늘 완료율</div>
-          <div class="value" id="todayRate">0%</div>
-          <div class="progress"><div id="todayBar"></div></div>
-        </div>
-        <div class="card metric">
-          <div class="label">누적 공부일</div>
-          <div class="value" id="studyDays">0일</div>
-          <div class="sub">기록이 있는 날짜 기준</div>
-        </div>
+    <div class="card" style="margin-top:16px">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">11122 목표</h3>
+        <span class="badge" id="phaseBadge"></span>
       </div>
-
-      <div class="card" style="margin-top:18px">
-        <h3>목표 성적</h3>
-        <div class="goal-strip">
-          <div class="goal"><b>국어</b><span>1</span></div>
-          <div class="goal"><b>수학</b><span>1</span></div>
-          <div class="goal"><b>영어</b><span>1</span></div>
-          <div class="goal"><b>사회문화</b><span>2</span></div>
-          <div class="goal"><b>경제</b><span>2</span></div>
-        </div>
+      <div class="goals" style="margin-top:13px">
+        <div class="goal"><b>국어</b><span>1</span></div><div class="goal"><b>수학</b><span>1</span></div>
+        <div class="goal"><b>영어</b><span>1</span></div><div class="goal"><b>사회문화</b><span>2</span></div>
+        <div class="goal"><b>경제</b><span>2</span></div>
       </div>
+    </div>
 
-      <div class="grid cols-2" style="margin-top:18px">
-        <div class="card">
-          <h3>오늘의 핵심</h3>
-          <div id="dashboardTasks" class="today-list"></div>
-        </div>
-        <div class="card">
-          <h3>이번 주 도달선</h3>
-          <div id="weekTarget" class="note"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:18px">
-        <h3>학교일 권장 시간 배분</h3>
-        <table>
-          <thead><tr><th>과목</th><th>권장 시간</th><th>핵심 역할</th></tr></thead>
-          <tbody>
-            <tr><td>국어</td><td>2시간</td><td>1등급 재현, 3등급 추락 원인 제거</td></tr>
-            <tr><td>수학</td><td>3시간</td><td>80점 초반에서 4점 2~3문제 추가 회수</td></tr>
-            <tr><td>영어</td><td>1시간</td><td>90점 아래로 새는 구멍 차단</td></tr>
-            <tr><td>사회문화</td><td>1시간 30분</td><td>개념 복구 후 기출·도표 자동화</td></tr>
-            <tr><td>경제</td><td>3시간</td><td>개념·그래프·시간 훈련 압축</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="roadmap" class="section">
+    <div class="grid g2" style="margin-top:16px">
       <div class="card">
-        <h3>전체 일정</h3>
-        <div class="phase">
-          <div class="date">7/29~8/1<br><span class="badge">사관학교</span></div>
-          <div>
-            <ul>
-              <li>국어 2시간 30분, 수학 4시간 30분, 영어 2시간 중심</li>
-              <li>탐구는 목차 확인 수준만 진행</li>
-              <li>8월 1일 시험 후에는 탐구를 시작하지 않고 휴식</li>
-            </ul>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="date">8/2~8/5<br><span class="badge">탐구 부팅</span></div>
-          <div>
-            <ul>
-              <li>방학 4일, 하루 순공 약 11시간</li>
-              <li>사문 개념 70~80% 복구</li>
-              <li>경제 전 범위의 큰 구조 1회 확인</li>
-              <li>국수영 진단과 약점 분류 병행</li>
-            </ul>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="date">8/6~8/12<br><span class="badge">기반 완성</span></div>
-          <div>
-            <ul>
-              <li>국어 1~2등급, 수학 84~88점, 영어 88점 이상</li>
-              <li>사문 38~42점</li>
-              <li>경제 25~32점이어도 정상</li>
-            </ul>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="date">8/13~8/19<br><span class="badge">기출 전환</span></div>
-          <div>
-            <ul>
-              <li>국어 실전 3회, 수학 실전 3회, 영어 실전 2회</li>
-              <li>사문 42점 이상</li>
-              <li>경제 33~38점</li>
-            </ul>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="date">8/20~8/26<br><span class="badge">11122 진입</span></div>
-          <div>
-            <ul>
-              <li>국어 최근 3회 중 2회 1등급</li>
-              <li>수학 88점 이상 반복, 92점 경험</li>
-              <li>영어 90점 이상 반복</li>
-              <li>사문 43~46점, 경제 38~42점</li>
-            </ul>
-          </div>
-        </div>
-        <div class="phase">
-          <div class="date">8/27~9/1<br><span class="badge">실전 고정</span></div>
-          <div>
-            <ul>
-              <li>실전일 → 분석일 → 실전일 → 회복일 순환</li>
-              <li>탐구 2과목 연속 60분 훈련</li>
-              <li>전날 새 실모와 초고난도 금지</li>
-            </ul>
-          </div>
-        </div>
+        <div class="row" style="justify-content:space-between"><h3 style="margin:0">오늘 할 일</h3><button class="btn primary small" id="addTaskBtn">+ 할 일</button></div>
+        <div id="taskList" class="tasklist" style="margin-top:13px"></div>
       </div>
-
-      <div class="grid cols-2" style="margin-top:18px">
-        <div class="card">
-          <h3>과목별 공부 구조</h3>
-          <table>
-            <thead><tr><th>과목</th><th>구성</th></tr></thead>
-            <tbody>
-              <tr><td>국어</td><td>실전/영역 60~80분 + 분석 40분 + 사고과정 기록 20분</td></tr>
-              <tr><td>수학</td><td>실전/준킬러 100분 + 오답 50분 + 취약 반복 30분</td></tr>
-              <tr><td>영어</td><td>단어 20분 + 취약 유형 30분 + 오답 10분</td></tr>
-              <tr><td>사문</td><td>개념 선지 35분 + 기출 30분 + 도표 25분</td></tr>
-              <tr><td>경제</td><td>개념 50분 + 백지설명 10분 + 기출 80분 + 그래프 복구 40분</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card">
-          <h3>시간이 부족한 날 최소량</h3>
-          <table>
-            <thead><tr><th>우선순위</th><th>과목</th><th>최소</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>수학</td><td>2시간 30분</td></tr>
-              <tr><td>2</td><td>경제</td><td>2시간 30분</td></tr>
-              <tr><td>3</td><td>국어</td><td>1시간 30분</td></tr>
-              <tr><td>4</td><td>사문</td><td>1시간</td></tr>
-              <tr><td>5</td><td>영어</td><td>40분</td></tr>
-            </tbody>
-          </table>
-          <div class="note" style="margin-top:14px">
-            밀린 공부를 밤 10시 이후 집에서 메우지 않는다. 다음 날 추가 보충은 최대 40분까지만 허용한다.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="daily" class="section">
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>날짜 선택</h3>
-          <input type="date" id="dailyDate" class="input">
-          <div id="dailyPhase" class="note" style="margin-top:12px"></div>
-        </div>
-        <div class="card">
-          <h3>오늘 순공시간</h3>
-          <div class="row">
-            <input type="number" id="hoursInput" class="input" step="0.5" min="0" max="16" placeholder="예: 10.5" style="max-width:180px">
-            <button class="btn primary" id="saveHours">저장</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:18px">
-        <h3>오늘 할 일</h3>
-        <div id="dailyTasks" class="today-list"></div>
-      </div>
-
-      <div class="card" style="margin-top:18px">
-        <h3>요일별 고정 운영</h3>
-        <table>
-          <thead><tr><th>요일</th><th>국어</th><th>수학</th><th>영어</th><th>사문</th><th>경제</th></tr></thead>
-          <tbody>
-            <tr><td>월</td><td>전체 실전</td><td>취약 단원</td><td>단어</td><td>개념 선지</td><td>단원 기출</td></tr>
-            <tr><td>화</td><td>독서 집중</td><td>전체 실전</td><td>순서·삽입</td><td>도표</td><td>개념+그래프</td></tr>
-            <tr><td>수</td><td>문학·선택</td><td>준킬러</td><td>단어</td><td>전체 실전</td><td>단원 기출</td></tr>
-            <tr><td>목</td><td>전체 실전</td><td>전체 실전</td><td>빈칸</td><td>오답</td><td>계산·그래프</td></tr>
-            <tr><td>금</td><td>취약 영역</td><td>준킬러</td><td>전체 실전</td><td>전체 실전</td><td>전체 실전</td></tr>
-            <tr><td>토</td><td>전체 실전</td><td>전체 실전</td><td>오답</td><td>도표 집중</td><td>전 범위 복습</td></tr>
-            <tr><td>일</td><td>주간 오답</td><td>주간 오답</td><td>단어</td><td>약점 복구</td><td>약점 복구</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="calendar" class="section">
       <div class="card">
-        <div class="row" style="justify-content:space-between;margin-bottom:14px">
-          <h3 style="margin:0">8월 학습 캘린더</h3>
-          <span class="badge">날짜를 누르면 오늘 계획으로 이동</span>
+        <h3>오늘 운영</h3>
+        <div id="phaseNote" class="note"></div>
+        <div style="margin-top:14px">
+          <label style="font-size:11px;color:var(--muted);font-weight:800">실제 순공시간 직접 입력</label>
+          <div class="row" style="margin-top:7px"><input class="input" id="manualHours" type="number" min="0" max="16" step=".1" style="max-width:150px"><button class="btn primary" id="saveHours">저장</button></div>
         </div>
-        <div class="calendar" id="calendarGrid"></div>
+        <div style="margin-top:14px">
+          <h3>과목별 타이머 누적</h3>
+          <table><tbody id="subjectTimeTable"></tbody></table>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="scores" class="section">
+  <section class="section" id="roadmap">
+    <div class="card">
+      <h3>전체 로드맵</h3>
+      <div class="phase"><div class="phase-date">7/29~8/1<br><span class="badge">사관학교</span></div><ul><li>국어 2시간 30분, 수학 4시간 30분, 영어 2시간 중심</li><li>탐구는 목차 확인 수준</li><li>8월 1일 시험 후 휴식</li></ul></div>
+      <div class="phase"><div class="phase-date">8/2~8/5<br><span class="badge">탐구 부팅</span></div><ul><li>방학 4일 순공 약 11시간</li><li>사문 개념 70~80% 복구</li><li>경제 전 범위 큰 구조 1회 확인</li></ul></div>
+      <div class="phase"><div class="phase-date">8/6~8/12<br><span class="badge">기반 완성</span></div><ul><li>국어 1~2등급, 수학 84~88, 영어 88+</li><li>사문 38~42, 경제 25~32</li></ul></div>
+      <div class="phase"><div class="phase-date">8/13~8/19<br><span class="badge">기출 전환</span></div><ul><li>국어·수학 실전 각 3회, 영어 실전 2회</li><li>사문 42+, 경제 33~38</li></ul></div>
+      <div class="phase"><div class="phase-date">8/20~8/26<br><span class="badge">11122 진입</span></div><ul><li>국어 최근 3회 중 2회 1등급</li><li>수학 88 반복·92 경험, 영어 90+</li><li>사문 43~46, 경제 38~42</li></ul></div>
+      <div class="phase"><div class="phase-date">8/27~9/1<br><span class="badge">실전 고정</span></div><ul><li>실전일 → 분석일 → 실전일 → 회복일</li><li>탐구 두 과목 연속 60분</li><li>전날 새 실모·초고난도 금지</li></ul></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>학교일 기준</h3><table><thead><tr><th>과목</th><th>시간</th><th>임무</th></tr></thead><tbody>
+        <tr><td>국어</td><td>2h</td><td>변동성 제거</td></tr><tr><td>수학</td><td>3h</td><td>4점 2~3문제 회수</td></tr>
+        <tr><td>영어</td><td>1h</td><td>90점 하방 방어</td></tr><tr><td>사문</td><td>1.5h</td><td>개념·도표 자동화</td></tr>
+        <tr><td>경제</td><td>3h</td><td>개념 적용·그래프</td></tr></tbody></table></div>
+      <div class="card"><h3>시간 부족일 최소선</h3><table><thead><tr><th>우선</th><th>과목</th><th>최소</th></tr></thead><tbody>
+        <tr><td>1</td><td>수학</td><td>2h 30m</td></tr><tr><td>2</td><td>경제</td><td>2h 30m</td></tr>
+        <tr><td>3</td><td>국어</td><td>1h 30m</td></tr><tr><td>4</td><td>사문</td><td>1h</td></tr><tr><td>5</td><td>영어</td><td>40m</td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="section" id="calendar">
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">8월 캘린더</h3><span class="badge">누르면 해당 날짜의 오늘 화면으로 이동</span></div>
+      <div class="calendar" id="calendarGrid" style="margin-top:13px"></div>
+    </div>
+  </section>
+
+  <section class="section" id="timetable">
+    <div class="grid g2">
       <div class="card">
-        <h3>성적 입력</h3>
-        <div class="row" style="margin-bottom:12px">
-          <input type="date" id="scoreDate" class="input" style="max-width:180px">
-          <select id="testType" class="input" style="max-width:180px">
-            <option>실모</option><option>기출</option><option>학교 시험</option><option>기타</option>
-          </select>
-        </div>
-        <div class="score-grid">
-          <div class="score-box"><label>국어</label><input id="korScore" type="number" class="input" min="0" max="100"></div>
-          <div class="score-box"><label>수학</label><input id="mathScore" type="number" class="input" min="0" max="100"></div>
-          <div class="score-box"><label>영어</label><input id="engScore" type="number" class="input" min="0" max="100"></div>
-          <div class="score-box"><label>사회문화</label><input id="socScore" type="number" class="input" min="0" max="50"></div>
-          <div class="score-box"><label>경제</label><input id="ecoScore" type="number" class="input" min="0" max="50"></div>
-        </div>
-        <button class="btn primary" id="saveScore" style="margin-top:14px">성적 저장</button>
+        <h3>학교 시간표 편집</h3>
+        <div class="note">교시 이름과 시간을 네 학교에 맞게 바꿔. 과제 배치용 시간표이며, 실제 수업 일정도 자유롭게 적을 수 있다.</div>
+        <div id="scheduleEditor" style="margin-top:13px"></div>
+        <button class="btn primary" id="addBlock" style="margin-top:10px">+ 시간 블록 추가</button>
       </div>
+      <div class="card">
+        <h3>오늘 시간표</h3>
+        <div id="scheduleView"></div>
+      </div>
+    </div>
+  </section>
 
-      <div class="card" style="margin-top:18px">
-        <h3>점수 추이</h3>
-        <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+  <section class="section" id="scores">
+    <div class="card">
+      <h3>성적·오답 원인 입력</h3>
+      <div class="row">
+        <input class="input" id="scoreDate" type="date" style="max-width:170px">
+        <select class="input" id="testType" style="max-width:150px"><option>실모</option><option>기출</option><option>학교 시험</option><option>기타</option></select>
       </div>
+      <div class="grid g3" style="margin-top:13px" id="scoreInputs"></div>
+      <button class="btn primary" id="saveScore" style="margin-top:12px">성적 저장</button>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>최근 분석</h3>
+      <div id="scoreKpis" class="kpis"></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>점수 추이</h3><div class="chart"><canvas id="scoreChart"></canvas></div></div>
+      <div class="card"><h3>반복 오답 유형</h3><div id="errorSummary"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>성적 기록</h3><div style="overflow:auto"><table><thead><tr><th>날짜</th><th>유형</th><th>국어</th><th>수학</th><th>영어</th><th>사문</th><th>경제</th><th></th></tr></thead><tbody id="scoreTable"></tbody></table></div></div>
+  </section>
 
-      <div class="card" style="margin-top:18px">
-        <h3>기록 목록</h3>
-        <table class="kpi-table">
-          <thead><tr><th>날짜</th><th>유형</th><th>국어</th><th>수학</th><th>영어</th><th>사문</th><th>경제</th><th></th></tr></thead>
-          <tbody id="scoreTable"></tbody>
-        </table>
+  <section class="section" id="weekly">
+    <div class="grid g4">
+      <div class="card metric"><div class="label">주간 순공</div><div class="value"><span id="wrHours">0</span>h</div></div>
+      <div class="card metric"><div class="label">계획 달성률</div><div class="value" id="wrRate">0%</div></div>
+      <div class="card metric"><div class="label">완료 과제</div><div class="value" id="wrDone">0</div></div>
+      <div class="card metric"><div class="label">미완료 과제</div><div class="value" id="wrMiss">0</div></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card"><h3>과목별 타이머</h3><table><thead><tr><th>과목</th><th>이번 주</th><th>비중</th></tr></thead><tbody id="weeklySubject"></tbody></table></div>
+      <div class="card"><h3>자동 주간 보고서</h3><div id="weeklyReport" class="report"></div></div>
+    </div>
+  </section>
+
+  <section class="section" id="review">
+    <div class="grid g2">
+      <div class="card">
+        <h3>일일 결산</h3>
+        <input class="input" id="reviewDate" type="date">
+        <textarea class="input" id="best" rows="3" placeholder="오늘 가장 잘한 것" style="margin-top:9px"></textarea>
+        <textarea class="input" id="problem" rows="3" placeholder="오늘 가장 아쉬운 것" style="margin-top:9px"></textarea>
+        <textarea class="input" id="tomorrowFirst" rows="3" placeholder="내일 첫 공부" style="margin-top:9px"></textarea>
+        <select class="input" id="grade" style="margin-top:9px"><option value="A">A: 계획 90% 이상 + 복습</option><option value="B">B: 계획 75~89%</option><option value="C">C: 계획 75% 미만 또는 분석 미완료</option></select>
+        <button class="btn primary" id="saveReview" style="margin-top:10px">결산 저장</button>
       </div>
-    </section>
+      <div class="card"><h3>운영 규칙</h3><div class="note">C가 하루 나오는 것은 문제가 아니다. 다음 날 13시간으로 보복하지 말고 원래 계획으로 복귀한다.<br><br>경제 강의는 문제 적용보다 길어지지 않는다. 국어는 맞은 문제도 근거가 흐렸으면 분석한다. 수학은 풀 수 있는 4점을 먼저 회수한다.</div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>결산 기록</h3><div id="reviewList"></div></div>
+  </section>
 
-    <section id="review" class="section">
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>일일 결산 작성</h3>
-          <input type="date" id="reviewDate" class="input">
-          <textarea id="bestThing" class="input" rows="3" placeholder="오늘 가장 잘한 것" style="margin-top:10px"></textarea>
-          <textarea id="problemThing" class="input" rows="3" placeholder="오늘 가장 아쉬운 것" style="margin-top:10px"></textarea>
-          <textarea id="firstTask" class="input" rows="3" placeholder="내일 가장 먼저 할 일" style="margin-top:10px"></textarea>
-          <select id="dayGrade" class="input" style="margin-top:10px">
-            <option value="A">A: 계획량 90% 이상 + 복습 완료</option>
-            <option value="B">B: 계획량 75~89%</option>
-            <option value="C">C: 계획량 75% 미만 또는 분석 미완료</option>
-          </select>
-          <button class="btn primary" id="saveReview" style="margin-top:12px">결산 저장</button>
+  <section class="section" id="data">
+    <div class="grid g2">
+      <div class="card">
+        <h3>백업·복원</h3>
+        <div class="note">새 버전으로 교체하거나 기기를 바꾸기 전에 JSON 백업을 저장해. 같은 GitHub 주소에서 업데이트하면 보통 기록이 유지되지만 백업이 가장 안전하다.</div>
+        <div class="row" style="margin-top:13px">
+          <button class="btn primary" id="exportBtn">전체 기록 내보내기</button>
+          <label class="btn ghost" style="cursor:pointer">기록 불러오기<input class="hidden" id="importFile" type="file" accept=".json,application/json"></label>
         </div>
-        <div class="card">
-          <h3>운영 규칙</h3>
-          <div class="note">
-            C가 하루 나오는 것은 문제가 아니다. 다음 날 13시간으로 보복하지 말고 원래 계획으로 복귀한다.<br><br>
-            국어는 정답 해설을 베껴 쓰지 않는다. 수학은 풀 수 있는 4점을 회수한다. 영어는 매일 짧게 유지한다.
-            사문은 도표를 미루지 않는다. 경제는 강의보다 문제 적용 시간이 길어야 한다.
-          </div>
-        </div>
       </div>
-      <div class="card" style="margin-top:18px">
-        <h3>결산 기록</h3>
-        <div id="reviewList"></div>
+      <div class="card">
+        <h3>설정</h3>
+        <label style="font-size:11px;color:var(--muted);font-weight:800">학교일 목표 순공시간</label>
+        <div class="row" style="margin-top:6px"><input class="input" id="goalHours" type="number" min="1" max="16" step=".5" style="max-width:130px"><button class="btn primary" id="saveSettings">저장</button></div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+        <button class="btn danger" id="resetAll">전체 기록 초기화</button>
       </div>
-    </section>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>업데이트 정보</h3><table><tbody><tr><td>현재 버전</td><td><b>v1.0</b></td></tr><tr><td>저장 방식</td><td>브라우저 localStorage + JSON 백업</td></tr><tr><td>추가 기능</td><td>편집 가능한 할 일·타이머·시간표·이월·주간 분석·오답 유형</td></tr></tbody></table></div>
+  </section>
 
-    <div class="footer-note">모든 기록은 이 기기의 브라우저에 저장됩니다. 파일을 다른 기기에서 열면 기록은 자동으로 따라가지 않습니다.</div>
-  </main>
+  <div class="footer">PROJECT 11122 v1.0 · 기록은 브라우저에 저장됨</div>
+</main>
 </div>
 
+<div class="modal-back" id="taskModal"><div class="modal">
+  <h3 id="taskModalTitle">할 일 추가</h3>
+  <input type="hidden" id="editTaskId">
+  <div class="grid g2">
+    <div><label>과목</label><select class="input" id="taskSubject"><option>국어</option><option>수학</option><option>영어</option><option>사회문화</option><option>경제</option><option>기타</option></select></div>
+    <div><label>계획 시간(분)</label><input class="input" id="taskMinutes" type="number" min="5" step="5" value="60"></div>
+  </div>
+  <label style="display:block;margin-top:10px">할 일</label><input class="input" id="taskTitle">
+  <label style="display:block;margin-top:10px">설명</label><textarea class="input" id="taskDetail" rows="3"></textarea>
+  <div class="row" style="justify-content:flex-end;margin-top:13px"><button class="btn ghost modalClose">취소</button><button class="btn primary" id="saveTask">저장</button></div>
+</div></div>
+
+<div class="modal-back" id="rollModal"><div class="modal">
+  <h3>미완료 과제 정리</h3>
+  <div class="note">지난 날짜의 미완료 과제만 표시한다. 오늘로 이동, 다음 날로 이동, 다음 일요일로 이동, 삭제 중에서 선택해.</div>
+  <div id="rollList" style="margin-top:13px"></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn ghost modalClose">닫기</button></div>
+</div></div>
+
 <script>
-const EXAM_DATE = new Date('2026-09-02T09:00:00');
-const START_DATE = '2026-08-02';
-const END_DATE = '2026-09-01';
-
-const weekdayPlans = {
-  0:{kor:'주간 오답',math:'주간 오답',eng:'단어',soc:'약점 복구',eco:'약점 복구'},
-  1:{kor:'전체 실전',math:'취약 단원',eng:'단어',soc:'개념 선지',eco:'단원 기출'},
-  2:{kor:'독서 집중',math:'전체 실전',eng:'순서·삽입',soc:'도표',eco:'개념+그래프'},
-  3:{kor:'문학·선택',math:'준킬러',eng:'단어',soc:'전체 실전',eco:'단원 기출'},
-  4:{kor:'전체 실전',math:'전체 실전',eng:'빈칸',soc:'오답',eco:'계산·그래프'},
-  5:{kor:'취약 영역',math:'준킬러',eng:'전체 실전',soc:'전체 실전',eco:'전체 실전'},
-  6:{kor:'전체 실전',math:'전체 실전',eng:'오답',soc:'도표 집중',eco:'전 범위 복습'}
+const VERSION='1.0', EXAM=new Date('2026-09-02T09:00:00');
+const SUBJECTS=['국어','수학','영어','사회문화','경제'];
+const TARGETS={국어:92,수학:92,영어:90,사회문화:44,경제:42};
+const ERRORS={
+  국어:['독서','문학','선택과목','시간 부족','선지 근거','집중력'],
+  수학:['계산','개념','발상','시간','문제 선택','조건 누락'],
+  영어:['어휘','빈칸','순서','삽입','장문','시간','쉬운 문제 실수'],
+  사회문화:['개념','도표','자료 해석','선지 판단','시간'],
+  경제:['개념','그래프','계산','자료 해석','시간']
 };
+const WEEKPLAN={
+  0:{국어:'주간 오답',수학:'주간 오답',영어:'단어',사회문화:'약점 복구',경제:'약점 복구'},
+  1:{국어:'전체 실전',수학:'취약 단원',영어:'단어',사회문화:'개념 선지',경제:'단원 기출'},
+  2:{국어:'독서 집중',수학:'전체 실전',영어:'순서·삽입',사회문화:'도표',경제:'개념+그래프'},
+  3:{국어:'문학·선택',수학:'준킬러',영어:'단어',사회문화:'전체 실전',경제:'단원 기출'},
+  4:{국어:'전체 실전',수학:'전체 실전',영어:'빈칸',사회문화:'오답',경제:'계산·그래프'},
+  5:{국어:'취약 영역',수학:'준킬러',영어:'전체 실전',사회문화:'전체 실전',경제:'전체 실전'},
+  6:{국어:'전체 실전',수학:'전체 실전',영어:'오답',사회문화:'도표 집중',경제:'전 범위 복습'}
+};
+const DEFAULT_SCHEDULE=[
+ {id:'s1',time:'08:00~08:30',name:'등교 후',work:'영어 단어·구문'},
+ {id:'s2',time:'08:30~10:10',name:'오전 블록 1',work:'국어'},
+ {id:'s3',time:'10:20~12:50',name:'오전 블록 2',work:'수학'},
+ {id:'s4',time:'12:50~13:20',name:'점심 후',work:'사회문화 개념'},
+ {id:'s5',time:'13:20~15:00',name:'오후 블록 1',work:'경제'},
+ {id:'s6',time:'15:10~16:10',name:'오후 블록 2',work:'사회문화'},
+ {id:'s7',time:'17:00~19:00',name:'야간 블록 1',work:'수학'},
+ {id:'s8',time:'19:10~20:30',name:'야간 블록 2',work:'경제'},
+ {id:'s9',time:'20:40~21:40',name:'야간 블록 3',work:'국어/영어'}
+];
 
-function ymd(d){return d.toISOString().slice(0,10)}
-function parseDate(s){return new Date(s+'T12:00:00')}
-function getPhase(dateStr){
-  if(dateStr < '2026-08-02') return {name:'사관학교 집중',desc:'국수영 중심. 탐구는 목차 확인 수준.'};
-  if(dateStr <= '2026-08-05') return {name:'탐구 부팅',desc:'방학 4일. 사문 개념 복구와 경제 전 범위 큰 구조 파악.'};
-  if(dateStr <= '2026-08-12') return {name:'기반 완성',desc:'국수영 약점 정리, 사문 38~42점, 경제 25~32점 목표.'};
-  if(dateStr <= '2026-08-19') return {name:'기출 전환',desc:'전 과목 기출과 실전 비중 확대. 경제 33~38점 목표.'};
-  if(dateStr <= '2026-08-26') return {name:'11122 진입',desc:'국어 1등급 반복, 수학 88~92, 영어 90+, 사문 43+, 경제 38~42.'};
-  return {name:'실전 고정',desc:'실전일-분석일-실전일-회복일 순환. 새로운 초고난도 금지.'};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const ymd=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+const dateObj=s=>new Date(s+'T12:00:00');
+const todayStr=()=>ymd(new Date());
+const get=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtSec=s=>{s=Math.max(0,Math.floor(s||0));return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s%3600/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`};
+const fmtHour=s=>(s/3600).toFixed(1);
+
+function phase(ds){
+ if(ds<'2026-08-02')return {n:'사관학교 집중',d:'국수영 중심. 탐구는 목차만 확인한다.'};
+ if(ds<='2026-08-05')return {n:'탐구 부팅',d:'방학 집중. 사문 개념 복구와 경제 전 범위 큰 구조를 잡는다.'};
+ if(ds<='2026-08-12')return {n:'기반 완성',d:'국수영 약점 정리, 사문 38~42점, 경제 25~32점 목표.'};
+ if(ds<='2026-08-19')return {n:'기출 전환',d:'전 과목 기출·실전 비중 확대. 사문 42+, 경제 33~38.'};
+ if(ds<='2026-08-26')return {n:'11122 진입',d:'국어 1등급 반복, 수학 88~92, 영어 90+, 사문 43+, 경제 38~42.'};
+ return {n:'실전 고정',d:'실전일과 분석일을 교대하고 새 초고난도 문제는 줄인다.'};
 }
-function tasksFor(dateStr){
-  const d=parseDate(dateStr), w=weekdayPlans[d.getDay()], phase=getPhase(dateStr);
-  let tasks=[
-    {id:'kor',title:'국어 2시간',detail:w.kor+' + 근거 분석'},
-    {id:'math',title:'수학 3시간',detail:w.math+' + 4점 회수 훈련'},
-    {id:'eng',title:'영어 1시간',detail:w.eng+' + 오답 근거'},
-    {id:'soc',title:'사회문화 1시간 30분',detail:w.soc+' + 도표/선지'},
-    {id:'eco',title:'경제 3시간',detail:w.eco+' + 그래프 재현'}
+
+function defaultTasks(ds){
+ const w=WEEKPLAN[dateObj(ds).getDay()];
+ if(ds<'2026-08-02'){
+  return [
+   {id:uid(),subject:'국어',title:'사관학교 국어 실전·오답',detail:'실전 감각과 선지 근거 점검',minutes:150,done:false,elapsed:0,created:'default'},
+   {id:uid(),subject:'수학',title:'사관학교 수학 기출·고난도',detail:'실전 풀이, 계산 점검, 오답 재풀이',minutes:270,done:false,elapsed:0,created:'default'},
+   {id:uid(),subject:'영어',title:'사관학교 영어 독해·어휘',detail:'사관학교 유형과 어휘 유지',minutes:120,done:false,elapsed:0,created:'default'},
+   {id:uid(),subject:'사회문화',title:'목차만 확인',detail:'본격 진도는 8월 2일부터',minutes:20,done:false,elapsed:0,created:'default'},
+   {id:uid(),subject:'경제',title:'교재·강의 구성 확인',detail:'본격 진도는 8월 2일부터',minutes:20,done:false,elapsed:0,created:'default'}
   ];
-  if(dateStr>='2026-08-02' && dateStr<='2026-08-05'){
-    const special={
-      '2026-08-02':['경제: 기회비용·합리적 선택','사문: 연구 방법'],
-      '2026-08-03':['경제: 수요·공급·균형','사문: 개인과 사회·집단'],
-      '2026-08-04':['경제: 탄력성·잉여·시장 실패','사문: 문화·불평등'],
-      '2026-08-05':['경제: 국민경제·무역·환율','사문: 전 범위 복구']
-    }[dateStr];
-    tasks.push({id:'special1',title:special[0],detail:'방학 집중 진도'});
-    tasks.push({id:'special2',title:special[1],detail:'방학 집중 진도'});
+ }
+ const mins=ds<='2026-08-05'?{국어:90,수학:130,영어:60,사회문화:180,경제:200}:{국어:120,수학:180,영어:60,사회문화:90,경제:180};
+ return SUBJECTS.map(sub=>({id:uid(),subject:sub,title:w[sub],detail:
+   sub==='국어'?'근거 분석 포함':sub==='수학'?'4점 회수·오답 포함':sub==='영어'?'단어+취약 유형':sub==='사회문화'?'선지·도표 포함':'그래프 재현·기출 포함',
+   minutes:mins[sub],done:false,elapsed:0,created:'default'}));
+}
+function allTasks(){return get('p11122_tasks',{})}
+function tasksFor(ds){
+ let map=allTasks();
+ if(!map[ds]){map[ds]=defaultTasks(ds);set('p11122_tasks',map)}
+ return map[ds];
+}
+function saveTasks(ds,tasks){const map=allTasks();map[ds]=tasks;set('p11122_tasks',map)}
+function settings(){return get('p11122_settings',{goalHours:10.5,schedule:DEFAULT_SCHEDULE})}
+
+function migrateLegacy(){
+ if(localStorage.getItem('p11122_migrated'))return;
+ if(!localStorage.getItem('p11122_hours')&&localStorage.getItem('hours'))localStorage.setItem('p11122_hours',localStorage.getItem('hours'));
+ if(!localStorage.getItem('p11122_reviews')&&localStorage.getItem('reviews'))localStorage.setItem('p11122_reviews',localStorage.getItem('reviews'));
+ if(!localStorage.getItem('p11122_scores')&&localStorage.getItem('scores')){
+  try{const old=JSON.parse(localStorage.getItem('scores')||'[]');const converted=old.map(r=>({id:String(r.id||uid()),date:r.date,type:r.type||'실모',scores:{국어:Number(r.kor||0),수학:Number(r.math||0),영어:Number(r.eng||0),사회문화:Number(r.soc||0),경제:Number(r.eco||0)},errors:{},memos:{}}));set('p11122_scores',converted)}catch{}
+ }
+ if(!localStorage.getItem('p11122_tasks')){
+  const map={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('tasks_')){const ds=k.slice(6);try{const state=JSON.parse(localStorage.getItem(k)||'{}');const ts=defaultTasks(ds);ts.forEach(t=>{if(state[t.subject==='사회문화'?'soc':t.subject==='경제'?'eco':t.subject==='국어'?'kor':t.subject==='수학'?'math':'eng'])t.done=true});map[ds]=ts}catch{}}}if(Object.keys(map).length)set('p11122_tasks',map)
+ }
+ localStorage.setItem('p11122_migrated','1');
+}
+migrateLegacy();
+
+let selectedDate=todayStr(), ticker=null;
+
+function navigate(page){
+ $$('.section').forEach(x=>x.classList.toggle('active',x.id===page));
+ $$('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+ $('#pageTitle').textContent=$(`nav button[data-page="${page}"]`).textContent;
+ if(page==='calendar')renderCalendar();
+ if(page==='timetable')renderSchedule();
+ if(page==='scores')renderScores();
+ if(page==='weekly')renderWeekly();
+ if(page==='review')renderReviews();
+}
+$$('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
+
+function renderToday(){
+ const tasks=tasksFor(selectedDate), p=phase(selectedDate), st=settings();
+ $('#phaseBadge').textContent=p.n;$('#phaseNote').innerHTML=`<b>${p.n}</b><br>${p.d}`;
+ $('#dailyGoalText').textContent=st.goalHours;
+ const hours=get('p11122_hours',{})[selectedDate]||0;$('#todayHours').textContent=Number(hours).toFixed(1);$('#manualHours').value=hours||'';
+ const done=tasks.filter(t=>t.done).length, rate=tasks.length?Math.round(done/tasks.length*100):0;
+ $('#completion').textContent=rate+'%';$('#completionBar').style.width=rate+'%';
+ renderTaskList(tasks);
+ renderSubjectTimes(tasks);
+ const [ws,we]=weekBounds(dateObj(selectedDate));
+ const hoursMap=get('p11122_hours',{});
+ let wh=0;for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1))wh+=Number(hoursMap[ymd(d)]||0);
+ $('#weekHours').textContent=wh.toFixed(1);$('#weekRange').textContent=`${ws.getMonth()+1}.${ws.getDate()}~${we.getMonth()+1}.${we.getDate()}`;
+}
+function renderTaskList(tasks){
+ const box=$('#taskList');box.innerHTML='';
+ if(!tasks.length)box.innerHTML='<div class="note">할 일이 없어. + 할 일로 추가해.</div>';
+ tasks.forEach(t=>{
+  const el=document.createElement('div');el.className='task'+(t.done?' done':'');
+  el.innerHTML=`<div class="task-main">
+   <input type="checkbox" ${t.done?'checked':''}>
+   <div><div><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.title)}</span></div>
+   <div class="task-meta">${esc(t.detail)} · 계획 ${t.minutes||0}분</div></div>
+   <div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div>
+  </div>
+  <div class="timerline"><span class="timer">${fmtSec(t.elapsed)}</span><div class="row">
+    <button class="btn good small start">${t.running?'일시정지':'시작'}</button>
+    <button class="btn ghost small zero">초기화</button>
+  </div></div>`;
+  el.querySelector('input').onchange=e=>{t.done=e.target.checked;if(t.running){stopAllTimers(tasks)}saveTasks(selectedDate,tasks);renderToday()};
+  el.querySelector('.edit').onclick=()=>openTaskModal(t);
+  el.querySelector('.del').onclick=()=>{if(confirm('이 할 일을 삭제할까?')){saveTasks(selectedDate,tasks.filter(x=>x.id!==t.id));renderToday()}};
+  el.querySelector('.start').onclick=()=>toggleTimer(t.id);
+  el.querySelector('.zero').onclick=()=>{t.elapsed=0;t.running=false;delete t.startedAt;saveTasks(selectedDate,tasks);renderToday()};
+  box.appendChild(el);
+ });
+}
+function stopAllTimers(tasks){
+ const now=Date.now();
+ tasks.forEach(t=>{if(t.running){t.elapsed=(t.elapsed||0)+Math.floor((now-t.startedAt)/1000);t.running=false;delete t.startedAt}})
+}
+function toggleTimer(id){
+ const tasks=tasksFor(selectedDate), now=Date.now(), target=tasks.find(t=>t.id===id), wasRunning=Boolean(target?.running);
+ tasks.forEach(t=>{
+  if(t.running){
+   t.elapsed=(t.elapsed||0)+Math.floor((now-t.startedAt)/1000);t.running=false;delete t.startedAt
   }
-  return tasks;
+ });
+ if(target && !target.done && !wasRunning){target.running=true;target.startedAt=now}
+ saveTasks(selectedDate,tasks);renderToday();startTicker();
 }
-function storeGet(k,def){try{return JSON.parse(localStorage.getItem(k)) ?? def}catch{return def}}
-function storeSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
-function taskKey(date){return 'tasks_'+date}
-
-const navBtns=[...document.querySelectorAll('.nav button')];
-navBtns.forEach(btn=>btn.onclick=()=>{
-  navBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(btn.dataset.target).classList.add('active');
-  document.getElementById('pageTitle').textContent=btn.textContent;
-});
-
-const now=new Date();
-document.getElementById('todayText').textContent=now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-const dday=Math.ceil((EXAM_DATE-now)/(1000*60*60*24));
-document.getElementById('dday').textContent='D-'+Math.max(dday,0);
-
-function renderTasks(containerId,dateStr){
-  const wrap=document.getElementById(containerId); wrap.innerHTML='';
-  const states=storeGet(taskKey(dateStr),{});
-  tasksFor(dateStr).forEach(t=>{
-    const div=document.createElement('label'); div.className='task'+(states[t.id]?' done':'');
-    div.innerHTML=`<input type="checkbox" ${states[t.id]?'checked':''}><div><b>${t.title}</b><small>${t.detail}</small></div>`;
-    div.querySelector('input').onchange=e=>{
-      states[t.id]=e.target.checked; storeSet(taskKey(dateStr),states);
-      div.classList.toggle('done',e.target.checked); refreshDashboard();
-    };
-    wrap.appendChild(div);
-  });
+function startTicker(){
+ clearInterval(ticker);ticker=setInterval(()=>{
+  const tasks=tasksFor(selectedDate);let changed=false;
+  tasks.forEach(t=>{if(t.running){changed=true}});
+  if(changed)renderToday();else clearInterval(ticker);
+ },1000)
 }
-function refreshDashboard(){
-  const today=ymd(new Date());
-  renderTasks('dashboardTasks',today);
-  const states=storeGet(taskKey(today),{});
-  const tasks=tasksFor(today);
-  const done=tasks.filter(t=>states[t.id]).length;
-  const rate=Math.round(done/tasks.length*100)||0;
-  document.getElementById('todayRate').textContent=rate+'%';
-  document.getElementById('todayBar').style.width=rate+'%';
-  const hours=storeGet('hours',{})[today]||0;
-  document.getElementById('todayHours').textContent=hours;
-  const hourMap=storeGet('hours',{});
-  document.getElementById('studyDays').textContent=Object.keys(hourMap).filter(k=>hourMap[k]>0).length+'일';
-  document.getElementById('weekTarget').innerHTML='<b>'+getPhase(today).name+'</b><br>'+getPhase(today).desc;
+function renderSubjectTimes(tasks){
+ const sums={};SUBJECTS.concat('기타').forEach(s=>sums[s]=0);
+ tasks.forEach(t=>{let sec=t.elapsed||0;if(t.running)sec+=Math.floor((Date.now()-t.startedAt)/1000);sums[t.subject]=(sums[t.subject]||0)+sec});
+ $('#subjectTimeTable').innerHTML=Object.entries(sums).filter(([s,v])=>SUBJECTS.includes(s)||v).map(([s,v])=>`<tr><td>${s}</td><td style="text-align:right"><b>${fmtHour(v)}h</b></td></tr>`).join('');
 }
-document.getElementById('resetToday').onclick=()=>{
-  localStorage.removeItem(taskKey(ymd(new Date()))); refreshDashboard();
+function weekBounds(d){
+ const x=new Date(d), day=x.getDay()||7, mon=new Date(x);mon.setDate(x.getDate()-day+1);mon.setHours(12,0,0,0);
+ const sun=new Date(mon);sun.setDate(mon.getDate()+6);return [mon,sun]
+}
+function openTaskModal(t=null){
+ $('#taskModalTitle').textContent=t?'할 일 수정':'할 일 추가';
+ $('#editTaskId').value=t?.id||'';$('#taskSubject').value=t?.subject||'국어';$('#taskMinutes').value=t?.minutes||60;
+ $('#taskTitle').value=t?.title||'';$('#taskDetail').value=t?.detail||'';$('#taskModal').classList.add('show')
+}
+$('#addTaskBtn').onclick=()=>openTaskModal();
+$('#saveTask').onclick=()=>{
+ const tasks=tasksFor(selectedDate), id=$('#editTaskId').value;
+ const obj={id:id||uid(),subject:$('#taskSubject').value,title:$('#taskTitle').value.trim()||'새 할 일',detail:$('#taskDetail').value.trim(),minutes:Number($('#taskMinutes').value||60),done:false,elapsed:0,created:'custom'};
+ const i=tasks.findIndex(t=>t.id===id);
+ if(i>=0)obj.done=tasks[i].done,obj.elapsed=tasks[i].elapsed||0,tasks[i]=obj;else tasks.push(obj);
+ saveTasks(selectedDate,tasks);$('#taskModal').classList.remove('show');renderToday()
 };
+$$('.modalClose').forEach(b=>b.onclick=()=>$$('.modal-back').forEach(m=>m.classList.remove('show')));
+$$('.modal-back').forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove('show')});
 
-const dailyDate=document.getElementById('dailyDate');
-dailyDate.value=ymd(new Date());
-function loadDaily(){
-  const date=dailyDate.value;
-  document.getElementById('dailyPhase').innerHTML='<b>'+getPhase(date).name+'</b><br>'+getPhase(date).desc;
-  renderTasks('dailyTasks',date);
-  document.getElementById('hoursInput').value=storeGet('hours',{})[date]||'';
+$('#saveHours').onclick=()=>{const m=get('p11122_hours',{});m[selectedDate]=Number($('#manualHours').value||0);set('p11122_hours',m);renderToday()};
+$('#addBlock').onclick=()=>{const st=settings();st.schedule.push({id:uid(),time:'',name:'새 블록',work:''});set('p11122_settings',st);renderSchedule()};
+
+function renderSchedule(){
+ const st=settings(), ed=$('#scheduleEditor'), view=$('#scheduleView');ed.innerHTML='';view.innerHTML='';
+ st.schedule.forEach((b,i)=>{
+  const row=document.createElement('div');row.className='schedule-row';
+  row.innerHTML=`<input class="input time" value="${esc(b.time)}"><input class="input name" value="${esc(b.name)}"><input class="input wide work" value="${esc(b.work)}"><button class="btn danger small">삭제</button>`;
+  const save=()=>{b.time=row.querySelector('.time').value;b.name=row.querySelector('.name').value;b.work=row.querySelector('.work').value;set('p11122_settings',st);renderScheduleView()};
+  row.querySelectorAll('input').forEach(x=>x.onchange=save);
+  row.querySelector('button').onclick=()=>{st.schedule.splice(i,1);set('p11122_settings',st);renderSchedule()};
+  ed.appendChild(row)
+ });
+ renderScheduleView()
 }
-dailyDate.onchange=loadDaily;
-document.getElementById('saveHours').onclick=()=>{
-  const map=storeGet('hours',{});
-  map[dailyDate.value]=Number(document.getElementById('hoursInput').value||0);
-  storeSet('hours',map); refreshDashboard(); renderCalendar();
-};
-loadDaily();
+function renderScheduleView(){
+ const st=settings();$('#scheduleView').innerHTML=st.schedule.map(b=>`<div class="roll-item"><b>${esc(b.time)} · ${esc(b.name)}</b><div class="task-meta">${esc(b.work)}</div></div>`).join('')
+}
 
 function renderCalendar(){
-  const grid=document.getElementById('calendarGrid'); grid.innerHTML='';
-  ['일','월','화','수','목','금','토'].forEach(x=>{
-    const h=document.createElement('div');h.className='cal-head';h.textContent=x;grid.appendChild(h)
-  });
-  const first=new Date('2026-08-01T12:00:00');
-  for(let i=0;i<first.getDay();i++){const b=document.createElement('div');b.className='day blank';grid.appendChild(b)}
-  const hours=storeGet('hours',{});
-  for(let day=1;day<=31;day++){
-    const ds=`2026-08-${String(day).padStart(2,'0')}`;
-    const d=document.createElement('div');d.className='day';
-    if(ds===ymd(new Date()))d.classList.add('today');
-    const phase=getPhase(ds);
-    d.innerHTML=`<div class="num">${day}</div><div class="mini">${phase.name}</div>${hours[ds]?'<div class="dot"></div>':''}`;
-    d.onclick=()=>{
-      dailyDate.value=ds;loadDaily();
-      navBtns.forEach(b=>b.classList.toggle('active',b.dataset.target==='daily'));
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.getElementById('daily').classList.add('active');
-      document.getElementById('pageTitle').textContent='오늘 계획';
-    };
-    grid.appendChild(d)
-  }
+ const g=$('#calendarGrid');g.innerHTML='';
+ ['일','월','화','수','목','금','토'].forEach(x=>{const e=document.createElement('div');e.className='calhead';e.textContent=x;g.appendChild(e)});
+ const first=new Date('2026-08-01T12:00:00');for(let i=0;i<first.getDay();i++){const b=document.createElement('div');b.className='day blank';g.appendChild(b)}
+ const hm=get('p11122_hours',{});
+ for(let n=1;n<=31;n++){
+  const ds=`2026-08-${String(n).padStart(2,'0')}`, d=document.createElement('div');d.className='day'+(ds===todayStr()?' today':'');
+  const ts=tasksFor(ds), done=ts.filter(x=>x.done).length;
+  d.innerHTML=`<div class="n">${n}</div><div class="mini">${phase(ds).n}<br>${done}/${ts.length} 완료</div>${hm[ds]?'<span class="dot"></span>':''}`;
+  d.onclick=()=>{selectedDate=ds;navigate('today');renderToday()};g.appendChild(d)
+ }
 }
-renderCalendar();
 
-document.getElementById('scoreDate').value=ymd(new Date());
-document.getElementById('saveScore').onclick=()=>{
-  const rec={
-    id:Date.now(),date:document.getElementById('scoreDate').value,type:document.getElementById('testType').value,
-    kor:Number(document.getElementById('korScore').value||0),
-    math:Number(document.getElementById('mathScore').value||0),
-    eng:Number(document.getElementById('engScore').value||0),
-    soc:Number(document.getElementById('socScore').value||0),
-    eco:Number(document.getElementById('ecoScore').value||0)
-  };
-  const arr=storeGet('scores',[]);arr.push(rec);storeSet('scores',arr);
-  renderScores();
+function buildScoreInputs(){
+ const box=$('#scoreInputs');box.innerHTML='';
+ SUBJECTS.forEach(s=>{
+  const max=(s==='사회문화'||s==='경제')?50:100;
+  const e=document.createElement('div');e.className='card';e.style.boxShadow='none';
+  e.innerHTML=`<b>${s}</b><input class="input score" data-sub="${s}" type="number" min="0" max="${max}" placeholder="점수" style="margin-top:8px">
+  <select class="input error" data-sub="${s}" style="margin-top:7px"><option value="">주요 오답 원인</option>${ERRORS[s].map(x=>`<option>${x}</option>`).join('')}</select>
+  <input class="input memo" data-sub="${s}" placeholder="메모" style="margin-top:7px">`;box.appendChild(e)
+ })
+}
+buildScoreInputs();$('#scoreDate').value=todayStr();
+$('#saveScore').onclick=()=>{
+ const rec={id:uid(),date:$('#scoreDate').value,type:$('#testType').value,scores:{},errors:{},memos:{}};
+ SUBJECTS.forEach(s=>{rec.scores[s]=Number($(`.score[data-sub="${s}"]`).value||0);rec.errors[s]=$(`.error[data-sub="${s}"]`).value;rec.memos[s]=$(`.memo[data-sub="${s}"]`).value});
+ const a=get('p11122_scores',[]);a.push(rec);set('p11122_scores',a);renderScores()
 };
 function renderScores(){
-  const arr=storeGet('scores',[]).sort((a,b)=>a.date.localeCompare(b.date));
-  const tbody=document.getElementById('scoreTable');tbody.innerHTML='';
-  arr.forEach(r=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${r.date}</td><td>${r.type}</td><td>${r.kor||''}</td><td>${r.math||''}</td><td>${r.eng||''}</td><td>${r.soc||''}</td><td>${r.eco||''}</td><td><button class="btn danger" data-id="${r.id}">삭제</button></td>`;
-    tr.querySelector('button').onclick=()=>{
-      storeSet('scores',storeGet('scores',[]).filter(x=>x.id!==r.id));renderScores()
-    };
-    tbody.appendChild(tr)
-  });
-  drawChart(arr);
+ const a=get('p11122_scores',[]).sort((x,y)=>x.date.localeCompare(y.date));
+ $('#scoreTable').innerHTML=a.slice().reverse().map(r=>`<tr><td>${r.date}</td><td>${r.type}</td>${SUBJECTS.map(s=>`<td>${r.scores[s]||''}</td>`).join('')}<td><button class="btn danger small" data-id="${r.id}">삭제</button></td></tr>`).join('');
+ $$('#scoreTable button').forEach(b=>b.onclick=()=>{set('p11122_scores',a.filter(x=>x.id!==b.dataset.id));renderScores()});
+ $('#scoreKpis').innerHTML=SUBJECTS.map(s=>{
+  const vals=a.map(r=>r.scores[s]).filter(v=>v>0), recent=vals.slice(-3), avg=recent.length?recent.reduce((p,c)=>p+c,0)/recent.length:0;
+  const last=vals.at(-1)||0, gap=last?TARGETS[s]-last:null, trend=vals.length>=2?last-vals.at(-2):0;
+  return `<div class="kpi"><div class="name">${s}</div><div class="big">${last||'-'}</div><div class="small">최근 3회 ${avg?avg.toFixed(1):'-'} · ${gap===null?'기록 없음':gap<=0?'목표권':`목표까지 ${gap}점`} · 추세 ${trend>0?'+':''}${trend}</div></div>`
+ }).join('');
+ const counts={};SUBJECTS.forEach(s=>counts[s]={});
+ a.forEach(r=>SUBJECTS.forEach(s=>{const e=r.errors?.[s];if(e)counts[s][e]=(counts[s][e]||0)+1}));
+ $('#errorSummary').innerHTML=SUBJECTS.map(s=>{const list=Object.entries(counts[s]).sort((a,b)=>b[1]-a[1]);return `<div class="roll-item"><b>${s}</b><div class="error-tags">${list.length?list.map(([e,c])=>`<span class="etag">${e} ${c}회</span>`).join(''):'<span class="task-meta">기록 없음</span>'}</div></div>`}).join('');
+ drawChart(a)
 }
-function drawChart(arr){
-  const canvas=document.getElementById('scoreChart'),ctx=canvas.getContext('2d');
-  const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
-  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;ctx.scale(dpr,dpr);
-  const w=rect.width,h=rect.height,pad=38;
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle='#dfe4ee';ctx.lineWidth=1;
-  for(let i=0;i<=5;i++){
-    const y=pad+(h-2*pad)*i/5;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
-  }
-  if(!arr.length){ctx.fillStyle='#7a8392';ctx.fillText('성적을 입력하면 그래프가 표시됩니다.',pad,60);return}
-  const series=[
-    ['kor','국어','#3559e0',100],['math','수학','#7c4dff',100],['eng','영어','#1f9d69',100],
-    ['soc','사문','#e0a21b',50],['eco','경제','#d9485f',50]
-  ];
-  series.forEach(([key,label,color,max])=>{
-    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
-    arr.forEach((r,i)=>{
-      const x=pad+(w-2*pad)*(arr.length===1?.5:i/(arr.length-1));
-      const y=h-pad-(h-2*pad)*(r[key]/max);
-      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-    });ctx.stroke();
-  });
-  let lx=pad;
-  series.forEach(([k,l,c])=>{ctx.fillStyle=c;ctx.fillRect(lx,10,10,10);ctx.fillStyle='#303745';ctx.fillText(l,lx+14,19);lx+=55})
+function drawChart(a){
+ const c=$('#scoreChart'),ctx=c.getContext('2d'),r=c.getBoundingClientRect(),dpr=devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;ctx.scale(dpr,dpr);
+ const w=r.width,h=r.height,p=34;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#e1e5ed';ctx.lineWidth=1;
+ for(let i=0;i<=5;i++){let y=p+(h-2*p)*i/5;ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke()}
+ if(!a.length){ctx.fillStyle='#7a8392';ctx.fillText('성적을 입력하면 그래프가 표시됩니다.',p,55);return}
+ const ser=[['국어','#3657db',100],['수학','#7756d8',100],['영어','#14885f',100],['사회문화','#c68a17',50],['경제','#c53d55',50]];
+ ser.forEach(([s,col,max])=>{ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();a.forEach((x,i)=>{const xx=p+(w-2*p)*(a.length===1?.5:i/(a.length-1)), yy=h-p-(h-2*p)*(x.scores[s]/max);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke()});
+ let lx=p;ser.forEach(([s,col])=>{ctx.fillStyle=col;ctx.fillRect(lx,9,9,9);ctx.fillStyle='#3e4655';ctx.fillText(s,lx+12,18);lx+=s.length>2?68:50})
 }
-window.addEventListener('resize',()=>renderScores());
-renderScores();
+window.addEventListener('resize',()=>{if($('#scores').classList.contains('active'))renderScores()});
 
-document.getElementById('reviewDate').value=ymd(new Date());
-document.getElementById('saveReview').onclick=()=>{
-  const rec={id:Date.now(),date:document.getElementById('reviewDate').value,best:bestThing.value,problem:problemThing.value,first:firstTask.value,grade:dayGrade.value};
-  const arr=storeGet('reviews',[]);arr.push(rec);storeSet('reviews',arr);renderReviews();
+function renderWeekly(){
+ const [ws,we]=weekBounds(dateObj(selectedDate)), taskMap=allTasks(), hm=get('p11122_hours',{});
+ let hours=0,done=0,total=0,subs={};SUBJECTS.concat('기타').forEach(s=>subs[s]=0);
+ for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1)){
+  const ds=ymd(d);hours+=Number(hm[ds]||0);const ts=taskMap[ds]||[];
+  ts.forEach(t=>{total++;if(t.done)done++;let sec=t.elapsed||0;subs[t.subject]=(subs[t.subject]||0)+sec})
+ }
+ const miss=total-done,rate=total?Math.round(done/total*100):0;
+ $('#wrHours').textContent=hours.toFixed(1);$('#wrRate').textContent=rate+'%';$('#wrDone').textContent=done;$('#wrMiss').textContent=miss;
+ const allsec=Object.values(subs).reduce((a,b)=>a+b,0);
+ $('#weeklySubject').innerHTML=Object.entries(subs).filter(([s,v])=>SUBJECTS.includes(s)||v).map(([s,v])=>`<tr><td>${s}</td><td>${fmtHour(v)}h</td><td>${allsec?Math.round(v/allsec*100):0}%</td></tr>`).join('');
+ const score=get('p11122_scores',[]).filter(r=>dateObj(r.date)>=ws&&dateObj(r.date)<=we);
+ let weakest='아직 성적 기록 부족',best='아직 성적 기록 부족';
+ if(score.length){
+  const gaps=SUBJECTS.map(s=>{const vals=score.map(r=>r.scores[s]).filter(Boolean);const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;return [s,avg?TARGETS[s]-avg:-999]});
+  const valid=gaps.filter(x=>x[1]>-900);if(valid.length){weakest=valid.sort((a,b)=>b[1]-a[1])[0][0];best=valid.sort((a,b)=>a[1]-b[1])[0][0]}
+ }
+ const most=Object.entries(subs).sort((a,b)=>b[1]-a[1])[0];
+ $('#weeklyReport').innerHTML=`
+  <div class="report-block"><b>총평</b>이번 주 순공 ${hours.toFixed(1)}시간, 계획 달성률 ${rate}%다. ${rate>=90?'계획 재현력이 안정적이다.':rate>=75?'기본선은 지켰지만 미완료 정리가 필요하다.':'계획 총량을 줄이고 핵심 과목부터 복구해야 한다.'}</div>
+  <div class="report-block"><b>시간 배분</b>${most&&most[1]>0?`${most[0]}에 가장 많은 타이머 시간이 들어갔다.`:'타이머 기록이 아직 부족하다.'}</div>
+  <div class="report-block"><b>성적 신호</b>현재 가장 위험한 과목: ${weakest}<br>현재 목표와 가장 가까운 과목: ${best}</div>
+  <div class="report-block"><b>다음 주 조정</b>${miss>5?'미완료 과제를 전부 이월하지 말고 우선순위가 낮은 과제는 삭제한다.':'현재 구조를 유지한다.'} ${weakest!=='아직 성적 기록 부족'?`${weakest}에 주간 60~90분을 추가 배정한다.`:'실모 점수를 최소 1회 기록한다.'}</div>`;
+}
+
+$('#reviewDate').value=todayStr();
+$('#saveReview').onclick=()=>{
+ const a=get('p11122_reviews',[]);a.push({id:uid(),date:$('#reviewDate').value,best:$('#best').value,problem:$('#problem').value,first:$('#tomorrowFirst').value,grade:$('#grade').value});set('p11122_reviews',a);renderReviews()
 };
 function renderReviews(){
-  const wrap=document.getElementById('reviewList');wrap.innerHTML='';
-  storeGet('reviews',[]).sort((a,b)=>b.date.localeCompare(a.date)).forEach(r=>{
-    const div=document.createElement('div');div.className='card';div.style.boxShadow='none';div.style.marginBottom='10px';
-    div.innerHTML=`<div class="row" style="justify-content:space-between"><b>${r.date} · ${r.grade}</b><button class="btn danger">삭제</button></div>
-    <p><b>잘한 것</b><br>${r.best||'-'}</p><p><b>아쉬운 것</b><br>${r.problem||'-'}</p><p><b>내일 첫 공부</b><br>${r.first||'-'}</p>`;
-    div.querySelector('button').onclick=()=>{storeSet('reviews',storeGet('reviews',[]).filter(x=>x.id!==r.id));renderReviews()};
-    wrap.appendChild(div)
-  })
+ const a=get('p11122_reviews',[]).sort((x,y)=>y.date.localeCompare(x.date));
+ $('#reviewList').innerHTML=a.length?a.map(r=>`<div class="roll-item"><div class="row" style="justify-content:space-between"><b>${r.date} · ${r.grade}</b><button class="btn danger small" data-id="${r.id}">삭제</button></div><p><b>잘한 것</b><br>${esc(r.best)||'-'}</p><p><b>아쉬운 것</b><br>${esc(r.problem)||'-'}</p><p><b>내일 첫 공부</b><br>${esc(r.first)||'-'}</p></div>`).join(''):'<div class="note">결산 기록이 없어.</div>';
+ $$('#reviewList button').forEach(b=>b.onclick=()=>{set('p11122_reviews',a.filter(x=>x.id!==b.dataset.id));renderReviews()})
 }
-renderReviews();
-refreshDashboard();
-</script>
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
+function missedTasks(){
+ const map=allTasks(), today=todayStr(), out=[];
+ Object.keys(map).filter(ds=>ds<today).sort().forEach(ds=>map[ds].filter(t=>!t.done).forEach(t=>out.push({ds,t})));
+ return out
 }
-</script>
+$('#rollBtn').onclick=()=>{
+ const list=missedTasks();$('#rollList').innerHTML=list.length?list.map(({ds,t})=>`<div class="roll-item" data-date="${ds}" data-id="${t.id}"><b>${ds} · ${esc(t.subject)} · ${esc(t.title)}</b>
+ <div class="row" style="margin-top:8px"><select class="input action" style="max-width:190px"><option value="today">오늘로 이동</option><option value="tomorrow">다음 날로 이동</option><option value="sunday">다음 일요일로 이동</option><option value="delete">삭제</option></select><button class="btn primary small apply">적용</button></div></div>`).join(''):'<div class="note">지난 미완료 과제가 없어.</div>';
+ $$('#rollList .apply').forEach(b=>b.onclick=()=>{const item=b.closest('.roll-item'), ds=item.dataset.date,id=item.dataset.id,act=item.querySelector('.action').value;rollOne(ds,id,act);$('#rollBtn').click()});
+ $('#rollModal').classList.add('show')
+};
+function rollOne(from,id,act){
+ const map=allTasks(), task=map[from].find(t=>t.id===id);if(!task)return;
+ map[from]=map[from].filter(t=>t.id!==id);
+ if(act!=='delete'){
+  let dest;
+  if(act==='today')dest=todayStr();
+  if(act==='tomorrow'){const d=dateObj(from);d.setDate(d.getDate()+1);dest=ymd(d)}
+  if(act==='sunday'){const d=new Date();const add=(7-d.getDay())%7||7;d.setDate(d.getDate()+add);dest=ymd(d)}
+  task.id=uid();task.done=false;task.running=false;delete task.startedAt;(map[dest]||(map[dest]=defaultTasks(dest))).push(task)
+ }
+ set('p11122_tasks',map);renderToday()
+}
 
+function exportData(){
+ const data={app:'PROJECT11122',version:VERSION,exportedAt:new Date().toISOString(),storage:{}};
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('p11122_'))data.storage[k]=localStorage.getItem(k)}
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PROJECT11122_backup_${todayStr()}.json`;a.click();URL.revokeObjectURL(a.href)
+}
+$('#exportBtn').onclick=exportData;$('#quickBackup').onclick=exportData;
+$('#importFile').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const d=JSON.parse(await f.text());if(d.app!=='PROJECT11122'||!d.storage)throw Error();if(!confirm('현재 기록을 백업 파일로 덮어쓸까?'))return;Object.entries(d.storage).forEach(([k,v])=>localStorage.setItem(k,v));alert('복원 완료');location.reload()}catch{alert('올바른 PROJECT 11122 백업 파일이 아니야.')}
+};
+$('#goalHours').value=settings().goalHours;
+$('#saveSettings').onclick=()=>{const st=settings();st.goalHours=Number($('#goalHours').value||10.5);set('p11122_settings',st);renderToday();alert('저장됨')};
+$('#resetAll').onclick=()=>{const x=prompt('전체 기록을 지우려면 RESET을 입력해.');if(x==='RESET'){Object.keys(localStorage).filter(k=>k.startsWith('p11122_')).forEach(k=>localStorage.removeItem(k));location.reload()}};
+
+const dday=Math.ceil((EXAM-new Date())/86400000);$('#dday').textContent=dday>=0?'D-'+dday:'종료';
+$('#dateText').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+renderToday();renderSchedule();renderScores();startTicker();
+
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
 </body>
 </html>

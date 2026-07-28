@@ -1,6 +1,6 @@
-# PROJECT 11122 배포 파일
+# PROJECT 11122 v1.0 업데이트
 
-아래 파일들을 GitHub 저장소의 최상위 위치에 모두 업로드하세요.
+기존 GitHub 저장소에서 아래 파일을 모두 교체하세요.
 
 - index.html
 - manifest.webmanifest
@@ -9,13 +9,14 @@
 - icon-512.png
 - .nojekyll
 
-GitHub 저장소에서 Settings → Pages로 이동한 뒤:
+README.md는 올리지 않아도 됩니다.
 
-- Source: Deploy from a branch
-- Branch: main
-- Folder: /(root)
-- Save
+## 업데이트 후
+1. 저장소에서 기존 파일을 삭제할 필요 없이 같은 이름으로 업로드하면 됩니다.
+2. Commit changes를 누릅니다.
+3. 1~3분 뒤 사이트를 새로고침합니다.
+4. 홈 화면 앱에 구버전이 남으면 앱을 완전히 종료한 뒤 다시 엽니다.
+5. 여전히 구버전이면 GitHub Pages 주소 뒤에 `?v=1`을 붙여 한 번 접속합니다.
 
-사이트 주소 예시:
-
-https://깃허브아이디.github.io/project-11122/
+같은 도메인과 경로를 유지하면 기존 브라우저 기록은 계속 유지됩니다.
+다만 업데이트 전 JSON 백업을 한 번 저장하는 것이 안전합니다.
