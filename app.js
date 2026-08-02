@@ -1,4 +1,4 @@
-const VERSION='2.1';
+const VERSION='2.4';
 const EXAM_DATE=new Date('2026-09-02T09:00:00');
 const SUBJECTS=['국어','수학','영어','사회문화','경제'];
 const PRIORITY_LABEL={must:'필수',should:'권장',extra:'여유'};
@@ -23,13 +23,13 @@ const INITIAL_WEEK={
   ['국어','must','All Of KICE Origin 5~8강','김승리 All Of KICE','전날 기준으로 기출 지문 1개 재독','3시간 20분'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','실모 없으면 커리+복습','2시간 30분'],['영어','should','순서·삽입 집중','평가원 기출','진단에서 틀린 유형 4~6문제','1시간'],['사회문화','must','LIM IT 28~29강','임정환 LIM IT','26~29강 누적 복습','1시간 30분'],['경제','must','LEAD IN 15~16강+적용','우영호 LEAD IN·마더텅','마더텅 해당 단원 8~12문제','2시간 40분']],
   schedule:[['07:00~09:10','방학','국어 Origin 5~6강'],['09:20~11:50','방학','수학 오르새 블록'],['11:50~12:40','점심','식사·휴식'],['12:40~15:20','방학','경제 LEAD IN 15~16강+적용'],['15:30~17:00','방학','사문 LIM IT 28~29강'],['17:10~18:10','방학','영어 순서·삽입'],['18:10~19:00','저녁','식사·휴식'],['19:00~20:20','방학','국어 Origin 7~8강'],['20:20~20:40','마감','전 과목 미완료 정리']]},
  '2026-08-04':{mode:'방학 집중',goal:10.8,tasks:[
-  ['국어','must','All Of KICE Origin 9~12강','김승리 All Of KICE','가장 어려운 지문 재독','3시간 20분'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','오전 집중 블록','2시간 30분'],['영어','should','빈칸 2+순서·삽입 4','평가원 기출','전날 오답 재풀이','1시간'],['사회문화','must','LIM IT 30강부터 남은 2강','임정환 LIM IT','정확한 남은 강의는 직접 수정','1시간 30분'],['경제','must','LEAD IN 17~18강+적용','우영호 LEAD IN·마더텅','마더텅 10문제+그래프 재현','2시간 40분']],
-  schedule:[['07:00~09:10','방학','국어 Origin 9~10강'],['09:20~11:50','방학','수학 오르새 블록'],['11:50~12:40','점심','식사·휴식'],['12:40~15:20','방학','경제 LEAD IN 17~18강+적용'],['15:30~17:00','방학','사문 LIM IT 남은 2강'],['17:10~18:10','방학','영어 빈칸·순서·삽입'],['18:10~19:00','저녁','식사·휴식'],['19:00~20:20','방학','국어 Origin 11~12강'],['20:20~20:40','마감','누적 복습']]},
+  ['국어','must','All Of KICE Origin 9~12강','김승리 All Of KICE','가장 어려운 지문 재독','3시간 20분'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','오전 집중 블록','2시간 30분'],['영어','should','빈칸 2+순서·삽입 4','평가원 기출','전날 오답 재풀이','1시간'],['사회문화','must','LIM IT 다음 2강','임정환 LIM IT','총강 수 확인 전 완강으로 처리하지 않음','1시간 30분'],['경제','must','LEAD IN 17~18강+적용','우영호 LEAD IN·마더텅','마더텅 10문제+그래프 재현','2시간 40분']],
+  schedule:[['07:00~09:10','방학','국어 Origin 9~10강'],['09:20~11:50','방학','수학 오르새 블록'],['11:50~12:40','점심','식사·휴식'],['12:40~15:20','방학','경제 LEAD IN 17~18강+적용'],['15:30~17:00','방학','사문 LIM IT 다음 2강'],['17:10~18:10','방학','영어 빈칸·순서·삽입'],['18:10~19:00','저녁','식사·휴식'],['19:00~20:20','방학','국어 Origin 11~12강'],['20:20~20:40','마감','누적 복습']]},
  '2026-08-05':{mode:'방학 점검',goal:10.5,tasks:[
-  ['국어','must','Origin 13~14강 완료+다음 과정 진입','김승리 All Of KICE','Origin 복습 후 Predator 시작','3시간'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','이번 주 오답 정리 포함','2시간 30분'],['영어','must','평가원·수능 영어 진단 2회','연도·월 직접 기록','첫날과 점수·시간 비교','1시간 40분'],['사회문화','must','LIM IT 완강 또는 사문 실모 1회','실모 이름 직접 기록','30분 풀이+선지·개념 복구','1시간 30분'],['경제','must','LEAD IN 19~20강+누적 테스트','우영호 LEAD IN·마더텅','13~20강 누적 15~20문제','2시간 40분']],
-  schedule:[['07:00~09:00','방학','국어 Origin 13~14강+복습'],['09:10~11:40','방학','수학 오르새 블록'],['11:40~12:30','점심','식사·휴식'],['12:30~15:10','방학','경제 19~20강+누적 테스트'],['15:20~16:50','방학','사문 완강/실모 1회+분석'],['17:00~18:40','방학','영어 전체 진단+오답'],['18:40~19:30','저녁','식사·휴식'],['19:30~20:30','점검','4일 성적·진도 결산']]},
+  ['국어','must','Origin 13~14강 완료+다음 과정 진입','김승리 All Of KICE','Origin 복습 후 Predator 시작','3시간'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','이번 주 오답 정리 포함','2시간 30분'],['영어','must','평가원·수능 영어 진단 2회','연도·월 직접 기록','첫날과 점수·시간 비교','1시간 40분'],['사회문화','must','LIM IT 다음 2강 또는 실제 완강 확인','총강 수 입력 후 자동 전환','완강 확인 전에는 다음 강의, 완강 후에만 실모','1시간 30분'],['경제','must','LEAD IN 19~20강+누적 테스트','우영호 LEAD IN·마더텅','13~20강 누적 15~20문제','2시간 40분']],
+  schedule:[['07:00~09:00','방학','국어 Origin 13~14강+복습'],['09:10~11:40','방학','수학 오르새 블록'],['11:40~12:30','점심','식사·휴식'],['12:30~15:10','방학','경제 19~20강+누적 테스트'],['15:20~16:50','방학','사문 LIM IT 진도 또는 완강 후 실모'],['17:00~18:40','방학','영어 전체 진단+오답'],['18:40~19:30','저녁','식사·휴식'],['19:30~20:30','점검','4일 성적·진도 결산']]},
  '2026-08-06':{mode:'학기 중 토요일 시간표',goal:8.0,tasks:[
-  ['국어','must','All Of KICE 다음 과정 2블록','김승리 All Of KICE','1교시·4교시에 배치','2시간 20분'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','3교시+하교 후','3시간'],['영어','should','단어+취약 유형','기출 오답','점심 20분+저녁 40분','1시간'],['사회문화','must','사문 실모 1회+분석','실모 이름 직접 기록','5교시 60분','1시간'],['경제','must','LEAD IN 21~22강 또는 적용','우영호 LEAD IN·마더텅','2교시·6교시','2시간 10분']],
+  ['국어','must','All Of KICE 다음 과정 2블록','김승리 All Of KICE','1교시·4교시에 배치','2시간 20분'],['수학','must','오르새 학습 블록','세부 진도 추후 입력','3교시+하교 후','3시간'],['영어','should','단어+취약 유형','기출 오답','점심 20분+저녁 40분','1시간'],['사회문화','must','LIM IT 완강 확인 시 실모, 아니면 다음 강의','총강 수 입력 후 자동 전환','5교시 60분','1시간'],['경제','must','LEAD IN 21~22강 또는 적용','우영호 LEAD IN·마더텅','2교시·6교시','2시간 10분']],
   schedule:[['08:40~09:50','1교시 · 수업명 입력','국어 All Of KICE 다음 진도'],['10:00~11:10','2교시 · 수업명 입력','경제 LEAD IN 21강+교재'],['11:20~12:30','3교시 · 수업명 입력','수학 오르새 블록'],['12:30~13:30','점심','식사 40분+영어 단어 20분'],['13:30~14:40','4교시 · 수업명 입력','국어 All Of KICE 다음 진도'],['14:50~15:50','5교시 · 수업명 입력','사문 실모 30분+분석 30분'],['16:00~17:00','6교시 · 수업명 입력','경제 LEAD IN 22강/마더텅'],['17:40~19:40','하교 후','수학 오르새 블록'],['19:50~20:30','마감','영어 취약 유형 또는 누적 복습']]}
 };
 
@@ -46,9 +46,9 @@ function phase(date){if(date<='2026-08-01')return'사관학교 집중';if(date<=
 let selected=ymd(now())<'2026-08-02'?'2026-08-02':ymd(now());
 
 $$('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
-function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('#pageTitle').textContent=$(`nav button[data-page="${page}"]`).textContent;if(page==='manager')renderManager();if(page==='calendar')renderCalendarPage();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
+function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const nav=$(`nav button[data-page="${page}"]`);if(nav)$('#pageTitle').textContent=nav.textContent;if(page==='manager')renderManager();if(page==='condition')renderCondition();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
 
-function renderDashboard(){const ts=tasksFor(selected),slots=scheduleFor(selected),done=ts.filter(t=>t.done).length,rate=ts.length?Math.round(done/ts.length*100):0;$('#phaseBadge').textContent=phase(selected);const info=INITIAL_WEEK[selected],st=settings(),mode=info?.mode||(parse(selected).getDay()===0?'일요일 회복':'학기 모드');$('#modeText').textContent=mode;$('#goalHours').textContent=(info?.goal||(parse(selected).getDay()===0?4.5:st.schoolGoal)).toFixed(1);$('#todayRate').textContent=rate+'%';$('#todayBar').style.width=rate+'%';const h=get('p11122_v2_hours',{});$('#hoursInput').value=h[selected]||'';const[ws,we]=weekBounds(parse(selected));let wh=0;for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1))wh+=Number(h[ymd(d)]||0);$('#weekStudy').textContent=wh.toFixed(1);renderTasks(ts);renderSchedule(slots);renderUpcomingEvents();renderTodayPrescription()}
+function renderDashboard(){const ts=tasksFor(selected),slots=scheduleFor(selected),done=ts.filter(t=>t.done).length,rate=ts.length?Math.round(done/ts.length*100):0;$('#phaseBadge').textContent=phase(selected);const info=INITIAL_WEEK[selected],st=settings(),mode=info?.mode||(parse(selected).getDay()===0?'일요일 회복':'학기 모드');$('#modeText').textContent=mode;const goalOverrides=get('p11122_v23_goals',{});$('#goalHours').textContent=(goalOverrides[selected]??info?.goal??(parse(selected).getDay()===0?4.5:st.schoolGoal)).toFixed(1);$('#todayRate').textContent=rate+'%';$('#todayBar').style.width=rate+'%';const h=get('p11122_v2_hours',{});$('#hoursInput').value=h[selected]||'';const[ws,we]=weekBounds(parse(selected));let wh=0;for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1))wh+=Number(h[ymd(d)]||0);$('#weekStudy').textContent=wh.toFixed(1);renderTasks(ts);renderSchedule(slots);renderConditionQuick();renderFeasibilityQuick();renderMinimumSuccess()}
 function renderTasks(ts){const box=$('#todayTasks');box.innerHTML='';ts.forEach(t=>{const e=document.createElement('div');e.className='task'+(t.done?' done':'');e.innerHTML=`<div class="task-main"><input type="checkbox" ${t.done?'checked':''}><div><div><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.name)}</span></div><div class="task-meta">${esc(t.material)}${t.duration?' · '+esc(t.duration):''}${t.note?' · '+esc(t.note):''}</div></div><div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div></div>`;e.querySelector('input').onchange=x=>{t.done=x.target.checked;saveTasks(selected,ts);renderDashboard()};e.querySelector('.edit').onclick=()=>openTask(t);e.querySelector('.del').onclick=()=>{if(confirm('삭제할까요?')){saveTasks(selected,ts.filter(x=>x.id!==t.id));renderDashboard()}};box.appendChild(e)})}
 function renderSchedule(slots){const box=$('#todaySchedule');box.innerHTML=slots.length?'':'<div class="note">시간표가 없습니다.</div>';slots.forEach(s=>{const e=document.createElement('div');e.className='slot'+(s.done?' done':'');e.innerHTML=`<div class="time">${esc(s.time)}</div><div class="school">${esc(s.school)}</div><div class="study">${esc(s.study)}</div><div class="slot-actions"><label><input type="checkbox" ${s.done?'checked':''}> 완료</label></div>`;e.querySelector('input').onchange=x=>{s.done=x.target.checked;saveSchedules(selected,slots);renderDashboard()};box.appendChild(e)})}
 $('#newTask').onclick=()=>openTask();
@@ -69,15 +69,69 @@ function renderSchool(){const day=$('#schoolDay').value,map=schoolMap(),arr=map[
 $('#schoolDay').onchange=renderSchool;$('#addPeriod').onclick=()=>{const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||DEFAULT_PERIODS.map(x=>({...x,id:uid()}));arr.push({id:uid(),time:'',school:'수업명 입력',selfStudy:true,study:''});map[day]=arr;set('p11122_v2_school',map);renderSchool()};
 $('#autoArrange').onclick=()=>{const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||DEFAULT_PERIODS.map(x=>({...x,id:uid()})),order=['국어 All Of KICE','수학 오르새','경제 LEAD IN/CORE','사회문화 실모+복습','영어 단어·취약 유형','국어 복습','경제 마더텅'];let idx=0;arr.forEach(p=>{if(p.selfStudy&&!p.study)p.study=order[idx++%order.length]});map[day]=arr;set('p11122_v2_school',map);renderSchool()};
 
-function courseData(){return get('p11122_v2_courses',{kor:[{name:'Origin',done:0,total:14,note:'우선 완강'},{name:'Predator 독서',done:0,total:32,note:'Origin 이후'},{name:'Predator 문학',done:0,total:38,note:'독서와 병행'},{name:'W.O.W',done:0,total:56,note:'전체 완주 대상'}],eco:[{name:'LEAD IN',done:12,total:29,note:'13강부터 재개'},{name:'CORE',done:0,total:0,note:'LEAD IN 후 자료 분석'},{name:'마더텅',done:0,total:0,note:'강의와 병행'}],soc:[{name:'LIM IT',done:25,total:0,note:'26강부터 완강'},{name:'사문 실모',done:0,total:0,note:'완강 후 하루 1회+분석'}],other:[{name:'오르새 수학',done:0,total:0,note:'세부 진도 추후 확정'},{name:'영어 일일 루틴',done:0,total:0,note:'매일 50~60분'}]})}
-function renderCourses(){const d=courseData();renderCourseBox('#korCourses',d.kor,'kor');renderCourseBox('#ecoCourses',d.eco,'eco');renderCourseBox('#socCourses',d.soc,'soc');renderCourseBox('#otherCourses',d.other,'other')}
-function renderCourseBox(sel,arr,key){$(sel).innerHTML=arr.map((c,i)=>{const pct=c.total?Math.min(100,Math.round(c.done/c.total*100)):0;return `<div class="course"><div class="course-head"><div><div class="course-title">${esc(c.name)}</div><div class="course-sub">${esc(c.note)}</div></div><button class="btn ghost small" data-i="${i}">진도 수정</button></div><div class="course-progress"><div style="width:${pct}%"></div></div><div class="task-meta">${c.total?`${c.done}/${c.total}강 · ${pct}%`:`현재 ${c.done} · 총량 직접 입력 가능`}</div></div>`}).join('');$$(sel+' button').forEach(b=>b.onclick=()=>{const c=arr[Number(b.dataset.i)],done=prompt(`${c.name} 현재 완료 강/회차`,c.done);if(done===null)return;const total=prompt(`${c.name} 전체 강/회차 (모르면 0)`,c.total);c.done=Number(done||0);c.total=Number(total||0);const all=courseData();all[key]=arr;set('p11122_v2_courses',all);renderCourses()})}
+const COURSE_META={
+ 'Origin':{deadline:'2026-08-08',dailyTarget:3},
+ 'Predator 독서':{deadline:'2026-08-22',dailyTarget:2},
+ 'Predator 문학':{deadline:'2026-08-22',dailyTarget:2},
+ 'W.O.W':{deadline:'2026-08-31',dailyTarget:2},
+ 'LEAD IN':{deadline:'2026-08-12',dailyTarget:2},
+ 'CORE':{deadline:'2026-08-29',dailyTarget:1},
+ '마더텅':{deadline:'2026-08-31',dailyTarget:1},
+ 'LIM IT':{deadline:'2026-08-10',dailyTarget:2},
+ '사문 실모':{deadline:'2026-09-01',dailyTarget:1},
+ '오르새 수학':{deadline:'2026-08-31',dailyTarget:1},
+ '영어 일일 루틴':{deadline:'2026-09-01',dailyTarget:1}
+};
+function courseData(){
+ const base={kor:[{name:'Origin',done:0,total:14,note:'우선 완강'},{name:'Predator 독서',done:0,total:32,note:'Origin 이후'},{name:'Predator 문학',done:0,total:38,note:'독서와 병행'},{name:'W.O.W',done:0,total:56,note:'전체 완주 대상'}],eco:[{name:'LEAD IN',done:12,total:29,note:'13강부터 재개'},{name:'CORE',done:0,total:0,note:'LEAD IN 후 자료 분석'},{name:'마더텅',done:0,total:0,note:'강의와 병행'}],soc:[{name:'LIM IT',done:25,total:0,note:'총강 수 확인 필요 · 26강부터 재개'},{name:'사문 실모',done:0,total:0,note:'실제 완강 확인 후 하루 1회+분석'}],other:[{name:'오르새 수학',done:0,total:0,note:'세부 진도 추후 확정'},{name:'영어 일일 루틴',done:0,total:0,note:'매일 50~60분'}]};
+ const stored=get('p11122_v2_courses',base);
+ Object.keys(base).forEach(key=>{
+   if(!Array.isArray(stored[key]))stored[key]=base[key];
+   stored[key]=stored[key].map(c=>({...COURSE_META[c.name],...c}));
+ });
+ return stored
+}
+function studyDaysUntil(deadline){
+ const today=parse(ymd(now())),end=parse(deadline||'2026-09-01');
+ if(end<today)return 0;
+ let count=0;
+ for(let d=new Date(today);d<=end;d.setDate(d.getDate()+1)){if(d.getDay()!==0)count++}
+ return count
+}
+function forecastCourse(c){
+ const done=Number(c.done||0),total=Number(c.total||0),daily=Number(c.dailyTarget||0),days=studyDaysUntil(c.deadline);
+ if(!total)return{state:'unknown',label:'검증 불가',text:`총강·총회차가 입력되지 않았습니다. 목표일 ${c.deadline||'미입력'}`};
+ const remain=Math.max(0,total-done);
+ if(remain===0)return{state:'ok',label:'완료',text:`${done}/${total} 완료`};
+ if(days<=0)return{state:'danger',label:'기한 초과',text:`${remain}개 남음 · 목표일 ${c.deadline}`};
+ const need=remain/days;
+ if(!daily)return{state:'unknown',label:'기준량 없음',text:`${remain}개 남음 · 하루 ${need.toFixed(1)}개 필요`};
+ const ratio=need/daily;
+ return{
+   state:ratio<=1?'ok':ratio<=1.25?'tight':'danger',
+   label:ratio<=1?'가능':ratio<=1.25?'빡빡':'위험',
+   text:`${remain}개 남음 · ${days}학습일 · 하루 ${need.toFixed(1)}개 필요 / 기준 ${daily}개`
+ }
+}
+function renderCourses(){const d=courseData();renderCourseBox('#korCourses',d.kor,'kor');renderCourseBox('#ecoCourses',d.eco,'eco');renderCourseBox('#socCourses',d.soc,'soc');renderCourseBox('#otherCourses',d.other,'other');renderFeasibility()}
+function renderCourseBox(sel,arr,key){
+ $(sel).innerHTML=arr.map((c,i)=>{const pct=c.total?Math.min(100,Math.round(c.done/c.total*100)):0,f=forecastCourse(c);return `<div class="course"><div class="course-head"><div><div class="course-title">${esc(c.name)}</div><div class="course-sub">${esc(c.note)}</div></div><button class="btn ghost small" data-i="${i}">진도 수정</button></div><div class="course-progress"><div style="width:${pct}%"></div></div><div class="task-meta">${c.total?`${c.done}/${c.total}강·회차 · ${pct}%`:`현재 ${c.done} · 총량 미입력`}</div><div class="course-forecast"><b>${f.label}</b> · ${esc(f.text)}<br>목표일 ${c.deadline||'-'} · 하루 기준 ${c.dailyTarget||'-'}개</div></div>`}).join('');
+ $$(sel+' button').forEach(b=>b.onclick=()=>{
+   const c=arr[Number(b.dataset.i)];
+   const done=prompt(`${c.name} 현재 완료 강·회차`,c.done);if(done===null)return;
+   const total=prompt(`${c.name} 전체 강·회차 (모르면 0)`,c.total);if(total===null)return;
+   const deadline=prompt(`${c.name} 목표 완료일 (YYYY-MM-DD)`,c.deadline||'2026-08-31');if(deadline===null)return;
+   const daily=prompt(`${c.name} 하루 현실 기준량`,c.dailyTarget||1);if(daily===null)return;
+   c.done=Number(done||0);c.total=Number(total||0);c.deadline=deadline;c.dailyTarget=Number(daily||0);
+   const all=courseData();all[key]=arr;set('p11122_v2_courses',all);renderCourses()
+ })
+}
 
-$('#testDate').value=$('#fullDate').value=ymd(now());$('#singleMode').onclick=()=>{$('#singleForm').classList.remove('hidden');$('#fullForm').classList.add('hidden');$('#singleMode').className='btn primary small';$('#fullMode').className='btn ghost small'};$('#fullMode').onclick=()=>{$('#singleForm').classList.add('hidden');$('#fullForm').classList.remove('hidden');$('#fullMode').className='btn primary small';$('#singleMode').className='btn ghost small'};$('#fullScoreInputs').innerHTML=SUBJECTS.map(s=>`<label>${s}<input class="input full-score" data-sub="${s}" type="number" min="0" max="${s==='사회문화'||s==='경제'?50:100}"></label>`).join('');
+$('#testDate').value=$('#fullDate').value=ymd(now());$('#singleMode').onclick=()=>{$('#singleForm').classList.remove('hidden');$('#fullForm').classList.add('hidden');$('#singleMode').className='btn primary small';$('#fullMode').className='btn ghost small'};$('#fullMode').onclick=()=>{$('#singleForm').classList.add('hidden');$('#fullForm').classList.remove('hidden');$('#fullMode').className='btn primary small';$('#singleMode').className='btn ghost small'};$('#fullScoreInputs').innerHTML=SUBJECTS.map(s=>`<label>${s}<div class="full-score-pair"><input class="input full-score" data-sub="${s}" type="number" min="0" max="${s==='사회문화'||s==='경제'?50:100}" placeholder="점수"><select class="input full-grade" data-sub="${s}"><option value="">등급</option><option value="1">1등급</option><option value="2">2등급</option><option value="3">3등급</option><option value="4">4등급</option><option value="5">5등급 이하</option></select></div></label>`).join('');
 function tests(){return get('p11122_v2_tests',[])}
-$('#saveSingleTest').onclick=()=>{const a=tests();a.push({id:uid(),kind:'single',date:$('#testDate').value,subject:$('#testSubject').value,category:$('#testCategory').value,select:$('#testSelect').value,series:$('#testSeries').value,round:$('#testRound').value,year:$('#testYear').value,month:$('#testMonth').value,score:Number($('#testScore').value||0),time:$('#testTime').value,wrong:Number($('#wrongCount').value||0),reason:$('#wrongReason').value,memo:$('#testMemo').value});set('p11122_v2_tests',a);savePrescriptionFromTest(a[a.length-1]);renderTests();alert('저장했습니다.')};
-$('#saveFullTest').onclick=()=>{const scores={};$$('.full-score').forEach(x=>scores[x.dataset.sub]=Number(x.value||0));const a=tests();a.push({id:uid(),kind:'full',date:$('#fullDate').value,name:$('#fullName').value||'전과목 모의고사',memo:$('#fullMemo').value,scores});set('p11122_v2_tests',a);savePrescriptionFromTest(a[a.length-1]);renderTests();alert('저장했습니다.')};
-function renderTests(){const a=tests().sort((x,y)=>x.date.localeCompare(y.date));drawChart(a);$('#testList').innerHTML=a.length?a.slice().reverse().map(t=>`<div class="test-card"><div class="row" style="justify-content:space-between"><div><div class="test-title">${t.kind==='full'?esc(t.name):`${esc(t.subject)} · ${esc(t.series||t.category)} ${esc(t.round||'')}`}</div><div class="test-meta">${t.date}${t.kind==='single'?` · ${esc(t.year)} ${esc(t.month)} · ${esc(t.select)}`:''}</div></div><button class="btn danger small" data-id="${t.id}">삭제</button></div><div>${t.kind==='full'?SUBJECTS.map(s=>`<span class="score-pill">${s} ${t.scores[s]||'-'}</span>`).join(''):`<span class="score-pill">${t.score}점</span><span class="score-pill">${esc(t.time)}</span><span class="score-pill">오답 ${t.wrong}</span><span class="score-pill">${esc(t.reason)}</span>`}</div>${t.memo?`<div class="task-meta">${esc(t.memo)}</div>`:''}</div>`).join(''):'<div class="note">아직 기록이 없습니다.</div>';$$('#testList button').forEach(b=>b.onclick=()=>{set('p11122_v2_tests',a.filter(x=>x.id!==b.dataset.id));renderTests()});const latest=a.slice(-5).reverse();$('#testSummary').innerHTML=latest.length?latest.map(t=>`<div class="test-card"><b>${t.date}</b> · ${t.kind==='full'?esc(t.name):`${esc(t.subject)} ${esc(t.series||t.category)}`}<div class="task-meta">${t.kind==='single'?`${t.score}점 · ${esc(t.reason)}`:SUBJECTS.map(s=>`${s} ${t.scores[s]||'-'}`).join(' · ')}</div></div>`).join(''):'<div class="note">최근 시험이 없습니다.</div>'}
+$('#saveSingleTest').onclick=()=>{const a=tests();a.push({id:uid(),kind:'single',date:$('#testDate').value,subject:$('#testSubject').value,category:$('#testCategory').value,select:$('#testSelect').value,series:$('#testSeries').value,round:$('#testRound').value,year:$('#testYear').value,month:$('#testMonth').value,score:Number($('#testScore').value||0),grade:Number($('#testGrade').value||0),time:$('#testTime').value,wrong:Number($('#wrongCount').value||0),reason:$('#wrongReason').value,memo:$('#testMemo').value});set('p11122_v2_tests',a);savePrescriptionFromTest(a[a.length-1]);renderTests();alert('저장했습니다.')};
+$('#saveFullTest').onclick=()=>{const scores={},grades={};$$('.full-score').forEach(x=>scores[x.dataset.sub]=Number(x.value||0));$$('.full-grade').forEach(x=>grades[x.dataset.sub]=Number(x.value||0));const a=tests();a.push({id:uid(),kind:'full',date:$('#fullDate').value,name:$('#fullName').value||'전과목 모의고사',memo:$('#fullMemo').value,scores,grades});set('p11122_v2_tests',a);savePrescriptionFromTest(a[a.length-1]);renderTests();alert('저장했습니다.')};
+function renderTests(){const a=tests().sort((x,y)=>x.date.localeCompare(y.date));drawChart(a);$('#testList').innerHTML=a.length?a.slice().reverse().map(t=>`<div class="test-card"><div class="row" style="justify-content:space-between"><div><div class="test-title">${t.kind==='full'?esc(t.name):`${esc(t.subject)} · ${esc(t.series||t.category)} ${esc(t.round||'')}`}</div><div class="test-meta">${t.date}${t.kind==='single'?` · ${esc(t.year)} ${esc(t.month)} · ${esc(t.select)}`:''}</div></div><button class="btn danger small" data-id="${t.id}">삭제</button></div><div>${t.kind==='full'?SUBJECTS.map(s=>`<span class="score-pill">${s} ${t.scores[s]||'-'}${t.grades?.[s]?` · ${t.grades[s]}등급`:''}</span>`).join(''):`<span class="score-pill">${t.score}점</span>${t.grade?`<span class="score-pill">${t.grade}등급</span>`:''}<span class="score-pill">${esc(t.time)}</span><span class="score-pill">오답 ${t.wrong}</span><span class="score-pill">${esc(t.reason)}</span>`}</div>${t.memo?`<div class="task-meta">${esc(t.memo)}</div>`:''}</div>`).join(''):'<div class="note">아직 기록이 없습니다.</div>';$$('#testList button').forEach(b=>b.onclick=()=>{set('p11122_v2_tests',a.filter(x=>x.id!==b.dataset.id));renderTests()});const latest=a.slice(-5).reverse();$('#testSummary').innerHTML=latest.length?latest.map(t=>`<div class="test-card"><b>${t.date}</b> · ${t.kind==='full'?esc(t.name):`${esc(t.subject)} ${esc(t.series||t.category)}`}<div class="task-meta">${t.kind==='single'?`${t.score}점 · ${esc(t.reason)}`:SUBJECTS.map(s=>`${s} ${t.scores[s]||'-'}`).join(' · ')}</div></div>`).join(''):'<div class="note">최근 시험이 없습니다.</div>'}
 function drawChart(a){const c=$('#scoreChart'),ctx=c.getContext('2d'),r=c.getBoundingClientRect(),dpr=devicePixelRatio||1;c.width=Math.max(1,r.width*dpr);c.height=Math.max(1,r.height*dpr);ctx.scale(dpr,dpr);const w=r.width,h=r.height,p=34;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#e1e5ed';for(let i=0;i<=5;i++){const y=p+(h-2*p)*i/5;ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke()}const rows=[];a.forEach(t=>{if(t.kind==='full')SUBJECTS.forEach(s=>rows.push({date:t.date,subject:s,score:t.scores[s]}));else rows.push({date:t.date,subject:t.subject,score:t.score})});if(!rows.length){ctx.fillStyle='#7a8392';ctx.fillText('시험을 기록하면 그래프가 표시됩니다.',p,55);return}const colors={국어:'#3658df',수학:'#7657d9',영어:'#14825d',사회문화:'#c38a17',경제:'#c43d57'};SUBJECTS.forEach(s=>{const vals=rows.filter(x=>x.subject===s&&x.score>0);if(!vals.length)return;ctx.strokeStyle=colors[s];ctx.lineWidth=2;ctx.beginPath();vals.forEach((v,i)=>{const max=s==='사회문화'||s==='경제'?50:100,x=p+(w-2*p)*(vals.length===1?.5:i/(vals.length-1)),y=h-p-(h-2*p)*(v.score/max);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()});let lx=p;SUBJECTS.forEach(s=>{ctx.fillStyle=colors[s];ctx.fillRect(lx,9,9,9);ctx.fillStyle='#3e4655';ctx.fillText(s,lx+12,18);lx+=s.length>2?67:48})}
 window.addEventListener('resize',()=>{if($('#tests').classList.contains('active'))renderTests()});
 
@@ -93,8 +147,441 @@ function exportData(){const data={app:'PROJECT11122',version:VERSION,exportedAt:
 $('#exportData').onclick=$('#backupQuick').onclick=exportData;$('#importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=='PROJECT11122')throw Error();if(!confirm('현재 기록을 백업으로 덮어쓸까요?'))return;Object.entries(d.storage).forEach(([k,v])=>localStorage.setItem(k,v));location.reload()}catch{alert('PROJECT 11122 백업 파일이 아닙니다.')}};
 $('#vacationGoal').value=settings().vacationGoal;$('#schoolGoal').value=settings().schoolGoal;$('#saveSettings').onclick=()=>{const st=settings();st.vacationGoal=Number($('#vacationGoal').value||10.8);st.schoolGoal=Number($('#schoolGoal').value||9.5);set('p11122_v2_settings',st);alert('저장했습니다.');renderDashboard()};$('#resetAll').onclick=()=>{if(prompt('전체 기록을 지우려면 RESET을 입력하세요.')==='RESET'){Object.keys(localStorage).filter(k=>k.startsWith('p11122')).forEach(k=>localStorage.removeItem(k));location.reload()}};
 
+
+/* ========================= v2.3 DAILY MANAGER ========================= */
+const TARGET_GRADES={국어:1,수학:1,영어:1,사회문화:2,경제:2};
+
+function migrateV23(){
+ if(get('p11122_v23_migrated',false))return;
+ const courses=courseData();
+ Object.keys(courses).forEach(k=>courses[k]=courses[k].map(c=>({...COURSE_META[c.name],...c})));
+ set('p11122_v2_courses',courses);
+ set('p11122_v23_migrated',true)
+}
+
+function conditionData(){return get('p11122_v23_condition',{})}
+function valueOrDash(v){return v===0||v?String(v):'-'}
+function headacheLabel(v){
+ const map={0:'없음',1:'약함',2:'보통',3:'심함'};
+ return v===0||v?map[Number(v)]:'미입력'
+}
+function calculateSleepMinutes(bed,wake){
+ if(!bed||!wake)return 0;
+ const [bh,bm]=bed.split(':').map(Number),[wh,wm]=wake.split(':').map(Number);
+ let start=bh*60+bm,end=wh*60+wm;
+ if(end<=start)end+=1440;
+ return Math.max(0,end-start)
+}
+function formatMinutes(min){
+ const h=Math.floor(Number(min||0)/60),m=Number(min||0)%60;
+ return `${h}시간 ${m}분`
+}
+function conditionAdviceFor(c){
+ if(!c)return{kind:'',text:'아직 기록이 없습니다.'};
+ const sleep=Number(c.sleepMinutes||0),fatigue=Math.max(Number(c.morningFatigue||0),Number(c.eveningFatigue||0)),head=Number(c.headache||0);
+ if(head>=3||fatigue>=5)return{kind:'bad',text:'오늘은 실모 강행보다 필수 복습과 휴식을 우선하고, 종료 시각을 늦추지 않는 편이 좋습니다.'};
+ if(sleep&&sleep<420||head>=2||fatigue>=4)return{kind:'warn',text:'수면·피로 상태를 고려해 여유 과제를 빼고 새 실모보다 오답·강의 중심으로 조정하는 편이 좋습니다.'};
+ return{kind:'good',text:'현재 기록만 보면 계획을 정상 강도로 진행할 수 있습니다.'}
+}
+function renderCondition(){
+ if(!$('#conditionDate'))return;
+ const date=$('#conditionDate').value||selected||ymd(now());
+ $('#conditionDate').value=date;
+ const c=conditionData()[date]||{};
+ $('#sleepBed').value=c.bed||'';$('#sleepWake').value=c.wake||'';$('#sleepQuality').value=valueOrDash(c.sleepQuality)==='-'?'':c.sleepQuality;
+ $('#morningFatigue').value=valueOrDash(c.morningFatigue)==='-'?'':c.morningFatigue;$('#headache').value=valueOrDash(c.headache)==='-'?'':c.headache;$('#morningFocus').value=valueOrDash(c.morningFocus)==='-'?'':c.morningFocus;$('#expectedCondition').value=c.expectedCondition||'';
+ $('#caffeineCups').value=String(c.caffeineCups||0);$('#lastCaffeine').value=c.lastCaffeine||'';$('#eveningFatigue').value=valueOrDash(c.eveningFatigue)==='-'?'':c.eveningFatigue;$('#eveningFocus').value=valueOrDash(c.eveningFocus)==='-'?'':c.eveningFocus;$('#overallCondition').value=valueOrDash(c.overallCondition)==='-'?'':c.overallCondition;$('#vitaminTaken').checked=Boolean(c.vitaminTaken);$('#conditionMemo').value=c.memo||'';
+ $$('.symptom-check').forEach(x=>x.checked=(c.symptoms||[]).includes(x.value));
+ updateSleepPreview();toggleLastCaffeine();
+ const advice=conditionAdviceFor(c);$('#conditionAdvice').className='condition-advice '+advice.kind;$('#conditionAdvice').textContent=advice.text;
+ renderConditionWeek();renderConditionPlanAdvice()
+}
+function updateSleepPreview(){
+ const min=calculateSleepMinutes($('#sleepBed').value,$('#sleepWake').value);
+ $('#sleepTotal').value=min?formatMinutes(min):''
+}
+function toggleLastCaffeine(){
+ const show=Number($('#caffeineCups').value||0)>0;
+ $('#lastCaffeineWrap').style.display=show?'block':'none';
+ if(!show)$('#lastCaffeine').value=''
+}
+$('#sleepBed')?.addEventListener('change',updateSleepPreview);
+$('#sleepWake')?.addEventListener('change',updateSleepPreview);
+$('#caffeineCups')?.addEventListener('change',toggleLastCaffeine);
+$('#conditionDate')?.addEventListener('change',renderCondition);
+$('#saveCondition')?.addEventListener('click',()=>{
+ const date=$('#conditionDate').value||ymd(now()),all=conditionData();
+ const bed=$('#sleepBed').value,wake=$('#sleepWake').value;
+ all[date]={
+  bed,wake,sleepMinutes:calculateSleepMinutes(bed,wake),
+  sleepQuality:Number($('#sleepQuality').value||0),
+  morningFatigue:Number($('#morningFatigue').value||0),
+  headache:Number($('#headache').value||0),
+  morningFocus:Number($('#morningFocus').value||0),
+  expectedCondition:$('#expectedCondition').value,
+  symptoms:$$('.symptom-check:checked').map(x=>x.value),
+  caffeineCups:Number($('#caffeineCups').value||0),
+  lastCaffeine:$('#lastCaffeine').value,
+  vitaminTaken:$('#vitaminTaken').checked,
+  eveningFatigue:Number($('#eveningFatigue').value||0),
+  eveningFocus:Number($('#eveningFocus').value||0),
+  overallCondition:Number($('#overallCondition').value||0),
+  memo:$('#conditionMemo').value.trim(),
+  updatedAt:new Date().toISOString()
+ };
+ set('p11122_v23_condition',all);selected=date;renderCondition();renderDashboard();refreshDailyReportText();alert('수면·컨디션을 저장했습니다.')
+});
+$('#clearCondition')?.addEventListener('click',()=>{
+ if(!confirm('이 날짜의 수면·컨디션 기록을 지울까요?'))return;
+ const date=$('#conditionDate').value,all=conditionData();delete all[date];set('p11122_v23_condition',all);renderCondition();renderDashboard()
+});
+function renderConditionQuick(){
+ if(!$('#conditionQuick'))return;
+ const c=conditionData()[selected]||{};
+ const advice=conditionAdviceFor(c);
+ $('#conditionQuick').innerHTML=`
+  <div class="condition-kpi"><span>수면</span><b>${c.sleepMinutes?formatMinutes(c.sleepMinutes):'미입력'}</b></div>
+  <div class="condition-kpi"><span>피로</span><b>${valueOrDash(c.eveningFatigue||c.morningFatigue)}/5</b></div>
+  <div class="condition-kpi"><span>두통</span><b>${headacheLabel(c.headache)}</b></div>
+  <div class="condition-kpi"><span>카페인</span><b>${Number(c.caffeineCups||0)}잔</b></div>
+  <div class="condition-kpi"><span>마지막 카페인</span><b>${c.lastCaffeine||'-'}</b></div>
+  <div class="condition-kpi"><span>비타민</span><b>${c.vitaminTaken?'✓':'-'}</b></div>
+  <div class="condition-advice ${advice.kind}" style="grid-column:1/-1">${advice.text}</div>`
+}
+function recentConditionRows(){
+ const data=conditionData(),rows=[];
+ for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=ymd(d);if(data[ds])rows.push({date:ds,...data[ds]})}
+ return rows
+}
+function renderConditionWeek(){
+ if(!$('#conditionWeek'))return;
+ const rows=recentConditionRows();
+ if(!rows.length){$('#conditionWeek').innerHTML='<div class="note">7일 기록이 아직 없습니다.</div>';return}
+ const avgSleep=rows.reduce((s,x)=>s+Number(x.sleepMinutes||0),0)/rows.filter(x=>x.sleepMinutes).length||0;
+ const avgFat=rows.reduce((s,x)=>s+Number(x.eveningFatigue||x.morningFatigue||0),0)/rows.length;
+ const headaches=rows.filter(x=>Number(x.headache||0)>0).length;
+ $('#conditionWeek').innerHTML=`<div class="note"><b>평균 수면 ${formatMinutes(Math.round(avgSleep))}</b><br>평균 피로 ${avgFat.toFixed(1)}/5 · 두통 기록 ${headaches}일</div>`+rows.map(x=>`<div class="condition-day"><b>${x.date.slice(5)}</b><div>수면 ${x.sleepMinutes?formatMinutes(x.sleepMinutes):'-'} · 피로 ${valueOrDash(x.eveningFatigue||x.morningFatigue)}/5 · 두통 ${headacheLabel(x.headache)} · 카페인 ${Number(x.caffeineCups||0)}잔${x.lastCaffeine?' / '+x.lastCaffeine:''}</div></div>`).join('')
+}
+function renderConditionPlanAdvice(){
+ if(!$('#conditionPlanAdvice'))return;
+ const c=conditionData()[$('#conditionDate')?.value||selected]||{};
+ const advice=conditionAdviceFor(c);
+ const late=Number(c.caffeineCups||0)>0&&c.lastCaffeine&&c.lastCaffeine>='16:00';
+ $('#conditionPlanAdvice').innerHTML=`<div class="report-block"><b>오늘 강도</b>${advice.text}</div><div class="report-block"><b>카페인</b>${late?'마지막 카페인 시각이 늦습니다. 오늘 취침이 밀리는지 확인합니다.':'특별한 늦은 카페인 경고가 없습니다.'}</div><div class="report-block"><b>원칙</b>수면 부족분을 밤 공부로 갚지 않고, 여유 과제를 먼저 줄입니다.</div>`
+}
+
+function allForecasts(){
+ const data=courseData(),out=[];
+ Object.entries(data).forEach(([group,arr])=>arr.forEach(c=>out.push({group,course:c,forecast:forecastCourse(c)})));
+ return out
+}
+function overallFinishStatus(){
+ const rows=allForecasts().filter(x=>!['오르새 수학'].includes(x.course.name));
+ const unknown=rows.filter(x=>x.forecast.state==='unknown').length;
+ const danger=rows.filter(x=>x.forecast.state==='danger').length;
+ const tight=rows.filter(x=>x.forecast.state==='tight').length;
+ if(danger)return{state:'danger',label:'현재 계획으로 완주 위험',detail:`위험 ${danger}개 · 빡빡 ${tight}개 · 검증 불가 ${unknown}개`};
+ if(unknown)return{state:'unknown',label:'아직 완주 확인 불가',detail:`총량 미입력 ${unknown}개가 있어 반드시 끝난다고 판단할 수 없습니다.`};
+ if(tight)return{state:'tight',label:'완주 가능하지만 빡빡함',detail:`빡빡한 과정 ${tight}개가 있어 매일 진도 확인이 필요합니다.`};
+ return{state:'ok',label:'현재 입력 기준 완주 가능',detail:'모든 입력 과정이 목표일 안에 들어옵니다.'}
+}
+function latestGrades(subject){
+ const list=[];
+ tests().forEach(t=>{
+  if(t.kind==='single'&&t.subject===subject&&t.grade)list.push({date:t.date,grade:Number(t.grade)});
+  if(t.kind==='full'&&t.grades?.[subject])list.push({date:t.date,grade:Number(t.grades[subject])})
+ });
+ return list.sort((a,b)=>a.date.localeCompare(b.date)).slice(-2)
+}
+function gradeState(subject){
+ const vals=latestGrades(subject),target=TARGET_GRADES[subject];
+ if(!vals.length)return{state:'unknown',label:'확인 불가',text:'최근 등급 미입력'};
+ const latest=vals.at(-1).grade;
+ if(vals.length>=2&&vals.every(x=>x.grade<=target))return{state:'ok',label:'도달권',text:`최근 ${vals.map(x=>x.grade+'등급').join(' · ')}`};
+ if(latest<=target)return{state:'tight',label:'1회 도달',text:`최근 ${latest}등급 · 한 번 더 확인 필요`};
+ return{state:'danger',label:'보완 필요',text:`최근 ${latest}등급 · 목표 ${target}등급`}
+}
+function renderFeasibility(){
+ if(!$('#finishForecast'))return;
+ const rows=allForecasts();
+ const overall=overallFinishStatus();
+ $('#finishStatusBadge').textContent=overall.label;
+ $('#finishForecast').className='forecast-list';
+ $('#finishForecast').innerHTML=`<div class="note"><b>${overall.label}</b><br>${overall.detail}</div>`+rows.map(({course:c,forecast:f})=>`<div class="forecast-item"><div class="forecast-top"><div><div class="forecast-name">${esc(c.name)}</div><div class="forecast-meta">${esc(f.text)}<br>목표일 ${esc(c.deadline||'-')} · 하루 기준 ${c.dailyTarget||'-'}개</div></div><span class="forecast-status ${f.state}">${f.label}</span></div></div>`).join('');
+ $('#gradeForecast').className='grade-grid';
+ $('#gradeForecast').innerHTML=SUBJECTS.map(s=>{const g=gradeState(s);return `<div class="grade-row"><b>${s}</b><span>${g.text}</span><span class="forecast-status ${g.state}">${g.label}</span></div>`}).join('')
+}
+function renderFeasibilityQuick(){
+ if(!$('#feasibilityQuick'))return;
+ const f=overallFinishStatus(),grades=SUBJECTS.map(gradeState),reached=grades.filter(x=>x.state==='ok'||x.state==='tight').length;
+ $('#feasibilityQuick').innerHTML=`<b>${f.label}</b><br>${f.detail}<br><br>11122 최근 등급 확인: ${reached}/5과목 · 등급 미입력은 실모 기록에서 추가`
+}
+
+function validatePatch(p){
+ if(!p||typeof p!=='object')throw new Error('JSON 객체가 아닙니다.');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date||''))throw new Error('date가 YYYY-MM-DD 형식이어야 합니다.');
+ if(p.tasks&&!Array.isArray(p.tasks))throw new Error('tasks는 배열이어야 합니다.');
+ if(p.schedule&&!Array.isArray(p.schedule))throw new Error('schedule은 배열이어야 합니다.');
+ return p
+}
+$('#applyPlanPatch')?.addEventListener('click',previewPlanPatch);
+$('#clearPlanPatch')?.addEventListener('click',()=>{$('#planPatchInput').value='';$('#patchStatus').textContent=''});
+
+
+
+/* ========================= v2.4 FINAL GUARD ========================= */
+const EXAM_DAY='2026-09-02';
+let pendingPlanPatch=null;
+let closeStep=1;
+let closeDate='';
+let closeQuickTestId='';
+
+function deepCopy(v){return JSON.parse(JSON.stringify(v))}
+
+/* ---------- Minimum success line ---------- */
+function minimumSuccess(date=selected){
+ const must=tasksFor(date).filter(t=>t.priority==='must');
+ return{tasks:must,done:must.filter(t=>t.done).length,total:must.length}
+}
+function renderMinimumSuccess(){
+ if(!$('#minimumSuccessList'))return;
+ const m=minimumSuccess(selected),rate=m.total?Math.round(m.done/m.total*100):0;
+ $('#minimumBadge').textContent=m.total?`${m.done}/${m.total}`:'미설정';
+ $('#minimumBar').style.width=rate+'%';
+ if(!m.total){
+  $('#minimumSuccessList').innerHTML='<div class="minimum-empty">필수 과제가 없습니다. 오늘 반드시 지킬 과제를 ‘필수’로 지정하세요.</div>';
+  return
+ }
+ $('#minimumSuccessList').innerHTML=m.tasks.map(t=>`<div class="minimum-item ${t.done?'done':''}"><div class="tick">${t.done?'✓':'·'}</div><div><b>${esc(t.subject)} · ${esc(t.name)}</b><span>${esc(t.duration||'시간 미입력')}${t.material?' · '+esc(t.material):''}</span></div></div>`).join('')
+}
+
+/* ---------- Reverse roadmap ---------- */
+function phaseStatus(start,end,today=ymd(now())){
+ if(today>end)return'past';
+ if(today>=start&&today<=end)return'current';
+ return'future'
+}
+function courseTargetsInRange(start,end){
+ return allForecasts().filter(x=>x.course.deadline&&x.course.deadline>=start&&x.course.deadline<=end)
+}
+function renderReverseRoadmap(){
+ if(!$('#reverseRoadmap'))return;
+ const today=ymd(now()),dd=Math.max(0,Math.ceil((parse(EXAM_DAY)-parse(today))/86400000));
+ $('#roadmapDday').textContent=today<=EXAM_DAY?`D-${dd}`:'종료';
+ const phases=[
+  {start:'2026-08-02',end:'2026-08-09',title:'개념 복구 가속',items:['사문 LIM IT 남은 강의 정리','국어·경제 강의 진도 정상화','수면·실제 공부량 기준 확보']},
+  {start:'2026-08-10',end:'2026-08-19',title:'완강과 문제 적용',items:['강의만 듣지 않고 당일 문제 적용','사문은 완강 확인 후 실모 전환','경제 LEAD IN 종료선 점검']},
+  {start:'2026-08-20',end:'2026-08-26',title:'실전 비중 확대',items:['전과목 실모·기출 점수와 등급 기록','반복 오답 유형 집중 복구','완강 지연 과정은 과감히 감량 판단']},
+  {start:'2026-08-27',end:'2026-09-01',title:'최종 안정화',items:['새 대형 강의 최소화','실모·오답·시간 운영 중심','취침·기상 고정, 밤 공부 연장 금지']}
+ ];
+ $('#reverseRoadmap').innerHTML=phases.map(p=>{
+  const status=phaseStatus(p.start,p.end,today),targets=courseTargetsInRange(p.start,p.end);
+  const targetText=targets.length
+   ?targets.map(x=>`${x.course.name}: ${x.forecast.label}`).join('<br>')
+   :'이 구간에 설정된 강좌 목표일 없음';
+  return `<div class="road-phase ${status}">
+    <span class="road-phase-label">${status==='current'?'현재 구간':status==='past'?'지난 구간':'예정'}</span>
+    <h4>${p.title}</h4>
+    <div class="road-date">${p.start.slice(5)} ~ ${p.end.slice(5)}</div>
+    <ul>${p.items.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="road-course"><b>강좌 마감선</b><br>${targetText}</div>
+  </div>`
+ }).join('')
+}
+
+/* ---------- Patch preview + undo ---------- */
+function cleanPatchTasks(tasks){
+ return (tasks||[]).slice(0,20).map(t=>({
+  id:uid(),
+  subject:SUBJECTS.includes(t.subject)?t.subject:'기타',
+  priority:['must','should','extra'].includes(t.priority)?t.priority:'should',
+  name:String(t.name||'새 할 일').slice(0,120),
+  material:String(t.material||'').slice(0,120),
+  note:String(t.note||'').slice(0,300),
+  duration:String(t.duration||'').slice(0,40),
+  done:false,
+  managerPatch:true
+ }))
+}
+function normalizedPatch(raw){
+ const p=validatePatch(raw);
+ return{
+  ...p,
+  replace:p.replace!==false,
+  cleanTasks:cleanPatchTasks(p.tasks),
+  cleanSchedule:(p.schedule||[]).slice(0,20).map(s=>({
+   id:uid(),time:String(s.time||'').slice(0,40),school:String(s.school||'').slice(0,80),
+   study:String(s.study||'').slice(0,160),done:false
+  }))
+ }
+}
+function taskPreviewHtml(t,kind=''){
+ return `<div class="patch-task ${kind}"><b><span class="priority ${t.priority||'should'}">${PRIORITY_LABEL[t.priority]||'권장'}</span>${esc(t.subject||'기타')} · ${esc(t.name||'할 일')}</b><div>${esc(t.duration||'시간 미입력')}${t.material?' · '+esc(t.material):''}${t.note?' · '+esc(t.note):''}</div></div>`
+}
+function previewPlanPatch(){
+ try{
+  const text=$('#planPatchInput').value.trim();
+  if(!text)throw new Error('붙여넣은 수정안이 없습니다.');
+  const p=normalizedPatch(JSON.parse(text));
+  const before=deepCopy(tasksFor(p.date));
+  const after=p.tasks?(p.replace?p.cleanTasks:[...before,...p.cleanTasks]):before;
+  const goalMap=get('p11122_v23_goals',{}),beforeGoal=Object.prototype.hasOwnProperty.call(goalMap,p.date)?goalMap[p.date]:null;
+  pendingPlanPatch={...p,before,after,beforeGoal};
+  $('#patchPreviewDate').textContent=p.date;
+  $('#patchPreviewSummary').innerHTML=`
+   <div class="patch-stat"><span>기존 과제</span><b>${before.length}개</b></div>
+   <div class="patch-stat"><span>적용 후</span><b>${after.length}개</b></div>
+   <div class="patch-stat"><span>시간표</span><b>${p.schedule?p.cleanSchedule.length+'개':'유지'}</b></div>
+   <div class="patch-stat"><span>목표 순공</span><b>${Number.isFinite(Number(p.goal))?Number(p.goal).toFixed(1)+'h':'유지'}</b></div>`;
+  $('#patchBefore').innerHTML=before.length?before.map(t=>taskPreviewHtml(t,p.replace?'removed':'')).join(''):'<div class="note">기존 과제 없음</div>';
+  $('#patchAfter').innerHTML=after.length?after.map((t,i)=>taskPreviewHtml(t,p.tasks&&(p.replace||i>=before.length)?'added':'')).join(''):'<div class="note">적용 후 과제 없음</div>';
+  $('#patchPreviewModal').classList.add('show');
+  $('#patchStatus').textContent='미리보기를 열었습니다. 아직 실제 계획은 바뀌지 않았습니다.'
+ }catch(err){
+  $('#patchStatus').textContent='미리보기 실패: '+err.message
+ }
+}
+function undoHistory(){return get('p11122_v24_undo',[])}
+function saveUndoSnapshot(p){
+ const goals=get('p11122_v23_goals',{}),hadGoal=Object.prototype.hasOwnProperty.call(goals,p.date);
+ const history=undoHistory();
+ history.unshift({
+  id:uid(),date:p.date,createdAt:new Date().toISOString(),
+  tasks:deepCopy(tasksFor(p.date)),
+  schedule:deepCopy(scheduleFor(p.date)),
+  hadGoal,goal:hadGoal?goals[p.date]:null,
+  label:`${p.date} · 적용 전 ${tasksFor(p.date).length}개 과제`
+ });
+ set('p11122_v24_undo',history.slice(0,5))
+}
+function applyPendingPatch(){
+ const p=pendingPlanPatch;if(!p)return;
+ saveUndoSnapshot(p);
+ if(p.tasks)saveTasks(p.date,p.after);
+ if(p.schedule)saveSchedules(p.date,p.cleanSchedule);
+ if(Number.isFinite(Number(p.goal))){
+  const goals=get('p11122_v23_goals',{});goals[p.date]=Number(p.goal);set('p11122_v23_goals',goals)
+ }
+ selected=p.date;
+ $('#patchPreviewModal').classList.remove('show');
+ $('#patchStatus').textContent=`${p.date} 계획을 적용했습니다. 적용 전 상태는 되돌리기에 저장했습니다.`;
+ pendingPlanPatch=null;
+ renderDashboard();renderWeek();renderManager()
+}
+$('#confirmApplyPatch')?.addEventListener('click',applyPendingPatch);
+function renderUndoList(){
+ if(!$('#undoList'))return;
+ const history=undoHistory();
+ $('#undoList').innerHTML=history.length?history.map(x=>`<div class="undo-item"><div><b>${esc(x.label)}</b><span>${new Date(x.createdAt).toLocaleString('ko-KR')} · 과제 ${x.tasks.length}개</span></div><button class="btn ghost small undo-btn" data-id="${x.id}">되돌리기</button></div>`).join(''):'<div class="undo-empty">아직 되돌릴 수정이 없습니다.</div>';
+ $$('.undo-btn').forEach(b=>b.onclick=()=>restoreUndo(b.dataset.id))
+}
+function restoreUndo(id){
+ const history=undoHistory(),snap=history.find(x=>x.id===id);
+ if(!snap||!confirm(`${snap.date} 계획을 수정 전 상태로 되돌릴까요?`))return;
+ saveTasks(snap.date,deepCopy(snap.tasks));
+ saveSchedules(snap.date,deepCopy(snap.schedule));
+ const goals=get('p11122_v23_goals',{});
+ if(snap.hadGoal)goals[snap.date]=snap.goal;else delete goals[snap.date];
+ set('p11122_v23_goals',goals);
+ set('p11122_v24_undo',history.filter(x=>x.id!==id));
+ selected=snap.date;$('#patchStatus').textContent=`${snap.date} 계획을 이전 상태로 되돌렸습니다.`;
+ renderDashboard();renderWeek();renderManager()
+}
+
+/* ---------- One-minute day close ---------- */
+function openCloseDay(){
+ closeDate=selected||ymd(now());closeStep=1;closeQuickTestId='';
+ $('#closeDayDate').textContent=closeDate;
+ const h=get('p11122_v2_hours',{}),c=conditionData()[closeDate]||{};
+ $('#closeHours').value=h[closeDate]||'';
+ $('#closeFatigue').value=c.eveningFatigue||'';
+ $('#closeFocus').value=c.eveningFocus||'';
+ $('#closeOverall').value=c.overallCondition||'';
+ $('#closeCaffeine').value=String(c.caffeineCups||0);
+ $('#closeLastCaffeine').value=c.lastCaffeine||'';
+ $('#closeVitamin').checked=Boolean(c.vitaminTaken);
+ $('#closeTestScore').value='';$('#closeTestGrade').value='';$('#closeTestReason').value='';
+ toggleCloseCaffeine();renderCloseTasks();renderCloseStep();$('#closeDayModal').classList.add('show')
+}
+function renderCloseTasks(){
+ const ts=tasksFor(closeDate);
+ $('#closeTaskList').innerHTML=ts.length?ts.map(t=>`<label class="close-task"><input class="close-task-check" data-id="${t.id}" type="checkbox" ${t.done?'checked':''}><div><b><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span>${esc(t.subject)} · ${esc(t.name)}</b><span>${esc(t.duration||'시간 미입력')}${t.material?' · '+esc(t.material):''}</span></div></label>`).join(''):'<div class="note">등록된 과제가 없습니다.</div>';
+ $$('.close-task-check').forEach(x=>x.onchange=()=>{
+  const ts=tasksFor(closeDate),t=ts.find(v=>v.id===x.dataset.id);if(t)t.done=x.checked;saveTasks(closeDate,ts);renderCloseMinimum();renderDashboard()
+ });
+ renderCloseMinimum()
+}
+function renderCloseMinimum(){
+ const m=minimumSuccess(closeDate),box=$('#closeMinimumState');
+ if(!m.total){box.className='condition-advice';box.textContent='최소 성공선이 설정되지 않았습니다.';return}
+ if(m.done===m.total){box.className='condition-advice good';box.textContent=`최소 성공선 달성 · 필수 ${m.done}/${m.total}`;}
+ else{box.className='condition-advice warn';box.textContent=`최소 성공선 미달 · 필수 ${m.done}/${m.total} · 남은 필수 ${m.total-m.done}개`;}
+}
+function toggleCloseCaffeine(){
+ const show=Number($('#closeCaffeine').value||0)>0;
+ $('#closeLastCaffeineWrap').style.display=show?'block':'none';
+ if(!show)$('#closeLastCaffeine').value=''
+}
+$('#closeCaffeine')?.addEventListener('change',toggleCloseCaffeine);
+function saveCloseCondition(){
+ const hours=get('p11122_v2_hours',{});hours[closeDate]=Number($('#closeHours').value||0);set('p11122_v2_hours',hours);
+ const all=conditionData(),old=all[closeDate]||{};
+ all[closeDate]={
+  ...old,
+  caffeineCups:Number($('#closeCaffeine').value||0),
+  lastCaffeine:$('#closeLastCaffeine').value,
+  vitaminTaken:$('#closeVitamin').checked,
+  eveningFatigue:Number($('#closeFatigue').value||0),
+  eveningFocus:Number($('#closeFocus').value||0),
+  overallCondition:Number($('#closeOverall').value||0),
+  updatedAt:new Date().toISOString()
+ };
+ set('p11122_v23_condition',all)
+}
+function saveCloseQuickTest(){
+ const score=Number($('#closeTestScore').value||0);
+ if(!score)return;
+ const list=tests(),subject=$('#closeTestSubject').value;
+ let t=closeQuickTestId?list.find(x=>x.id===closeQuickTestId):null;
+ const values={
+  kind:'single',date:closeDate,subject,category:'오늘 마감 빠른 기록',select:'',
+  series:'오늘 기록',round:'',year:'',month:'',score,
+  grade:Number($('#closeTestGrade').value||0),time:'',wrong:0,
+  reason:$('#closeTestReason').value.trim(),memo:'오늘 마감에서 입력'
+ };
+ if(t)Object.assign(t,values);
+ else{t={id:uid(),...values};list.push(t);closeQuickTestId=t.id;savePrescriptionFromTest(t)}
+ set('p11122_v2_tests',list)
+}
+function renderCloseStep(){
+ $$('.close-step').forEach(x=>x.classList.toggle('active',Number(x.dataset.closeStep)===closeStep));
+ $$('.close-steps i').forEach(x=>x.classList.toggle('active',Number(x.dataset.step)<=closeStep));
+ $('#closeStepBadge').textContent=`${closeStep}/4`;
+ $('#closePrev').style.visibility=closeStep===1?'hidden':'visible';
+ $('#closeNext').style.display=closeStep===4?'none':'inline-flex';
+ if(closeStep===4){
+  $('#closeReportText').value=dailyReport(closeDate);
+  const m=minimumSuccess(closeDate),f=overallFinishStatus();
+  $('#closeFinalState').innerHTML=`<b>${m.total&&m.done===m.total?'최소 성공선 달성':'최소 성공선 확인 필요'}</b><br>9모 완주 검증: ${f.label} · 보고서를 복사해 보내면 내일 계획을 수정합니다.`
+ }
+}
+$('#closeDayBtn')?.addEventListener('click',openCloseDay);
+$('#closePrev')?.addEventListener('click',()=>{if(closeStep>1){closeStep--;renderCloseStep()}});
+$('#closeNext')?.addEventListener('click',()=>{
+ if(closeStep===2)saveCloseCondition();
+ if(closeStep===3){saveCloseQuickTest();renderTests();renderFeasibility()}
+ if(closeStep<4){closeStep++;renderCloseStep()}
+});
+$('#copyCloseReport')?.addEventListener('click',()=>copyText($('#closeReportText').value));
+$('#finishCloseDay')?.addEventListener('click',()=>{
+ saveCloseCondition();saveCloseQuickTest();
+ set('p11122_v24_close_history',{...(get('p11122_v24_close_history',{})),[closeDate]:new Date().toISOString()});
+ $('#closeDayModal').classList.remove('show');renderDashboard();renderCondition();renderManager();renderTests();
+ alert('오늘 마감을 저장했습니다.')
+});
+
 $('#todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});const dday=Math.ceil((EXAM_DATE-now())/86400000);$('#dday').textContent=dday>=0?'D-'+dday:'종료';
-migrateV21();renderDashboard();renderManager();renderCalendarPage();renderWeek();renderSchool();renderCourses();renderTests();renderReport();renderHike();
+migrateV21();migrateV23();renderDashboard();renderCondition();renderManager();renderWeek();renderSchool();renderCourses();renderTests();renderReport();renderHike();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 
@@ -111,7 +598,6 @@ function migrateV21(){
   {id:uid(),subject:'경제',type:'문제집',name:'마더텅 경제',note:'강의 범위와 병행'}
  ];
  if(!localStorage.getItem('p11122_v21_materials'))set('p11122_v21_materials',defaults);
- if(!localStorage.getItem('p11122_v21_events'))set('p11122_v21_events',[{id:uid(),title:'9월 모의평가',type:'시험',date:'2026-09-02',allDay:true,start:'',end:'',priority:'high',location:'학교',memo:'목표 11122',source:'app'}]);
  set('p11122_v21_migrated',true)
 }
 
@@ -143,7 +629,7 @@ function generatePlanFor(date,showAlert=true){
  suggestions.forEach(s=>{if(!keys.has(s.autoKey)){current.push({id:uid(),...s,done:false});added++}});saveTasks(date,current);selected=date;renderDashboard();renderManager();if(showAlert)alert(`${date}에 ${added}개 계획을 추가했습니다.`);return added
 }
 function renderManager(){
- if(!$('#managerDate'))return;$('#managerDate').value=$('#managerDate').value||nextDateString(ymd(now()),1);
+ if(!$('#managerDate'))return;renderFeasibility();renderReverseRoadmap();renderUndoList();$('#managerDate').value=$('#managerDate').value||nextDateString(ymd(now()),1);
  const date=$('#managerDate').value||nextDateString(ymd(now()),1),preview=managerSuggestions(date);
  $('#managerPreview').innerHTML=preview.map(x=>`<div class="manager-preview-item"><span class="priority ${x.priority}">${PRIORITY_LABEL[x.priority]}</span><span class="subject">${x.subject}</span><b>${esc(x.name)}</b><div class="task-meta">${esc(x.material)} · ${esc(x.duration)} · ${esc(x.note)}</div></div>`).join('');
  renderPrescriptions();renderMaterials();refreshDailyReportText()
@@ -195,11 +681,36 @@ $('#addMaterial')?.addEventListener('click',()=>{$('#materialId').value='';$('#m
 $('#saveMaterial')?.addEventListener('click',()=>{const list=materials();list.push({id:uid(),subject:$('#materialSubject').value,type:$('#materialType').value,name:$('#materialName').value.trim()||'새 자료',note:$('#materialNote').value.trim()});set('p11122_v21_materials',list);$('#materialModal').classList.remove('show');renderMaterials()});
 
 function dailyReport(date=selected){
- const ts=tasksFor(date),hours=get('p11122_v2_hours',{})[date]||0,dayTests=tests().filter(t=>t.date===date),ev=combinedEvents().filter(e=>e.date===date);const lines=[`${date} PROJECT 11122 결산`,`순공 ${hours}시간 / 완료 ${ts.filter(t=>t.done).length}/${ts.length}`,''];
- SUBJECTS.forEach(s=>{const a=ts.filter(t=>t.subject===s);if(a.length)lines.push(`${s}: ${a.map(t=>`${t.done?'완료':'미완료'} ${t.name}`).join(' / ')}`)});
- if(dayTests.length){lines.push('','시험 기록:');dayTests.forEach(t=>lines.push(t.kind==='single'?`${t.subject} ${t.series||t.category} ${t.round||''}: ${t.score}점, 원인 ${t.reason||'-'}`:`${t.name}: ${SUBJECTS.map(s=>`${s} ${t.scores[s]||'-'}`).join(', ')}`))}
- if(ev.length){lines.push('','오늘 일정: '+ev.map(e=>e.title).join(', '))}
- const miss=ts.filter(t=>!t.done);if(miss.length)lines.push('','조정 필요: '+miss.map(t=>`${t.subject} ${t.name}`).join(', '));return lines.join('\n')
+ const ts=tasksFor(date),hours=get('p11122_v2_hours',{})[date]||0,dayTests=tests().filter(t=>t.date===date),c=conditionData()[date]||{},finish=overallFinishStatus();
+ const sleep=c.sleepMinutes?formatMinutes(c.sleepMinutes):'미입력';
+ const caffeine=Number(c.caffeineCups||0);
+ const lines=[
+  `[PROJECT 11122 일일 보고]`,
+  `날짜: ${date}`,
+  `순공: ${hours}시간`,
+  `완료: ${ts.filter(t=>t.done).length}/${ts.length}`,
+  `수면: ${sleep}${c.bed&&c.wake?` (${c.bed} 취침 / ${c.wake} 기상)`:''}`,
+  `아침 피로: ${valueOrDash(c.morningFatigue)}/5 · 두통: ${headacheLabel(c.headache)} · 아침 집중: ${valueOrDash(c.morningFocus)}/5`,
+  `저녁 피로: ${valueOrDash(c.eveningFatigue)}/5 · 오늘 집중: ${valueOrDash(c.eveningFocus)}/5 · 전체 컨디션: ${valueOrDash(c.overallCondition)}/5`,
+  `카페인: ${caffeine}잔${caffeine&&c.lastCaffeine?` · 마지막 ${c.lastCaffeine}`:''} · 비타민: ${c.vitaminTaken?'복용':'미복용/미입력'}`,
+  c.symptoms?.length?`기타 상태: ${c.symptoms.join(', ')}`:'',
+  '',
+  `9모 전 완주 검증: ${finish.label}`,
+  finish.detail,
+  '',
+  '완료 과제:',
+  ...ts.filter(t=>t.done).map(t=>`- ${t.subject}: ${t.name}`),
+  '',
+  '미완료 과제:',
+  ...ts.filter(t=>!t.done).map(t=>`- [${PRIORITY_LABEL[t.priority]}] ${t.subject}: ${t.name}`),
+  '',
+  '오늘 시험:',
+  ...(dayTests.length?dayTests.map(t=>t.kind==='single'?`- ${t.subject} ${t.series||t.category} ${t.score}점${t.grade?` ${t.grade}등급`:''} · ${t.reason||'원인 미입력'}`:`- ${t.name} · ${SUBJECTS.map(s=>`${s} ${t.scores[s]||'-'}${t.grades?.[s]?`(${t.grades[s]}등급)`:''}`).join(' / ')}`):['- 없음']),
+  '',
+  c.memo?`컨디션 메모: ${c.memo}`:'',
+  '내일 계획을 9모 전 완주 가능성과 11122 도달 가능성을 다시 확인해서 수정해 주세요.'
+ ];
+ return lines.filter((x,i)=>x!==''||lines[i-1]!=='').join('\n')
 }
 function refreshDailyReportText(){$('#dailyReportText').value=dailyReport(selected)}
 $('#refreshDailyReport')?.addEventListener('click',refreshDailyReportText);
@@ -210,46 +721,21 @@ $('#copyReportQuick')?.addEventListener('click',()=>copyText(dailyReport(selecte
 $$('[data-open-page]').forEach(b=>b.onclick=()=>navigate(b.dataset.openPage));
 
 /* ========================= CALENDAR ========================= */
-function appEvents(){return get('p11122_v21_events',[])}
-function googleEvents(){return get('p11122_v21_google_events',[])}
-function combinedEvents(){return [...appEvents(),...googleEvents()].sort((a,b)=>(a.date+(a.start||'')).localeCompare(b.date+(b.start||'')))}
-function eventDday(date){return Math.ceil((parse(date)-parse(ymd(now())))/86400000)}
-function renderUpcomingEvents(){
- const from=selected,items=combinedEvents().filter(e=>e.date>=from).slice(0,5);$('#upcomingEvents').innerHTML=items.length?items.map(eventHtml).join(''):'<div class="calendar-empty">다가오는 일정이 없습니다.</div>'
-}
-function eventHtml(e,full=false){const d=eventDday(e.date),dd=d===0?'D-DAY':d>0?`D-${d}`:`D+${Math.abs(d)}`;return `<div class="event-card ${e.priority||'normal'}"><div class="event-date">${e.date}${e.allDay?' · 종일':e.start?' · '+e.start:''}<span class="d-day">${dd}</span> <span class="source-pill">${e.source==='google'?'Google':e.type||'일정'}</span></div><div class="event-title">${esc(e.title)}</div>${e.memo?`<div class="task-meta">${esc(e.memo)}</div>`:''}${full&&e.source!=='google'?`<div class="event-actions"><button class="btn ghost small edit-event" data-id="${e.id}">수정</button><button class="btn good small one-ics" data-id="${e.id}">ICS</button><button class="btn danger small del-event" data-id="${e.id}">삭제</button></div>`:''}</div>`}
-function renderCalendarPage(){
- if(!$('#eventDate'))return;$('#eventDate').value=$('#eventDate').value||ymd(now());$('#googleOrigin').textContent=location.origin;const cfg=get('p11122_v21_google_config',{clientId:'',apiKey:''});$('#googleClientId').value=cfg.clientId;$('#googleApiKey').value=cfg.apiKey;
- const list=combinedEvents().filter(e=>e.date>=ymd(now())).slice(0,30);$('#eventList').innerHTML=list.length?list.map(e=>eventHtml(e,true)).join(''):'<div class="calendar-empty">일정이 없습니다.</div>';
- $$('.edit-event').forEach(b=>b.onclick=()=>editEvent(b.dataset.id));$$('.del-event').forEach(b=>b.onclick=()=>{set('p11122_v21_events',appEvents().filter(e=>e.id!==b.dataset.id));renderCalendarPage();renderDashboard()});$$('.one-ics').forEach(b=>b.onclick=()=>exportIcsFile(appEvents().filter(e=>e.id===b.dataset.id),`PROJECT11122_${b.dataset.id}.ics`));renderGoogleEvents()
-}
-function clearEventForm(){['eventId','eventTitle','eventStart','eventEnd','eventLocation','eventMemo'].forEach(id=>$('#'+id).value='');$('#eventDate').value=ymd(now());$('#eventType').value='시험';$('#eventPriority').value='normal';$('#eventAllDay').checked=true}
-$('#clearEvent')?.addEventListener('click',clearEventForm);
-$('#eventAllDay')?.addEventListener('change',e=>{$('#eventStart').disabled=e.target.checked;$('#eventEnd').disabled=e.target.checked});
-$('#saveEvent')?.addEventListener('click',()=>{const list=appEvents(),id=$('#eventId').value,obj={id:id||uid(),title:$('#eventTitle').value.trim()||'새 일정',type:$('#eventType').value,date:$('#eventDate').value,priority:$('#eventPriority').value,allDay:$('#eventAllDay').checked,start:$('#eventStart').value,end:$('#eventEnd').value,location:$('#eventLocation').value.trim(),memo:$('#eventMemo').value.trim(),source:'app'};const i=list.findIndex(e=>e.id===id);i>=0?list[i]=obj:list.push(obj);set('p11122_v21_events',list);clearEventForm();renderCalendarPage();renderDashboard()});
-function editEvent(id){const e=appEvents().find(x=>x.id===id);if(!e)return;$('#eventId').value=e.id;$('#eventTitle').value=e.title;$('#eventType').value=e.type;$('#eventDate').value=e.date;$('#eventPriority').value=e.priority;$('#eventAllDay').checked=e.allDay;$('#eventStart').value=e.start||'';$('#eventEnd').value=e.end||'';$('#eventLocation').value=e.location||'';$('#eventMemo').value=e.memo||'';window.scrollTo({top:0,behavior:'smooth'})}
-function icsEscape(s){return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
-function icsDate(e,end=false){const date=e.date.replaceAll('-','');if(e.allDay)return end?nextDateString(e.date,1).replaceAll('-',''):date;const time=(end?e.end:e.start)||'00:00';return `${date}T${time.replace(':','')}00`}
-function toIcs(events){const rows=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PROJECT11122//KO','CALSCALE:GREGORIAN'];events.forEach(e=>{rows.push('BEGIN:VEVENT',`UID:${e.id}@project11122`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}`);if(e.allDay){rows.push(`DTSTART;VALUE=DATE:${icsDate(e)}`,`DTEND;VALUE=DATE:${icsDate(e,true)}`)}else{rows.push(`DTSTART:${icsDate(e)}`,`DTEND:${icsDate(e,true)}`)}rows.push(`SUMMARY:${icsEscape(e.title)}`);if(e.memo)rows.push(`DESCRIPTION:${icsEscape(e.memo)}`);if(e.location)rows.push(`LOCATION:${icsEscape(e.location)}`);rows.push('END:VEVENT')});rows.push('END:VCALENDAR');return rows.join('\r\n')}
-function exportIcsFile(events,name='PROJECT11122_calendar.ics'){const blob=new Blob([toIcs(events)],{type:'text/calendar;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-$('#exportIcs')?.addEventListener('click',()=>exportIcsFile(appEvents()));
-$('#icsImport')?.addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const imported=parseIcs(await file.text()),list=appEvents(),seen=new Set(list.map(x=>x.id));imported.forEach(x=>{if(!seen.has(x.id))list.push(x)});set('p11122_v21_events',list);alert(`${imported.length}개 일정을 가져왔습니다.`);renderCalendarPage();renderDashboard()}catch(err){alert('ICS 파일을 읽지 못했습니다.')}});
-function parseIcs(text){const lines=text.replace(/\r\n[ \t]/g,'').split(/\r?\n/),out=[];let e=null;for(const line of lines){if(line==='BEGIN:VEVENT'){e={source:'app',priority:'normal',type:'가져온 일정',allDay:false,start:'',end:'',location:'',memo:''};continue}if(line==='END:VEVENT'&&e){e.id=e.id||uid();if(e.title&&e.date)out.push(e);e=null;continue}if(!e)continue;const idx=line.indexOf(':');if(idx<0)continue;const key=line.slice(0,idx),value=line.slice(idx+1).replace(/\\n/g,'\n').replace(/\\([,;\\])/g,'$1');if(key.startsWith('UID'))e.id=value;if(key.startsWith('SUMMARY'))e.title=value;if(key.startsWith('DESCRIPTION'))e.memo=value;if(key.startsWith('LOCATION'))e.location=value;if(key.startsWith('DTSTART')){const p=parseIcsDate(value,key.includes('VALUE=DATE'));Object.assign(e,p)}if(key.startsWith('DTEND')){const p=parseIcsDate(value,key.includes('VALUE=DATE'));e.end=p.start||''}}
- return out}
-function parseIcsDate(value,allDay){if(allDay||/^\d{8}$/.test(value)){return{date:`${value.slice(0,4)}-${value.slice(4,6)}-${value.slice(6,8)}`,allDay:true,start:''}}const clean=value.replace('Z',''),date=`${clean.slice(0,4)}-${clean.slice(4,6)}-${clean.slice(6,8)}`,start=`${clean.slice(9,11)}:${clean.slice(11,13)}`;return{date,allDay:false,start}}
-
-/* Google Calendar read-only */
-let googleTokenClient=null,googleReady=false;
-function loadScriptOnce(src){return new Promise((resolve,reject)=>{const old=[...document.scripts].find(s=>s.src===src);if(old){if(old.dataset.loaded)resolve();else old.addEventListener('load',resolve,{once:true});return}const s=document.createElement('script');s.src=src;s.async=true;s.defer=true;s.onload=()=>{s.dataset.loaded='1';resolve()};s.onerror=reject;document.head.appendChild(s)})}
-async function initGoogle(){const cfg=get('p11122_v21_google_config',{clientId:'',apiKey:''});if(!cfg.clientId||!cfg.apiKey)throw new Error('Client ID와 API Key를 먼저 저장하세요.');await Promise.all([loadScriptOnce('https://apis.google.com/js/api.js'),loadScriptOnce('https://accounts.google.com/gsi/client')]);await new Promise(resolve=>gapi.load('client',resolve));await gapi.client.init({apiKey:cfg.apiKey,discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:cfg.clientId,scope:'https://www.googleapis.com/auth/calendar.readonly',callback:()=>{}});googleReady=true}
-$('#saveGoogleConfig')?.addEventListener('click',()=>{set('p11122_v21_google_config',{clientId:$('#googleClientId').value.trim(),apiKey:$('#googleApiKey').value.trim()});$('#googleStatus').textContent='설정을 저장했습니다.'});
-$('#connectGoogle')?.addEventListener('click',async()=>{try{$('#googleStatus').textContent='Google 라이브러리 준비 중…';if(!googleReady)await initGoogle();googleTokenClient.callback=async resp=>{if(resp.error){$('#googleStatus').textContent='연결 실패: '+resp.error;return}$('#googleStatus').textContent='연결되었습니다.';await fetchGoogleEvents()};googleTokenClient.requestAccessToken({prompt:gapi.client.getToken()?'':'consent'})}catch(err){$('#googleStatus').textContent='설정 오류: '+err.message}});
-$('#refreshGoogle')?.addEventListener('click',async()=>{try{if(!googleReady)await initGoogle();if(!gapi.client.getToken()){alert('먼저 Google 연결을 눌러 주세요.');return}await fetchGoogleEvents()}catch(err){$('#googleStatus').textContent='새로고침 실패: '+err.message}});
-$('#disconnectGoogle')?.addEventListener('click',()=>{try{const token=window.gapi?.client?.getToken();if(token)google.accounts.oauth2.revoke(token.access_token);gapi.client.setToken('')}catch{}set('p11122_v21_google_events',[]);$('#googleStatus').textContent='연결을 해제했습니다.';renderCalendarPage();renderDashboard()});
-async function fetchGoogleEvents(){const max=new Date();max.setMonth(max.getMonth()+3);const res=await gapi.client.calendar.events.list({calendarId:'primary',timeMin:new Date().toISOString(),timeMax:max.toISOString(),showDeleted:false,singleEvents:true,maxResults:100,orderBy:'startTime'});const list=(res.result.items||[]).map(x=>{const raw=x.start?.dateTime||x.start?.date||'',end=x.end?.dateTime||x.end?.date||'',allDay=Boolean(x.start?.date);return{id:'g-'+x.id,title:x.summary||'(제목 없음)',type:'Google 일정',date:raw.slice(0,10),allDay,start:allDay?'':raw.slice(11,16),end:allDay?'':end.slice(11,16),priority:'normal',location:x.location||'',memo:x.description||'',source:'google'}});set('p11122_v21_google_events',list);$('#googleStatus').textContent=`Google 일정 ${list.length}개를 불러왔습니다.`;renderCalendarPage();renderDashboard()}
-function renderGoogleEvents(){const list=googleEvents().filter(e=>e.date>=ymd(now())).slice(0,8);$('#googleEventList').innerHTML=list.length?list.map(e=>`<div class="google-event"><b>${esc(e.title)}</b><div class="task-meta">${e.date}${e.allDay?' · 종일':e.start?' · '+e.start:''}</div></div>`).join(''):'<div class="calendar-empty">저장된 Google 일정이 없습니다.</div>'}
-
 /* Test templates */
 $$('.test-template').forEach(b=>b.onclick=()=>{const t=b.dataset.template;$('#singleMode').click();if(t==='평가원'){$('#testCategory').value='평가원 기출';$('#testSeries').value='평가원 기출';$('#testRound').value=''}if(t==='전대'){$('#testCategory').value='학교 실모';$('#testSeries').value='전대 실모';$('#testRound').value=''}if(t==='우영호'){$('#testSubject').value='경제';$('#testCategory').value='강사 실모';$('#testSeries').value='우영호 실모';$('#testRound').value=''}if(t==='사문'){$('#testSubject').value='사회문화';$('#testCategory').value='사설 실모';$('#testSeries').value='사문 실모';$('#testRound').value=''}$('#testSeries').focus()});
 
-function renderHikeDecision(){if(!$('#hikeDecision'))return;const st=settings(),checks=get('p11122_v2_hikeChecks',{}),count=Object.values(checks).filter(Boolean).length;let cls='rest',text='등산 OFF · 일반 회복일';if(st.hikeEnabled){if(count===5){cls='full';text='풀코스 권장 · 오후 공부 4~5시간'}else if(count>=3){cls='short';text='단축 코스 권장 · 오후 공부 3시간'}else{text='등산 대신 휴식 · 복습 1~2시간'}}$('#hikeDecision').className='hike-decision '+cls;$('#hikeDecision').textContent=text}
+function renderHikeDecision(){
+ if(!$('#hikeDecision'))return;
+ const st=settings(),checks=get('p11122_v2_hikeChecks',{}),count=Object.values(checks).filter(Boolean).length;
+ const recent=conditionData()[ymd(now())]||{};
+ const healthRisk=(recent.sleepMinutes&&recent.sleepMinutes<420)||Number(recent.eveningFatigue||recent.morningFatigue||0)>=4||Number(recent.headache||0)>=2;
+ let cls='rest',text='등산 OFF · 일반 회복일';
+ if(st.hikeEnabled){
+  if(healthRisk){cls='rest';text='수면·피로·두통 기록상 휴식 또는 짧은 산책 권장'}
+  else if(count===5){cls='full';text='풀코스 권장 · 오후 공부 4~5시간'}
+  else if(count>=3){cls='short';text='단축 코스 권장 · 오후 공부 3시간'}
+  else{text='등산 대신 휴식 · 복습 1~2시간'}
+ }
+ $('#hikeDecision').className='hike-decision '+cls;
+ $('#hikeDecision').textContent=text
+}

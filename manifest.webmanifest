@@ -1,7 +1,7 @@
 {
   "name": "PROJECT 11122",
   "short_name": "11122",
-  "description": "11122 목표 자동 입시 매니저와 일정 관리 PWA",
+  "description": "11122 목표 최소 성공선·역산 지도·오늘 마감 입시 관리 웹앱",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
