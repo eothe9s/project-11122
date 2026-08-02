@@ -10,14 +10,16 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="stylesheet" href="./styles.css">
-<title>PROJECT 11122 v2.0</title>
+<title>PROJECT 11122 v2.1</title>
 </head>
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v2.0 · MANAGER EDITION</span></div>
+  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v2.1 · AUTO MANAGER</span></div>
   <nav>
     <button class="active" data-page="dashboard">오늘</button>
+    <button data-page="manager">자동 매니저</button>
+    <button data-page="calendar">일정</button>
     <button data-page="week">이번 주</button>
     <button data-page="school">학교 시간표</button>
     <button data-page="courses">강좌 진도</button>
@@ -46,6 +48,78 @@
     <article class="card"><div class="card-head"><h3>오늘 할 일</h3><button id="newTask" class="btn primary small">+ 직접 추가</button></div><div id="todayTasks" class="task-list"></div></article>
     <article class="card"><h3>오늘 시간표</h3><div id="todaySchedule" class="schedule"></div><label class="mini-label">실제 순공시간</label><div class="row"><input id="hoursInput" class="input short" type="number" min="0" max="16" step=".1"><button id="saveHours" class="btn primary">저장</button></div></article>
   </div>
+  <div class="grid g2">
+    <article class="card"><div class="card-head"><h3>다가오는 일정</h3><button class="btn ghost small" data-open-page="calendar">일정 관리</button></div><div id="upcomingEvents"></div></article>
+    <article class="card"><h3>빠른 매니저</h3><div id="todayPrescription" class="note"></div><div class="row"><button id="generateNextQuick" class="btn primary">내일 계획 생성</button><button id="copyReportQuick" class="btn ghost">오늘 보고서 복사</button></div></article>
+  </div>
+</section>
+
+
+<section id="manager" class="section">
+  <div class="grid g2">
+    <article class="card">
+      <h3>비수학 자동 계획 엔진</h3>
+      <div class="note">강좌 진도와 최근 시험을 읽어 국어·영어·사회문화·경제 계획을 만듭니다. 기존 과제는 지우지 않고 중복만 피합니다.</div>
+      <div class="row"><input id="managerDate" class="input short" type="date"><button id="generatePlan" class="btn primary">선택 날짜 생성</button><button id="generateNext" class="btn good">내일 생성</button></div>
+      <div id="managerPreview" class="report"></div>
+    </article>
+    <article class="card">
+      <h3>최근 시험 처방</h3>
+      <div id="prescriptionList"></div>
+      <div class="row"><button id="applyPrescription" class="btn primary">처방을 내일 계획에 추가</button><button id="autoCarry" class="btn warn">미완료 자동 정리</button></div>
+    </article>
+  </div>
+  <div class="grid g2">
+    <article class="card">
+      <div class="card-head"><h3>자료 보관함</h3><button id="addMaterial" class="btn primary small">+ 자료 추가</button></div>
+      <div id="materialList"></div>
+    </article>
+    <article class="card">
+      <h3>매니저에게 보낼 일일 보고서</h3>
+      <textarea id="dailyReportText" class="input report-text" rows="16"></textarea>
+      <div class="row"><button id="refreshDailyReport" class="btn ghost">새로 만들기</button><button id="copyDailyReport" class="btn primary">클립보드 복사</button></div>
+    </article>
+  </div>
+</section>
+
+<section id="calendar" class="section">
+  <div class="grid g2">
+    <article class="card">
+      <h3>시험·제출 일정 추가</h3>
+      <input id="eventId" type="hidden">
+      <div class="form-grid compact-form">
+        <label>제목<input id="eventTitle" class="input" placeholder="경제 수행평가 보고서 제출"></label>
+        <label>종류<select id="eventType" class="input"><option>시험</option><option>보고서 제출</option><option>수행평가</option><option>학교 일정</option><option>개인 일정</option><option>등산</option></select></label>
+        <label>날짜<input id="eventDate" class="input" type="date"></label>
+        <label>우선순위<select id="eventPriority" class="input"><option value="high">높음</option><option value="normal">보통</option><option value="low">낮음</option></select></label>
+        <label>시작 시간<input id="eventStart" class="input" type="time"></label>
+        <label>종료 시간<input id="eventEnd" class="input" type="time"></label>
+        <label class="inline-check"><input id="eventAllDay" type="checkbox" checked> 종일 일정</label>
+        <label>장소<input id="eventLocation" class="input" placeholder="학교 / 교실"></label>
+      </div>
+      <label>메모<textarea id="eventMemo" class="input" rows="3" placeholder="준비물·제출 형식·시험 범위"></textarea></label>
+      <div class="row"><button id="saveEvent" class="btn primary">일정 저장</button><button id="clearEvent" class="btn ghost">입력 초기화</button></div>
+    </article>
+    <article class="card">
+      <h3>다가오는 일정</h3>
+      <div id="eventList"></div>
+    </article>
+  </div>
+  <div class="grid g2">
+    <article class="card">
+      <h3>Apple·iCloud·기타 캘린더</h3>
+      <div class="note">실시간 계정 연동 대신 표준 .ics 파일로 가져오고 내보냅니다. 아이폰·아이패드 캘린더와 Google Calendar 모두 .ics를 받을 수 있습니다.</div>
+      <div class="row"><label class="btn ghost file-label">ICS 가져오기<input id="icsImport" class="hidden" type="file" accept=".ics,text/calendar"></label><button id="exportIcs" class="btn primary">전체 일정 ICS 내보내기</button></div>
+    </article>
+    <article class="card">
+      <h3>Google Calendar 읽기 전용 연결 <span class="badge">BETA</span></h3>
+      <div class="note">비공개 Google Calendar를 앱 안에 띄우려면 Google Cloud에서 Calendar API, OAuth 웹 클라이언트, API 키를 한 번 설정해야 합니다. 승인된 JavaScript 출처는 <b id="googleOrigin"></b> 입니다.</div>
+      <label>OAuth Client ID<input id="googleClientId" class="input" placeholder="...apps.googleusercontent.com"></label>
+      <label>API Key<input id="googleApiKey" class="input" placeholder="AIza..."></label>
+      <div class="row"><button id="saveGoogleConfig" class="btn ghost">설정 저장</button><button id="connectGoogle" class="btn primary">Google 연결</button><button id="refreshGoogle" class="btn good">일정 새로고침</button><button id="disconnectGoogle" class="btn danger">연결 해제</button></div>
+      <div id="googleStatus" class="task-meta"></div><div id="googleEventList"></div>
+    </article>
+  </div>
 </section>
 
 <section id="week" class="section">
@@ -69,6 +143,7 @@
 
 <section id="tests" class="section">
   <article class="card"><div class="card-head"><h3>실모·기출 기록</h3><div class="row"><button id="singleMode" class="btn primary small">과목 하나</button><button id="fullMode" class="btn ghost small">전과목 모의고사</button></div></div>
+    <div class="template-row"><span class="mini-label">빠른 입력</span><button class="btn ghost small test-template" data-template="평가원">평가원 기출</button><button class="btn ghost small test-template" data-template="전대">전대 실모</button><button class="btn ghost small test-template" data-template="우영호">우영호 실모</button><button class="btn ghost small test-template" data-template="사문">사문 실모</button></div>
     <div id="singleForm"><div class="form-grid">
       <label>날짜<input id="testDate" class="input" type="date"></label><label>과목<select id="testSubject" class="input"><option>국어</option><option>수학</option><option>영어</option><option>사회문화</option><option>경제</option></select></label><label>분류<select id="testCategory" class="input"><option>평가원 기출</option><option>교육청 기출</option><option>사관학교 기출</option><option>학교 실모</option><option>사설 실모</option><option>강사 실모</option><option>N제</option><option>단원 테스트</option><option>기타</option></select></label><label>선택과목<input id="testSelect" class="input" placeholder="미적분 / 언매"></label>
       <label>자료·시리즈명<input id="testSeries" class="input" placeholder="전대 실모, 우영호 실모"></label><label>회차<input id="testRound" class="input" placeholder="3회"></label><label>시행 연도<input id="testYear" class="input" placeholder="2025학년도"></label><label>시행 월<input id="testMonth" class="input" placeholder="9월"></label>
@@ -86,19 +161,21 @@
 </section>
 
 <section id="hike" class="section">
-  <div class="hike-grid"><article class="hike-hero"><h3>일요일 회복 루틴</h3><h2>무등산 늦재고개·옛길 코스</h2><p>월~토의 출력이 꺼지지 않게 만드는 회복 장치</p><div class="hike-kpis"><div><b>9.3km</b><span>총 거리</span></div><div><b>4h 17m</b><span>예상 시간</span></div><div><b>중간</b><span>난이도</span></div></div><label class="check"><input id="hikeEnabled" type="checkbox"><span><b>학기 중 일요일 등산 활성화</b><small>활성화하면 주간 보고서에 반영됩니다.</small></span></label></article><article class="card"><h3>등산 전 조건 확인</h3><div id="hikeChecks" class="checks"></div></article></div>
+  <div class="hike-grid"><article class="hike-hero"><h3>일요일 회복 루틴</h3><h2>무등산 늦재고개·옛길 코스</h2><p>월~토의 출력이 꺼지지 않게 만드는 회복 장치</p><div class="hike-kpis"><div><b>9.3km</b><span>총 거리</span></div><div><b>4h 17m</b><span>예상 시간</span></div><div><b>중간</b><span>난이도</span></div></div><label class="check"><input id="hikeEnabled" type="checkbox"><span><b>학기 중 일요일 등산 활성화</b><small>활성화하면 주간 보고서에 반영됩니다.</small></span></label><div id="hikeDecision" class="hike-decision"></div></article><article class="card"><h3>등산 전 조건 확인</h3><div id="hikeChecks" class="checks"></div></article></div>
   <div class="grid g2"><article class="card"><h3>추천 일요일 일정</h3><table><tbody><tr><td>06:30</td><td>기상·아침·준비</td></tr><tr><td>07:30~12:30</td><td>이동·등산·귀가</td></tr><tr><td>12:30~14:30</td><td>식사·샤워·완전 휴식</td></tr><tr><td>14:30~16:00</td><td>사문 실모+분석 또는 경제 복습</td></tr><tr><td>16:20~17:50</td><td>국어·수학 주간 오답</td></tr><tr><td>18:30~19:20</td><td>영어·다음 주 계획</td></tr><tr><td>19:20</td><td>공부 종료</td></tr></tbody></table></article><article class="card"><h3>자동 감량 규칙</h3><div class="note">수면 부족, 무릎·발목 통증, 폭염·비·강풍, 월요일 피로 누적 중 하나라도 있으면 풀코스를 강행하지 않습니다. 짧은 산책으로 낮추고 오답·복습만 남깁니다.</div></article></div>
 </section>
 
 <section id="data" class="section">
   <div class="grid g2"><article class="card"><h3>백업·복원</h3><div class="note">업데이트 전 JSON 백업을 저장하면 새 버전에서도 기록을 그대로 복원할 수 있습니다.</div><div class="row"><button id="exportData" class="btn primary">전체 기록 내보내기</button><label class="btn ghost file-label">기록 불러오기<input id="importData" class="hidden" type="file" accept=".json,application/json"></label></div></article><article class="card"><h3>기본 설정</h3><label>방학 목표 순공시간<input id="vacationGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>학기 중 목표 순공시간<input id="schoolGoal" class="input" type="number" step=".1" min="1" max="16"></label><button id="saveSettings" class="btn primary">설정 저장</button></article></div><article class="card"><h3>위험 작업</h3><button id="resetAll" class="btn danger">전체 기록 초기화</button></article>
 </section>
-<div class="footer">PROJECT 11122 v2.0 · GitHub Pages/PWA · 기록은 이 브라우저에 저장됩니다.</div>
+<div class="footer">PROJECT 11122 v2.1 · GitHub Pages/PWA · 기록은 이 브라우저에 저장됩니다.</div>
 </main>
 </div>
 
 <div id="taskModal" class="modal-back"><div class="modal"><h3 id="taskModalTitle">할 일</h3><input id="taskId" type="hidden"><div class="grid g3"><label>과목<select id="taskSubject" class="input"><option>국어</option><option>수학</option><option>영어</option><option>사회문화</option><option>경제</option><option>기타</option></select></label><label>우선순위<select id="taskPriority" class="input"><option value="must">필수</option><option value="should">권장</option><option value="extra">여유</option></select></label><label>예상 시간<input id="taskDuration" class="input" placeholder="90분"></label></div><label>할 일<input id="taskName" class="input"></label><label>자료명·회차<input id="taskMaterial" class="input" placeholder="All Of KICE Origin 1~2강"></label><label>메모<textarea id="taskNote" class="input" rows="3"></textarea></label><div class="row end"><button class="btn ghost closeModal">취소</button><button id="saveTask" class="btn primary">저장</button></div></div></div>
 <div id="carryModal" class="modal-back"><div class="modal"><h3>미완료 과제 정리</h3><div class="note">필수는 오늘 또는 다음 가능한 날로, 권장은 주말 후보로, 여유는 삭제를 권장합니다.</div><div id="carryList"></div><div class="row end"><button class="btn ghost closeModal">닫기</button></div></div></div>
+
+<div id="materialModal" class="modal-back"><div class="modal"><h3>자료 추가</h3><input id="materialId" type="hidden"><div class="grid g2"><label>과목<select id="materialSubject" class="input"><option>국어</option><option>수학</option><option>영어</option><option>사회문화</option><option>경제</option></select></label><label>종류<select id="materialType" class="input"><option>강의</option><option>실모</option><option>기출</option><option>문제집</option><option>N제</option><option>단어장</option><option>기타</option></select></label></div><label>자료명<input id="materialName" class="input" placeholder="김승리 All Of KICE"></label><label>기본 메모<input id="materialNote" class="input" placeholder="매일 2~4강"></label><div class="row end"><button class="btn ghost closeModal">취소</button><button id="saveMaterial" class="btn primary">저장</button></div></div></div>
 <script src="./app.js"></script>
 </body>
 </html>
