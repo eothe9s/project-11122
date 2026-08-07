@@ -10,18 +10,19 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="stylesheet" href="./styles.css">
-<title>PROJECT 11122 v2.4</title>
+<title>PROJECT 11122 v3.0</title>
 </head>
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v2.4 · FINAL GUARD</span></div>
+  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v3.0 · FINAL</span></div>
   <nav>
     <button class="active" data-page="dashboard">오늘</button>
     <button data-page="manager">계획 검증·보고</button>
         <button data-page="condition">수면·컨디션</button>
     <button data-page="week">이번 주</button>
     <button data-page="school">학교 시간표</button>
+    <button data-page="lectures">인강 자판기</button>
     <button data-page="courses">강좌 진도</button>
     <button data-page="tests">실모·기출</button>
     <button data-page="report">주간 분석</button>
@@ -208,15 +209,102 @@
   <article class="card"><h3>날짜별 확정 진도</h3><div class="scroll"><table><thead><tr><th>날짜</th><th>국어</th><th>수학</th><th>영어</th><th>사회문화</th><th>경제</th></tr></thead><tbody id="weekTable"></tbody></table></div></article>
 </section>
 
+
 <section id="school" class="section">
+  <article class="card">
+    <div class="card-head">
+      <div>
+        <h3>확정 주간 시간표</h3>
+        <div class="task-meta">과목명은 전부 풀네임으로 표시합니다. 자습 가능 여부와 전자기기 사용 가능 여부도 함께 저장됩니다.</div>
+      </div>
+      <div class="school-stat-row">
+        <span class="badge">자습 <b id="schoolSelfStudyCount">18</b>교시</span>
+        <span class="badge">전자기기 <b id="schoolDeviceCount">15</b>교시</span>
+        <span class="badge">종이 자습 <b id="schoolPaperCount">3</b>교시</span>
+      </div>
+    </div>
+    <div class="scroll"><table class="school-week-table">
+      <thead><tr><th>교시</th><th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th></tr></thead>
+      <tbody id="schoolWeekGrid"></tbody>
+    </table></div>
+    <div class="legend-row">
+      <span class="school-tag self">자습 가능</span>
+      <span class="school-tag device">전자기기 가능</span>
+      <span class="school-tag paper">전자기기 불가</span>
+    </div>
+  </article>
+
   <div class="grid g2">
-    <article class="card"><h3>학기 중 주간 시간표</h3><div class="note">실제 수업명과 자습 가능 여부를 입력하시면, 교시 길이와 과목 우선순위에 맞춰 공부 내용을 추천 배치합니다.</div><div class="row"><select id="schoolDay" class="input short"><option value="1">월요일</option><option value="2">화요일</option><option value="3">수요일</option><option value="4">목요일</option><option value="5">금요일</option><option value="6">토요일</option></select><button id="autoArrange" class="btn primary">추천 배치</button></div><div id="schoolEditor"></div><button id="addPeriod" class="btn ghost">+ 교시 추가</button></article>
-    <article class="card"><h3>8월 6일 특별 시간표</h3><div class="note">학기 중 토요일 시간표로 운영됩니다. 수업명은 나중에 수정하고 실제 공부를 먼저 배치했습니다.</div><div id="thursdaySpecial" class="schedule"></div></article>
+    <article class="card">
+      <div class="card-head"><h3>요일별 자습 배치</h3><select id="schoolDay" class="input short"><option value="1">월요일</option><option value="2">화요일</option><option value="3">수요일</option><option value="4">목요일</option><option value="5">금요일</option></select></div>
+      <div class="note">학교 과목 자체는 고정되어 있습니다. 실제 자습 내용은 직접 수정할 수 있고, 인강 자판기에서 날짜별로 담은 강의는 전자기기 가능한 자습 교시에 우선 배치됩니다.</div>
+      <div id="schoolEditor"></div>
+      <div class="row"><button id="autoArrange" class="btn primary">빈 자습칸 추천</button><button id="restoreSchool" class="btn ghost">확정 시간표로 복원</button></div>
+    </article>
+
+    <article class="card">
+      <h3>학교 자습 사용 원칙</h3>
+      <div class="report">
+        <div class="report-block"><b>전자기기 가능</b>인강을 가장 먼저 배치합니다. 국어 All Of KICE, 경제 LEAD IN·CORE, 사회문화 LIM IT처럼 영상이 필요한 공부를 학교에서 최대한 처리합니다.</div>
+        <div class="report-block"><b>전자기기 불가</b>생명과학Ⅱ 자습시간은 문제풀이·오답·백지복습 같은 종이 공부를 배치합니다.</div>
+        <div class="report-block"><b>일반 수업</b>학교 수업으로 표시하며, PROJECT 11122의 순공시간에는 자동으로 포함하지 않습니다.</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="lectures" class="section">
+  <div class="lecture-layout">
+    <div>
+      <article class="card lecture-hero">
+        <div class="card-head">
+          <div>
+            <h3>인강 자판기</h3>
+            <div class="task-meta">들어야 할 강의를 전부 낱개로 펼쳐놓았습니다. 강의를 클릭해서 장바구니에 담고, 날짜를 고른 뒤 일정으로 만드세요.</div>
+          </div>
+          <span id="lecturePressureBadge" class="badge">계산 중</span>
+        </div>
+        <div class="grid g4 lecture-metrics">
+          <div class="lecture-metric"><span>전체 인강</span><b id="lectureTotal">0</b></div>
+          <div class="lecture-metric"><span>완료</span><b id="lectureDone">0</b></div>
+          <div class="lecture-metric"><span>남음</span><b id="lectureRemain">0</b></div>
+          <div class="lecture-metric"><span>9모 전 하루 필요</span><b id="lecturePerDay">0</b></div>
+        </div>
+        <div id="lecturePressureText" class="note"></div>
+      </article>
+
+      <article class="card">
+        <div class="lecture-filter">
+          <label>과목
+            <select id="lectureSubjectFilter" class="input">
+              <option value="all">전체</option><option value="국어">국어</option><option value="사회문화">사회문화</option><option value="경제">경제</option>
+            </select>
+          </label>
+          <label>강좌
+            <select id="lectureCourseFilter" class="input"><option value="all">전체 강좌</option></select>
+          </label>
+          <label class="inline-check vending-check"><input id="lectureIncompleteOnly" type="checkbox" checked> 미수강만 보기</label>
+        </div>
+        <div class="row lecture-custom-row"><button id="addCustomLectureCourse" class="btn ghost small">+ 사용자 강좌 추가</button><span class="task-meta">수학 등 아직 세부 강좌를 안 정한 과목도 나중에 총 강수만 입력하면 자동 생성됩니다.</span></div><div id="lectureCatalog" class="lecture-catalog"></div>
+      </article>
+    </div>
+
+    <aside class="lecture-cart card">
+      <div class="card-head"><h3>오늘의 장바구니</h3><span id="lectureCartCount" class="badge">0강</span></div>
+      <label>일정 날짜<input id="lecturePlanDate" class="input" type="date"></label>
+      <div class="note cart-note">학교가 있는 날은 전자기기 가능한 자습 교시에 한 강씩 우선 배치합니다. 남는 강의는 오늘 할 일에 그대로 추가됩니다.</div>
+      <div id="lectureCartList" class="lecture-cart-list"></div>
+      <div id="lectureCartSchoolHint" class="task-meta"></div>
+      <div class="cart-actions">
+        <button id="buildLecturePlan" class="btn primary">오늘 일정 만들기</button>
+        <button id="clearLectureCart" class="btn ghost">장바구니 비우기</button>
+      </div>
+    </aside>
   </div>
 </section>
 
 <section id="courses" class="section">
-  <div class="grid g2"><article class="card"><h3>국어 · 김승리 All Of KICE</h3><div id="korCourses"></div></article><article class="card"><h3>경제 · 우영호</h3><div id="ecoCourses"></div></article><article class="card"><h3>사회문화 · 임정환</h3><div id="socCourses"></div></article><article class="card"><h3>수학·영어</h3><div id="otherCourses"></div></article></div>
+  <div class="grid g2"><article class="card"><h3>국어 · 김승리 All Of KICE</h3><div id="korCourses"></div></article><article class="card"><h3>경제 · 우영호 LEAD IN / CORE</h3><div id="ecoCourses"></div></article><article class="card"><h3>사회문화 · 임정환 LIM IT</h3><div id="socCourses"></div></article><article class="card"><h3>수학·영어</h3><div id="otherCourses"></div></article></div>
 </section>
 
 <section id="tests" class="section">
@@ -244,9 +332,9 @@
 </section>
 
 <section id="data" class="section">
-  <div class="grid g2"><article class="card"><h3>백업·복원</h3><div class="note">업데이트 전 JSON 백업을 저장하면 새 버전에서도 기록을 그대로 복원할 수 있습니다.</div><div class="row"><button id="exportData" class="btn primary">전체 기록 내보내기</button><label class="btn ghost file-label">기록 불러오기<input id="importData" class="hidden" type="file" accept=".json,application/json"></label></div></article><article class="card"><h3>기본 설정</h3><label>방학 목표 순공시간<input id="vacationGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>학기 중 목표 순공시간<input id="schoolGoal" class="input" type="number" step=".1" min="1" max="16"></label><button id="saveSettings" class="btn primary">설정 저장</button></article></div><article class="card"><h3>위험 작업</h3><button id="resetAll" class="btn danger">전체 기록 초기화</button></article>
+  <div class="grid g2"><article class="card"><h3>백업·복원</h3><div class="note">업데이트 전 JSON 백업을 저장하면 새 버전에서도 기록을 그대로 복원할 수 있습니다.</div><div class="row"><button id="exportData" class="btn primary">전체 기록 내보내기</button><label class="btn ghost file-label">기록 불러오기<input id="importData" class="hidden" type="file" accept=".json,application/json"></label></div></article><article class="card"><h3>기본 설정</h3><label>방학 목표 순공시간<input id="vacationGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>학기 중 목표 순공시간<input id="schoolGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>하루 인강 계획 상한<input id="lectureDailyCap" class="input" type="number" step="1" min="1" max="12"><span class="task-meta">9모 완주 검증용 개인 기준값입니다.</span></label><button id="saveSettings" class="btn primary">설정 저장</button></article></div><article class="card"><h3>위험 작업</h3><button id="resetAll" class="btn danger">전체 기록 초기화</button></article>
 </section>
-<div class="footer">PROJECT 11122 v2.4 · GitHub Pages/PWA · 기록은 이 브라우저에 저장됩니다.</div>
+<div class="footer">PROJECT 11122 v3.0 · GitHub Pages/PWA · 기록은 이 브라우저에 저장됩니다.</div>
 </main>
 </div>
 

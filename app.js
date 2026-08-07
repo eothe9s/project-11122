@@ -1,4 +1,4 @@
-const VERSION='2.4';
+const VERSION='3.0';
 const EXAM_DATE=new Date('2026-09-02T09:00:00');
 const SUBJECTS=['국어','수학','영어','사회문화','경제'];
 const PRIORITY_LABEL={must:'필수',should:'권장',extra:'여유'};
@@ -35,21 +35,29 @@ const INITIAL_WEEK={
 
 function buildInitial(){const tasks={},schedules={};Object.entries(INITIAL_WEEK).forEach(([date,d])=>{tasks[date]=d.tasks.map(x=>({id:uid(),subject:x[0],priority:x[1],name:x[2],material:x[3],note:x[4],duration:x[5],done:false}));schedules[date]=d.schedule.map(x=>({id:uid(),time:x[0],school:x[1],study:x[2],done:false}))});return{tasks,schedules}}
 const INITIAL=buildInitial();
-function settings(){return get('p11122_v2_settings',{vacationGoal:10.8,schoolGoal:9.5,hikeEnabled:false})}
+function settings(){return get('p11122_v2_settings',{vacationGoal:10.8,schoolGoal:9.5,hikeEnabled:false,lectureDailyCap:5})}
 function allTasks(){return get('p11122_v2_tasks',INITIAL.tasks)}
 function allSchedules(){return get('p11122_v2_schedules',INITIAL.schedules)}
 function saveTasks(date,tasks){const m=allTasks();m[date]=tasks;set('p11122_v2_tasks',m)}
 function saveSchedules(date,slots){const m=allSchedules();m[date]=slots;set('p11122_v2_schedules',m)}
 function tasksFor(date){const m=allTasks();if(!m[date]){m[date]=SUBJECTS.map((s,i)=>({id:uid(),subject:s,priority:[0,1,4].includes(i)?'must':'should',name:'직접 계획 입력',material:'',note:'',duration:'',done:false}));set('p11122_v2_tasks',m)}return m[date]}
-function scheduleFor(date){const m=allSchedules();if(!m[date]){m[date]=[];set('p11122_v2_schedules',m)}return m[date]}
+function scheduleFor(date){
+ const m=allSchedules();
+ if(!m[date]){
+   const day=parse(date).getDay();
+   m[date]=(day>=1&&day<=5)?schoolScheduleForDate(date):[];
+   set('p11122_v2_schedules',m)
+ }
+ return m[date]
+}
 function phase(date){if(date<='2026-08-01')return'사관학교 집중';if(date<='2026-08-05')return'방학 압축 부팅';if(date<='2026-08-12')return'기반 완성';if(date<='2026-08-19')return'기출 전환';if(date<='2026-08-26')return'11122 진입';return'실전 고정'}
 let selected=ymd(now())<'2026-08-02'?'2026-08-02':ymd(now());
 
 $$('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
-function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const nav=$(`nav button[data-page="${page}"]`);if(nav)$('#pageTitle').textContent=nav.textContent;if(page==='manager')renderManager();if(page==='condition')renderCondition();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
+function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const nav=$(`nav button[data-page="${page}"]`);if(nav)$('#pageTitle').textContent=nav.textContent;if(page==='manager')renderManager();if(page==='condition')renderCondition();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='lectures')renderLectures();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
 
 function renderDashboard(){const ts=tasksFor(selected),slots=scheduleFor(selected),done=ts.filter(t=>t.done).length,rate=ts.length?Math.round(done/ts.length*100):0;$('#phaseBadge').textContent=phase(selected);const info=INITIAL_WEEK[selected],st=settings(),mode=info?.mode||(parse(selected).getDay()===0?'일요일 회복':'학기 모드');$('#modeText').textContent=mode;const goalOverrides=get('p11122_v23_goals',{});$('#goalHours').textContent=(goalOverrides[selected]??info?.goal??(parse(selected).getDay()===0?4.5:st.schoolGoal)).toFixed(1);$('#todayRate').textContent=rate+'%';$('#todayBar').style.width=rate+'%';const h=get('p11122_v2_hours',{});$('#hoursInput').value=h[selected]||'';const[ws,we]=weekBounds(parse(selected));let wh=0;for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1))wh+=Number(h[ymd(d)]||0);$('#weekStudy').textContent=wh.toFixed(1);renderTasks(ts);renderSchedule(slots);renderConditionQuick();renderFeasibilityQuick();renderMinimumSuccess()}
-function renderTasks(ts){const box=$('#todayTasks');box.innerHTML='';ts.forEach(t=>{const e=document.createElement('div');e.className='task'+(t.done?' done':'');e.innerHTML=`<div class="task-main"><input type="checkbox" ${t.done?'checked':''}><div><div><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.name)}</span></div><div class="task-meta">${esc(t.material)}${t.duration?' · '+esc(t.duration):''}${t.note?' · '+esc(t.note):''}</div></div><div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div></div>`;e.querySelector('input').onchange=x=>{t.done=x.target.checked;saveTasks(selected,ts);renderDashboard()};e.querySelector('.edit').onclick=()=>openTask(t);e.querySelector('.del').onclick=()=>{if(confirm('삭제할까요?')){saveTasks(selected,ts.filter(x=>x.id!==t.id));renderDashboard()}};box.appendChild(e)})}
+function renderTasks(ts){const box=$('#todayTasks');box.innerHTML='';ts.forEach(t=>{const e=document.createElement('div');e.className='task'+(t.done?' done':'');e.innerHTML=`<div class="task-main"><input type="checkbox" ${t.done?'checked':''}><div><div><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.name)}</span></div><div class="task-meta">${esc(t.material)}${t.duration?' · '+esc(t.duration):''}${t.note?' · '+esc(t.note):''}</div></div><div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div></div>`;e.querySelector('input').onchange=x=>{t.done=x.target.checked;if(t.done&&Array.isArray(t.lectureIds))markLecturesCompleted(t.lectureIds,true);saveTasks(selected,ts);renderDashboard();if($('#lectures')?.classList.contains('active'))renderLectures()};e.querySelector('.edit').onclick=()=>openTask(t);e.querySelector('.del').onclick=()=>{if(confirm('삭제할까요?')){saveTasks(selected,ts.filter(x=>x.id!==t.id));renderDashboard()}};box.appendChild(e)})}
 function renderSchedule(slots){const box=$('#todaySchedule');box.innerHTML=slots.length?'':'<div class="note">시간표가 없습니다.</div>';slots.forEach(s=>{const e=document.createElement('div');e.className='slot'+(s.done?' done':'');e.innerHTML=`<div class="time">${esc(s.time)}</div><div class="school">${esc(s.school)}</div><div class="study">${esc(s.study)}</div><div class="slot-actions"><label><input type="checkbox" ${s.done?'checked':''}> 완료</label></div>`;e.querySelector('input').onchange=x=>{s.done=x.target.checked;saveSchedules(selected,slots);renderDashboard()};box.appendChild(e)})}
 $('#newTask').onclick=()=>openTask();
 function openTask(t=null){$('#taskModalTitle').textContent=t?'할 일 수정':'할 일 추가';$('#taskId').value=t?.id||'';$('#taskSubject').value=t?.subject||'국어';$('#taskPriority').value=t?.priority||'must';$('#taskDuration').value=t?.duration||'';$('#taskName').value=t?.name||'';$('#taskMaterial').value=t?.material||'';$('#taskNote').value=t?.note||'';$('#taskModal').classList.add('show')}
@@ -63,31 +71,148 @@ $('#selectedDate').onchange=e=>{selected=e.target.value;updateSelectedSummary()}
 function updateSelectedSummary(){const info=INITIAL_WEEK[selected],ts=tasksFor(selected);$('#selectedSummary').innerHTML=`<b>${selected} · ${info?.mode||phase(selected)}</b><br>${ts.filter(t=>t.priority==='must').length}개 필수, ${ts.filter(t=>t.priority==='should').length}개 권장, ${ts.filter(t=>t.priority==='extra').length}개 여유 과제`}
 $('#openSelected').onclick=()=>{navigate('dashboard');renderDashboard()};$('#printPlan').onclick=()=>window.print();
 
-const DEFAULT_PERIODS=[{time:'08:40~09:30',school:'수업명 입력',selfStudy:true,study:''},{time:'09:40~10:30',school:'수업명 입력',selfStudy:true,study:''},{time:'10:40~11:30',school:'수업명 입력',selfStudy:true,study:''},{time:'11:40~12:30',school:'수업명 입력',selfStudy:true,study:''},{time:'13:30~14:20',school:'수업명 입력',selfStudy:true,study:''},{time:'14:30~15:20',school:'수업명 입력',selfStudy:true,study:''},{time:'15:30~16:20',school:'수업명 입력',selfStudy:true,study:''}];
-function schoolMap(){return get('p11122_v2_school',{})}
-function renderSchool(){const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||DEFAULT_PERIODS.map(x=>({...x,id:uid()}));const box=$('#schoolEditor');box.innerHTML='';arr.forEach((p,i)=>{const e=document.createElement('div');e.className='slot';e.innerHTML=`<input class="input t" value="${esc(p.time)}"><input class="input s" value="${esc(p.school)}"><div><input class="input w" value="${esc(p.study)}" placeholder="실제 공부"><label class="task-meta"><input class="a" type="checkbox" ${p.selfStudy?'checked':''}> 자습 가능</label></div><button class="btn danger small">삭제</button>`;const save=()=>{p.time=e.querySelector('.t').value;p.school=e.querySelector('.s').value;p.study=e.querySelector('.w').value;p.selfStudy=e.querySelector('.a').checked;map[day]=arr;set('p11122_v2_school',map)};e.querySelectorAll('input').forEach(x=>x.onchange=save);e.querySelector('button').onclick=()=>{arr.splice(i,1);map[day]=arr;set('p11122_v2_school',map);renderSchool()};box.appendChild(e)});$('#thursdaySpecial').innerHTML=scheduleFor('2026-08-06').map(s=>`<div class="slot"><div class="time">${esc(s.time)}</div><div class="school">${esc(s.school)}</div><div class="study">${esc(s.study)}</div><div></div></div>`).join('')}
-$('#schoolDay').onchange=renderSchool;$('#addPeriod').onclick=()=>{const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||DEFAULT_PERIODS.map(x=>({...x,id:uid()}));arr.push({id:uid(),time:'',school:'수업명 입력',selfStudy:true,study:''});map[day]=arr;set('p11122_v2_school',map);renderSchool()};
-$('#autoArrange').onclick=()=>{const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||DEFAULT_PERIODS.map(x=>({...x,id:uid()})),order=['국어 All Of KICE','수학 오르새','경제 LEAD IN/CORE','사회문화 실모+복습','영어 단어·취약 유형','국어 복습','경제 마더텅'];let idx=0;arr.forEach(p=>{if(p.selfStudy&&!p.study)p.study=order[idx++%order.length]});map[day]=arr;set('p11122_v2_school',map);renderSchool()};
+const SCHOOL_PERIOD_TIMES={
+ 1:'08:40~09:50',2:'10:00~11:10',3:'11:20~12:30',
+ 4:'13:30~14:40',5:'14:50~15:50',6:'16:00~17:00',7:'7교시'
+};
+const SCHOOL_TIMETABLE={
+ '1':[
+  ['물리학Ⅱ',false,false],['인공지능수학',false,false],['지구과학Ⅱ',false,false],
+  ['진로',true,true],['언어와매체',false,false],['미적분',false,false],['공강',true,true]
+ ],
+ '2':[
+  ['지구과학Ⅱ',false,false],['과학과제연구',true,true],['화학Ⅱ',false,false],
+  ['사회문제탐구',true,true],['정보과제연구',true,true],['물리학Ⅱ',false,false],['생명과학Ⅱ',true,false]
+ ],
+ '3':[
+  ['미적분',false,false],['정보과제연구',true,true],['스포츠생활',false,false],
+  ['화학Ⅱ',false,false],['과학융합',true,true],['공강',true,true],['공강',true,true]
+ ],
+ '4':[
+  ['지구과학Ⅱ',false,false],['사회문제탐구',true,true],['미적분',false,false],
+  ['생명과학Ⅱ',true,false],['과학융합',true,true],['물리학Ⅱ',false,false],['언어와매체',false,false]
+ ],
+ '5':[
+  ['환경',true,true],['과학과제연구',true,true],['인공지능수학',false,false],
+  ['화학Ⅱ',false,false],['공강',true,true],['공강',true,true],['생명과학Ⅱ',true,false]
+ ]
+};
+const DAY_NAMES={1:'월요일',2:'화요일',3:'수요일',4:'목요일',5:'금요일'};
+
+function fixedSchoolMap(){
+ const out={};
+ Object.entries(SCHOOL_TIMETABLE).forEach(([day,rows])=>{
+  out[day]=rows.map((r,i)=>({
+   id:`school-${day}-${i+1}`,
+   period:i+1,time:SCHOOL_PERIOD_TIMES[i+1],
+   school:r[0],selfStudy:r[1],device:r[2],
+   study:r[1]?(r[2]?'전자기기 자습':'종이 자습'):'학교 수업'
+  }))
+ });
+ return out
+}
+function schoolMap(){return get('p11122_v2_school',fixedSchoolMap())}
+function schoolScheduleForDate(date){
+ const day=parse(date).getDay(),arr=schoolMap()[String(day)]||[];
+ return arr.map(p=>({
+  id:`date-${date}-p${p.period}`,
+  period:p.period,time:p.time,
+  school:`${p.period}교시 · ${p.school}${p.selfStudy?' · 자습':''}${p.selfStudy?(p.device?' · 전자기기 가능':' · 전자기기 불가'):''}`,
+  study:p.study||(p.selfStudy?(p.device?'전자기기 자습':'종이 자습'):'학교 수업'),
+  selfStudy:Boolean(p.selfStudy),device:Boolean(p.device),done:false
+ }))
+}
+function renderSchoolWeekGrid(){
+ const map=schoolMap(),days=['1','2','3','4','5'];
+ let self=0,device=0,paper=0;
+ days.forEach(d=>(map[d]||[]).forEach(p=>{if(p.selfStudy){self++;if(p.device)device++;else paper++}}));
+ $('#schoolSelfStudyCount').textContent=self;$('#schoolDeviceCount').textContent=device;$('#schoolPaperCount').textContent=paper;
+ $('#schoolWeekGrid').innerHTML=[1,2,3,4,5,6,7].map(period=>{
+  const cells=days.map(day=>{
+   const p=(map[day]||[]).find(x=>Number(x.period)===period)||{};
+   return `<td><div class="school-cell"><div class="period-time">${esc(p.time||'')}</div><strong>${esc(p.school||'')}</strong><div class="school-cell-tags">${p.selfStudy?'<span class="school-tag self">자습</span>':''}${p.selfStudy?(p.device?'<span class="school-tag device">전자기기</span>':'<span class="school-tag paper">종이</span>'):''}</div></div></td>`
+  }).join('');
+  return `<tr><th>${period}교시</th>${cells}</tr>`
+ }).join('')
+}
+function renderSchool(){
+ renderSchoolWeekGrid();
+ const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||[];
+ $('#schoolEditor').innerHTML=arr.map((p,i)=>`<div class="school-editor-slot" data-i="${i}">
+   <div><b>${p.period}교시</b><div class="task-meta">${esc(p.time)}</div></div>
+   <div><b>${esc(p.school)}</b><div class="school-editor-meta">${p.selfStudy?'<span class="school-tag self">자습 가능</span>':''}${p.selfStudy?(p.device?'<span class="school-tag device">전자기기 가능</span>':'<span class="school-tag paper">전자기기 불가</span>'):''}</div></div>
+   <input class="input school-study-input" value="${esc(p.study||'')}" ${p.selfStudy?'':'disabled'} placeholder="${p.selfStudy?'실제 자습 내용':'학교 수업'}">
+  </div>`).join('');
+ $$('#schoolEditor .school-editor-slot').forEach(row=>{
+  const i=Number(row.dataset.i),inp=row.querySelector('.school-study-input');
+  if(inp)inp.onchange=()=>{arr[i].study=inp.value;map[day]=arr;set('p11122_v2_school',map)}
+ })
+}
+$('#schoolDay').onchange=renderSchool;
+$('#restoreSchool')?.addEventListener('click',()=>{
+ if(!confirm('학교 시간표와 기본 자습 표시를 확정본으로 복원할까요?'))return;
+ set('p11122_v2_school',fixedSchoolMap());renderSchool()
+});
+$('#autoArrange').onclick=()=>{
+ const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||[];
+ const next=nextUnfinishedLectureLabels(12);
+ let li=0,paperOrder=['경제 마더텅','사회문화 실모·오답 분석','국어 기출 적용','수학 종이 문제풀이'],pi=0;
+ arr.forEach(p=>{
+  if(!p.selfStudy)return;
+  if(p.device)p.study=next[li++]||'전자기기 자습';
+  else p.study=paperOrder[pi++%paperOrder.length]
+ });
+ map[day]=arr;set('p11122_v2_school',map);renderSchool()
+};
 
 const COURSE_META={
- 'Origin':{deadline:'2026-08-08',dailyTarget:3},
+ 'Origin':{deadline:'2026-08-10',dailyTarget:3},
  'Predator 독서':{deadline:'2026-08-22',dailyTarget:2},
- 'Predator 문학':{deadline:'2026-08-22',dailyTarget:2},
- 'W.O.W':{deadline:'2026-08-31',dailyTarget:2},
- 'LEAD IN':{deadline:'2026-08-12',dailyTarget:2},
+ 'Predator 문학':{deadline:'2026-08-27',dailyTarget:2},
+ 'Predator 독서 W.O.W':{deadline:'2026-09-01',dailyTarget:2},
+ 'LEAD IN':{deadline:'2026-08-14',dailyTarget:2},
  'CORE':{deadline:'2026-08-29',dailyTarget:1},
- '마더텅':{deadline:'2026-08-31',dailyTarget:1},
+ '마더텅':{deadline:'2026-09-01',dailyTarget:1},
  'LIM IT':{deadline:'2026-08-10',dailyTarget:2},
  '사문 실모':{deadline:'2026-09-01',dailyTarget:1},
  '오르새 수학':{deadline:'2026-08-31',dailyTarget:1},
  '영어 일일 루틴':{deadline:'2026-09-01',dailyTarget:1}
 };
+const COURSE_TOTALS={
+ 'Origin':14,'Predator 독서':32,'Predator 문학':38,'Predator 독서 W.O.W':56,
+ 'LEAD IN':29,'CORE':7,'마더텅':25,'LIM IT':30
+};
 function courseData(){
- const base={kor:[{name:'Origin',done:0,total:14,note:'우선 완강'},{name:'Predator 독서',done:0,total:32,note:'Origin 이후'},{name:'Predator 문학',done:0,total:38,note:'독서와 병행'},{name:'W.O.W',done:0,total:56,note:'전체 완주 대상'}],eco:[{name:'LEAD IN',done:12,total:29,note:'13강부터 재개'},{name:'CORE',done:0,total:0,note:'LEAD IN 후 자료 분석'},{name:'마더텅',done:0,total:0,note:'강의와 병행'}],soc:[{name:'LIM IT',done:25,total:0,note:'총강 수 확인 필요 · 26강부터 재개'},{name:'사문 실모',done:0,total:0,note:'실제 완강 확인 후 하루 1회+분석'}],other:[{name:'오르새 수학',done:0,total:0,note:'세부 진도 추후 확정'},{name:'영어 일일 루틴',done:0,total:0,note:'매일 50~60분'}]};
+ const base={
+  kor:[
+   {name:'Origin',done:0,total:14,note:'All Of KICE 첫 과정'},
+   {name:'Predator 독서',done:0,total:32,note:'All Of KICE 독서'},
+   {name:'Predator 문학',done:0,total:38,note:'All Of KICE 문학'},
+   {name:'Predator 독서 W.O.W',done:0,total:56,note:'All Of KICE 독서 W.O.W'}
+  ],
+  eco:[
+   {name:'LEAD IN',done:12,total:29,note:'13강부터 재개'},
+   {name:'CORE',done:0,total:7,note:'LEAD IN 후 자료 분석'},
+   {name:'마더텅',done:0,total:25,note:'빨간 마더텅 · 강의와 병행'}
+  ],
+  soc:[
+   {name:'LIM IT',done:25,total:30,note:'26~30강 남음'},
+   {name:'사문 실모',done:0,total:0,note:'LIM IT 완강 후 하루 1회+분석'}
+  ],
+  other:[
+   {name:'오르새 수학',done:0,total:0,note:'세부 진도 추후 확정'},
+   {name:'영어 일일 루틴',done:0,total:0,note:'매일 50~60분'}
+  ]
+ };
  const stored=get('p11122_v2_courses',base);
  Object.keys(base).forEach(key=>{
-   if(!Array.isArray(stored[key]))stored[key]=base[key];
-   stored[key]=stored[key].map(c=>({...COURSE_META[c.name],...c}));
+  if(!Array.isArray(stored[key]))stored[key]=base[key];
+  const knownNames=new Set(base[key].map(x=>x.name));
+  stored[key]=stored[key].map(c=>{
+   let name=c.name==='W.O.W'?'Predator 독서 W.O.W':c.name;
+   return {...COURSE_META[name],...c,name,total:COURSE_TOTALS[name]??c.total}
+  });
+  base[key].forEach(b=>{if(!stored[key].some(c=>c.name===b.name))stored[key].push({...COURSE_META[b.name],...b})});
  });
  return stored
 }
@@ -123,7 +248,7 @@ function renderCourseBox(sel,arr,key){
    const deadline=prompt(`${c.name} 목표 완료일 (YYYY-MM-DD)`,c.deadline||'2026-08-31');if(deadline===null)return;
    const daily=prompt(`${c.name} 하루 현실 기준량`,c.dailyTarget||1);if(daily===null)return;
    c.done=Number(done||0);c.total=Number(total||0);c.deadline=deadline;c.dailyTarget=Number(daily||0);
-   const all=courseData();all[key]=arr;set('p11122_v2_courses',all);renderCourses()
+   const all=courseData();all[key]=arr;set('p11122_v2_courses',all);syncLectureStateFromCourseProgress(c);renderCourses();if($('#lectures'))renderLectures()
  })
 }
 
@@ -145,7 +270,7 @@ function carryOne(from,id,action){const m=allTasks(),task=m[from]?.find(t=>t.id=
 
 function exportData(){const data={app:'PROJECT11122',version:VERSION,exportedAt:new Date().toISOString(),storage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('p11122'))data.storage[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PROJECT11122_backup_${ymd(now())}.json`;a.click();URL.revokeObjectURL(a.href)}
 $('#exportData').onclick=$('#backupQuick').onclick=exportData;$('#importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=='PROJECT11122')throw Error();if(!confirm('현재 기록을 백업으로 덮어쓸까요?'))return;Object.entries(d.storage).forEach(([k,v])=>localStorage.setItem(k,v));location.reload()}catch{alert('PROJECT 11122 백업 파일이 아닙니다.')}};
-$('#vacationGoal').value=settings().vacationGoal;$('#schoolGoal').value=settings().schoolGoal;$('#saveSettings').onclick=()=>{const st=settings();st.vacationGoal=Number($('#vacationGoal').value||10.8);st.schoolGoal=Number($('#schoolGoal').value||9.5);set('p11122_v2_settings',st);alert('저장했습니다.');renderDashboard()};$('#resetAll').onclick=()=>{if(prompt('전체 기록을 지우려면 RESET을 입력하세요.')==='RESET'){Object.keys(localStorage).filter(k=>k.startsWith('p11122')).forEach(k=>localStorage.removeItem(k));location.reload()}};
+$('#vacationGoal').value=settings().vacationGoal;$('#schoolGoal').value=settings().schoolGoal;if($('#lectureDailyCap'))$('#lectureDailyCap').value=settings().lectureDailyCap||5;$('#saveSettings').onclick=()=>{const st=settings();st.vacationGoal=Number($('#vacationGoal').value||10.8);st.schoolGoal=Number($('#schoolGoal').value||9.5);st.lectureDailyCap=Number($('#lectureDailyCap')?.value||5);set('p11122_v2_settings',st);alert('저장했습니다.');renderDashboard()};$('#resetAll').onclick=()=>{if(prompt('전체 기록을 지우려면 RESET을 입력하세요.')==='RESET'){Object.keys(localStorage).filter(k=>k.startsWith('p11122')).forEach(k=>localStorage.removeItem(k));location.reload()}};
 
 
 /* ========================= v2.3 DAILY MANAGER ========================= */
@@ -280,10 +405,12 @@ function overallFinishStatus(){
  const unknown=rows.filter(x=>x.forecast.state==='unknown').length;
  const danger=rows.filter(x=>x.forecast.state==='danger').length;
  const tight=rows.filter(x=>x.forecast.state==='tight').length;
+ const lp=lectureFinishPressure();
+ if(lp.state==='danger')return{state:'danger',label:'현재 계획으로 완주 위험',detail:`남은 인강 ${lp.remaining}강 · 하루 ${lp.perDay.toFixed(1)}강 필요(계획 상한 ${lp.cap}강). 문제풀이·수학·영어 시간은 별도입니다.`};
  if(danger)return{state:'danger',label:'현재 계획으로 완주 위험',detail:`위험 ${danger}개 · 빡빡 ${tight}개 · 검증 불가 ${unknown}개`};
  if(unknown)return{state:'unknown',label:'아직 완주 확인 불가',detail:`총량 미입력 ${unknown}개가 있어 반드시 끝난다고 판단할 수 없습니다.`};
- if(tight)return{state:'tight',label:'완주 가능하지만 빡빡함',detail:`빡빡한 과정 ${tight}개가 있어 매일 진도 확인이 필요합니다.`};
- return{state:'ok',label:'현재 입력 기준 완주 가능',detail:'모든 입력 과정이 목표일 안에 들어옵니다.'}
+ if(lp.state==='tight'||tight)return{state:'tight',label:'완주 가능하지만 빡빡함',detail:`남은 인강 하루 ${lp.perDay.toFixed(1)}강 필요 · 빡빡한 과정 ${tight}개`};
+ return{state:'ok',label:'현재 입력 기준 완주 가능',detail:`남은 인강 하루 ${lp.perDay.toFixed(1)}강 필요 · 입력된 과정이 목표일 안에 들어옵니다.`}
 }
 function latestGrades(subject){
  const list=[];
@@ -314,7 +441,7 @@ function renderFeasibility(){
 function renderFeasibilityQuick(){
  if(!$('#feasibilityQuick'))return;
  const f=overallFinishStatus(),grades=SUBJECTS.map(gradeState),reached=grades.filter(x=>x.state==='ok'||x.state==='tight').length;
- $('#feasibilityQuick').innerHTML=`<b>${f.label}</b><br>${f.detail}<br><br>11122 최근 등급 확인: ${reached}/5과목 · 등급 미입력은 실모 기록에서 추가`
+ const lp=lectureFinishPressure();$('#feasibilityQuick').innerHTML=`<b>${f.label}</b><br>${f.detail}<br><br>인강: ${lp.remaining}강 남음 · 하루 ${lp.perDay.toFixed(1)}강 필요<br>11122 최근 등급 확인: ${reached}/5과목 · 등급 미입력은 실모 기록에서 추가`
 }
 
 function validatePatch(p){
@@ -580,8 +707,297 @@ $('#finishCloseDay')?.addEventListener('click',()=>{
  alert('오늘 마감을 저장했습니다.')
 });
 
+
+/* ========================= v3.0 FINAL · LECTURE VENDING ========================= */
+const LECTURE_COURSES=[
+ {key:'kor-origin',subject:'국어',provider:'김승리',series:'All Of KICE',name:'Origin',display:'All Of KICE Origin',courseName:'Origin',total:14},
+ {key:'kor-pred-read',subject:'국어',provider:'김승리',series:'All Of KICE',name:'Predator 독서',display:'All Of KICE Predator 독서',courseName:'Predator 독서',total:32},
+ {key:'kor-pred-lit',subject:'국어',provider:'김승리',series:'All Of KICE',name:'Predator 문학',display:'All Of KICE Predator 문학',courseName:'Predator 문학',total:38},
+ {key:'kor-wow',subject:'국어',provider:'김승리',series:'All Of KICE',name:'Predator 독서 W.O.W',display:'All Of KICE Predator 독서 W.O.W',courseName:'Predator 독서 W.O.W',total:56},
+ {key:'eco-leadin',subject:'경제',provider:'우영호',series:'경제',name:'LEAD IN',display:'LEAD IN',courseName:'LEAD IN',total:29},
+ {key:'eco-core',subject:'경제',provider:'우영호',series:'경제',name:'CORE',display:'CORE',courseName:'CORE',total:7},
+ {key:'soc-limit',subject:'사회문화',provider:'임정환',series:'사회문화',name:'LIM IT',display:'LIM IT',courseName:'LIM IT',total:30}
+];
+function customLectureCourses(){return get('p11122_v30_custom_lectures',[])}
+function lectureCourses(){return [...LECTURE_COURSES,...customLectureCourses()]}
+function lectureId(key,n){return `${key}::${n}`}
+function lectureState(){return get('p11122_v30_lecture_state',{})}
+function lectureCart(){return get('p11122_v30_lecture_cart',[])}
+function saveLectureCart(v){set('p11122_v30_lecture_cart',[...new Set(v)])}
+function lectureCourse(key){return lectureCourses().find(c=>c.key===key)}
+function lectureInfo(id){
+ const [key,n]=String(id).split('::'),course=lectureCourse(key);
+ return course?{...course,n:Number(n),id}:null
+}
+function lectureCompleted(id){return Boolean(lectureState()[id]?.completed)}
+function lecturePlannedDate(id){return lectureState()[id]?.plannedDate||''}
+function lectureCourseDone(course){
+ let n=0;for(let i=1;i<=course.total;i++)if(lectureCompleted(lectureId(course.key,i)))n++;return n
+}
+function findCourseProgress(name){
+ const d=courseData();
+ for(const arr of Object.values(d)){const c=arr.find(x=>x.name===name);if(c)return c}
+ return null
+}
+function setCourseProgressDone(name,done){
+ const d=courseData();
+ for(const key of Object.keys(d)){
+  const c=d[key].find(x=>x.name===name);
+  if(c){c.done=done;set('p11122_v2_courses',d);return}
+ }
+}
+function syncCourseProgressFromLectures(){
+ lectureCourses().forEach(c=>setCourseProgressDone(c.courseName,lectureCourseDone(c)))
+}
+function syncLectureStateFromCourseProgress(courseProgress){
+ const lc=lectureCourses().find(x=>x.courseName===courseProgress.name);if(!lc)return;
+ const st=lectureState(),done=Math.max(0,Math.min(lc.total,Number(courseProgress.done||0)));
+ for(let i=1;i<=lc.total;i++){
+  const id=lectureId(lc.key,i),old=st[id]||{};
+  if(i<=done)st[id]={...old,completed:true,plannedDate:''};
+  else if(old.completed)st[id]={...old,completed:false}
+ }
+ set('p11122_v30_lecture_state',st)
+}
+function inferCompletedFromOldTasks(st){
+ const courseMatchers=[
+  ['kor-origin',/Origin\s*(\d+)(?:~(\d+))?강/i],
+  ['kor-pred-read',/Predator\s*독서\s*(\d+)(?:~(\d+))?강/i],
+  ['kor-pred-lit',/Predator\s*문학\s*(\d+)(?:~(\d+))?강/i],
+  ['kor-wow',/(?:W\.?O\.?W|Predator\s*독서\s*W\.?O\.?W)\s*(\d+)(?:~(\d+))?강/i],
+  ['eco-leadin',/LEAD IN\s*(\d+)(?:~(\d+))?강/i],
+  ['eco-core',/CORE\s*(\d+)(?:~(\d+))?강/i],
+  ['soc-limit',/LIM IT\s*(\d+)(?:~(\d+))?강/i]
+ ];
+ Object.values(allTasks()).flat().filter(t=>t.done).forEach(t=>{
+  const text=`${t.name||''} ${t.material||''}`;
+  for(const [key,re] of courseMatchers){
+   const m=text.match(re);if(!m)continue;
+   const c=lectureCourse(key),a=Number(m[1]),b=Number(m[2]||m[1]);
+   for(let n=a;n<=Math.min(b,c.total);n++)st[lectureId(key,n)]={...(st[lectureId(key,n)]||{}),completed:true,plannedDate:''}
+   break
+  }
+ })
+ return st
+}
+function migrateV30(){
+ if(get('p11122_v30_migrated',false))return;
+ set('p11122_v2_school',fixedSchoolMap());
+
+ const d=courseData();
+ Object.values(d).flat().forEach(c=>{
+  if(COURSE_TOTALS[c.name])c.total=COURSE_TOTALS[c.name]
+ });
+ set('p11122_v2_courses',d);
+
+ let st=lectureState();
+ lectureCourses().forEach(lc=>{
+  const progress=findCourseProgress(lc.courseName),done=Math.min(lc.total,Number(progress?.done||0));
+  for(let n=1;n<=done;n++){
+   const id=lectureId(lc.key,n);st[id]={...(st[id]||{}),completed:true,plannedDate:''}
+  }
+ });
+ st=inferCompletedFromOldTasks(st);
+ set('p11122_v30_lecture_state',st);
+ syncCourseProgressFromLectures();
+
+ const s=settings();if(!s.lectureDailyCap)s.lectureDailyCap=5;set('p11122_v2_settings',s);
+ set('p11122_v30_migrated',true)
+}
+function studyDaysToExam(){
+ let start=parse(ymd(now())),end=parse('2026-09-01'),count=0;
+ if(start>end)return 0;
+ for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1))if(d.getDay()!==0)count++;
+ return count
+}
+function lectureFinishPressure(){
+ const total=lectureCourses().reduce((s,c)=>s+c.total,0);
+ const done=lectureCourses().reduce((s,c)=>s+lectureCourseDone(c),0);
+ const remaining=Math.max(0,total-done),days=studyDaysToExam(),perDay=days?remaining/days:remaining;
+ const cap=Number(settings().lectureDailyCap||5),ratio=cap?perDay/cap:99;
+ return{total,done,remaining,days,perDay,cap,state:remaining===0?'ok':ratio<=.85?'ok':ratio<=1?'tight':'danger'}
+}
+function markLecturesCompleted(ids,completed=true){
+ const st=lectureState(),cart=lectureCart().filter(id=>!ids.includes(id));
+ ids.forEach(id=>{
+  const old=st[id]||{};
+  st[id]={...old,completed:Boolean(completed),plannedDate:completed?'':(old.plannedDate||'')}
+ });
+ set('p11122_v30_lecture_state',st);saveLectureCart(cart);syncCourseProgressFromLectures()
+}
+function reconcileLecturePlans(){
+ const st=lectureState();
+ Object.keys(st).forEach(id=>{if(!st[id].completed)st[id].plannedDate=''});
+ Object.entries(allTasks()).forEach(([date,ts])=>ts.forEach(t=>(t.lectureIds||[]).forEach(id=>{
+  if(!st[id]?.completed)st[id]={...(st[id]||{}),completed:false,plannedDate:date}
+ })));
+ set('p11122_v30_lecture_state',st)
+}
+function nextUnfinishedLectureLabels(limit=10){
+ const out=[];
+ for(const c of lectureCourses()){
+  for(let n=1;n<=c.total;n++){
+   const id=lectureId(c.key,n);
+   if(!lectureCompleted(id)){out.push(`${c.provider} ${c.display} ${n}강`);if(out.length>=limit)return out}
+  }
+ }
+ return out
+}
+function fillLectureCourseFilter(){
+ if(!$('#lectureCourseFilter'))return;
+ const subject=$('#lectureSubjectFilter').value,sel=$('#lectureCourseFilter').value;
+ const list=lectureCourses().filter(c=>subject==='all'||c.subject===subject);
+ $('#lectureCourseFilter').innerHTML='<option value="all">전체 강좌</option>'+list.map(c=>`<option value="${c.key}">${esc(c.display)}</option>`).join('');
+ if(list.some(c=>c.key===sel))$('#lectureCourseFilter').value=sel
+}
+function toggleLectureCartId(id){
+ if(lectureCompleted(id))return;
+ const cart=lectureCart(),i=cart.indexOf(id);
+ if(i>=0)cart.splice(i,1);else cart.push(id);
+ saveLectureCart(cart);renderLectures()
+}
+function addNextLectures(key,count){
+ const c=lectureCourse(key),cart=lectureCart();let added=0;
+ for(let n=1;n<=c.total&&added<count;n++){
+  const id=lectureId(key,n);
+  if(!lectureCompleted(id)&&!cart.includes(id)){cart.push(id);added++}
+ }
+ saveLectureCart(cart);renderLectures()
+}
+function renderLectures(){
+ if(!$('#lectureCatalog'))return;
+ reconcileLecturePlans();fillLectureCourseFilter();
+ const pressure=lectureFinishPressure(),cart=lectureCart(),subject=$('#lectureSubjectFilter').value,courseFilter=$('#lectureCourseFilter').value,incomplete=$('#lectureIncompleteOnly').checked;
+ $('#lectureTotal').textContent=pressure.total+'강';$('#lectureDone').textContent=pressure.done+'강';$('#lectureRemain').textContent=pressure.remaining+'강';$('#lecturePerDay').textContent=pressure.days?pressure.perDay.toFixed(1)+'강':'-';
+ $('#lecturePressureBadge').textContent=pressure.state==='ok'?'현재 속도 가능':pressure.state==='tight'?'상한선 근접':'완주 위험';
+ $('#lecturePressureBadge').className='badge lecture-pressure-'+pressure.state;
+ $('#lecturePressureText').innerHTML=`9모 전 집중 학습일 ${pressure.days}일 기준, <b>강의만 하루 ${pressure.perDay.toFixed(1)}강</b>이 필요합니다. 현재 개인 계획 상한은 하루 ${pressure.cap}강입니다. 문제풀이·수학·영어 시간은 별도이므로 이 수치는 매일 다시 확인합니다.`;
+
+ const courses=lectureCourses().filter(c=>(subject==='all'||c.subject===subject)&&(courseFilter==='all'||c.key===courseFilter));
+ $('#lectureCatalog').innerHTML=courses.map(c=>{
+  const done=lectureCourseDone(c),pct=Math.round(done/c.total*100);
+  const buttons=[];
+  for(let n=1;n<=c.total;n++){
+   const id=lectureId(c.key,n),isDone=lectureCompleted(id),isCart=cart.includes(id),planned=lecturePlannedDate(id);
+   if(incomplete&&isDone)continue;
+   buttons.push(`<button class="lecture-btn ${isDone?'completed':''} ${isCart?'cart':''} ${planned?'planned':''}" data-id="${id}">
+    <button class="lecture-complete-toggle" data-complete-id="${id}" title="완료 상태">${isDone?'✓':'○'}</button>
+    <b>${n}강</b>
+    <small>${isDone?'완료':isCart?'장바구니':planned?planned+' 예정':'미수강'}</small>
+   </button>`)
+  }
+  return `<section class="lecture-course">
+    <div class="lecture-course-head">
+      <div class="lecture-course-title"><b>${esc(c.provider)} · ${esc(c.display)}</b><span>${done}/${c.total}강 완료 · ${c.total-done}강 남음</span><div class="lecture-course-progress"><i style="width:${pct}%"></i></div></div>
+      <div class="lecture-course-actions"><button class="btn ghost small next-lecture-btn" data-key="${c.key}" data-count="2">다음 2강 담기</button><button class="btn ghost small next-lecture-btn" data-key="${c.key}" data-count="4">다음 4강 담기</button>${c.custom?`<button class="btn danger small delete-custom-course" data-key="${c.key}">강좌 삭제</button>`:''}</div>
+    </div>
+    <div class="lecture-grid">${buttons.length?buttons.join(''):'<div class="note">표시할 미수강 강의가 없습니다.</div>'}</div>
+  </section>`
+ }).join('');
+
+ $$('.lecture-btn[data-id]').forEach(b=>b.onclick=e=>{if(e.target.closest('.lecture-complete-toggle'))return;toggleLectureCartId(b.dataset.id)});
+ $$('.lecture-complete-toggle').forEach(b=>b.onclick=e=>{
+  e.stopPropagation();const id=b.dataset.completeId;markLecturesCompleted([id],!lectureCompleted(id));renderCourses();renderLectures();renderFeasibility()
+ });
+ $$('.next-lecture-btn').forEach(b=>b.onclick=()=>addNextLectures(b.dataset.key,Number(b.dataset.count)));
+ $$('.delete-custom-course').forEach(b=>b.onclick=e=>{
+  e.stopPropagation();
+  const key=b.dataset.key,c=lectureCourse(key);
+  if(!c||!confirm(`${c.display} 강좌와 관련된 완료·계획 표시를 삭제할까요?`))return;
+  const custom=customLectureCourses().filter(x=>x.key!==key);set('p11122_v30_custom_lectures',custom);
+  const st=lectureState();Object.keys(st).filter(id=>id.startsWith(key+'::')).forEach(id=>delete st[id]);set('p11122_v30_lecture_state',st);
+  saveLectureCart(lectureCart().filter(id=>!id.startsWith(key+'::')));renderLectures()
+ });
+
+ $('#lectureCartCount').textContent=cart.length+'강';
+ $('#lectureCartList').innerHTML=cart.length?cart.map(id=>{const x=lectureInfo(id);return `<div class="cart-lecture"><div><b>${esc(x.display)} ${x.n}강</b><span>${esc(x.provider)} · ${esc(x.subject)}</span></div><button class="cart-remove" data-id="${id}">×</button></div>`}).join(''):'<div class="cart-empty">강의를 클릭하면 여기에 담깁니다.</div>';
+ $$('.cart-remove').forEach(b=>b.onclick=()=>toggleLectureCartId(b.dataset.id));
+
+ const date=$('#lecturePlanDate').value||selected||ymd(now());$('#lecturePlanDate').value=date;
+ const day=parse(date).getDay(),deviceSlots=day>=1&&day<=5?(schoolMap()[String(day)]||[]).filter(p=>p.selfStudy&&p.device).length:0;
+ $('#lectureCartSchoolHint').textContent=day>=1&&day<=5?`${DAY_NAMES[day]} 전자기기 가능 자습 ${deviceSlots}교시 · 장바구니 ${cart.length}강`:'주말·비등교일은 오늘 할 일에만 추가합니다.'
+}
+$('#lectureSubjectFilter')?.addEventListener('change',()=>{fillLectureCourseFilter();renderLectures()});
+$('#lectureCourseFilter')?.addEventListener('change',renderLectures);
+$('#lectureIncompleteOnly')?.addEventListener('change',renderLectures);
+$('#lecturePlanDate')?.addEventListener('change',renderLectures);
+$('#clearLectureCart')?.addEventListener('click',()=>{saveLectureCart([]);renderLectures()});
+
+function sortLectureIds(ids){
+ return [...ids].sort((a,b)=>{
+  const A=lectureInfo(a),B=lectureInfo(b),ca=lectureCourses().findIndex(c=>c.key===A.key),cb=lectureCourses().findIndex(c=>c.key===B.key);
+  return ca-cb||A.n-B.n
+ })
+}
+function groupLectureIds(ids){
+ const groups=[];
+ sortLectureIds(ids).forEach(id=>{
+  const x=lectureInfo(id),last=groups.at(-1);
+  if(last&&last.key===x.key&&last.numbers.at(-1)+1===x.n){last.ids.push(id);last.numbers.push(x.n)}
+  else groups.push({key:x.key,course:x,ids:[id],numbers:[x.n]})
+ });
+ return groups
+}
+function rangeLabel(nums){
+ if(nums.length===1)return`${nums[0]}강`;
+ return`${nums[0]}~${nums.at(-1)}강`
+}
+function buildLecturePlan(){
+ const date=$('#lecturePlanDate').value||selected,cart=lectureCart().filter(id=>!lectureCompleted(id));
+ if(!cart.length){alert('장바구니에 강의를 먼저 담아 주세요.');return}
+ const existing=tasksFor(date),existingIds=new Set(existing.flatMap(t=>t.lectureIds||[]));
+ const fresh=cart.filter(id=>!existingIds.has(id)),groups=groupLectureIds(fresh);
+ groups.forEach(g=>{
+  const c=g.course;
+  existing.push({
+   id:uid(),subject:c.subject,priority:'must',
+   name:`${c.display} ${rangeLabel(g.numbers)}`,
+   material:`${c.provider} · ${c.series}`,
+   note:'인강 자판기에서 담은 강의 · 수강 완료 시 강좌 진도 자동 반영',
+   duration:`${g.ids.length}강`,done:false,lectureIds:g.ids
+  })
+ });
+ saveTasks(date,existing);
+
+ const state=lectureState();fresh.forEach(id=>state[id]={...(state[id]||{}),completed:false,plannedDate:date});set('p11122_v30_lecture_state',state);
+
+ const day=parse(date).getDay();
+ let placed=0;
+ if(day>=1&&day<=5){
+  const school=schoolMap()[String(day)]||[],m=allSchedules();
+  let slots=schoolScheduleForDate(date);
+  const candidates=slots.filter(s=>s.selfStudy&&s.device);
+  sortLectureIds(fresh).forEach((id,i)=>{
+   if(i>=candidates.length)return;
+   const x=lectureInfo(id),slot=candidates[i];
+   slot.study=`${x.provider} ${x.display} ${x.n}강`;slot.lectureIds=[id];placed++
+  });
+  m[date]=slots;set('p11122_v2_schedules',m)
+ }
+ saveLectureCart([]);
+ selected=date;
+ renderDashboard();renderWeek();renderLectures();renderCourses();renderFeasibility();
+ navigate('dashboard');
+ const left=fresh.length-placed;
+ alert(`${date}에 ${fresh.length}강을 추가했습니다.${placed?`\n전자기기 자습 ${placed}교시에 자동 배치했습니다.`:''}${left>0?`\n나머지 ${left}강은 오늘 할 일에 추가했습니다.`:''}`)
+}
+
+$('#addCustomLectureCourse')?.addEventListener('click',()=>{
+ const subject=(prompt('과목명을 입력하세요. 예: 수학')||'').trim();if(!subject)return;
+ const provider=(prompt('강사 또는 제공자 이름을 입력하세요. 예: 오르새')||'').trim();if(!provider)return;
+ const display=(prompt('강좌명을 입력하세요.')||'').trim();if(!display)return;
+ const total=Number(prompt('전체 강의 수를 숫자로 입력하세요.'));if(!Number.isInteger(total)||total<1||total>300){alert('전체 강의 수는 1~300 사이의 정수로 입력해 주세요.');return}
+ const custom=customLectureCourses();
+ const key='custom-'+Date.now().toString(36);
+ custom.push({key,subject,provider,series:subject,name:display,display,courseName:'',total,custom:true});
+ set('p11122_v30_custom_lectures',custom);
+ $('#lectureSubjectFilter').value='all';$('#lectureCourseFilter').value='all';renderLectures();
+});
+
+$('#buildLecturePlan')?.addEventListener('click',buildLecturePlan);
+
 $('#todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});const dday=Math.ceil((EXAM_DATE-now())/86400000);$('#dday').textContent=dday>=0?'D-'+dday:'종료';
-migrateV21();migrateV23();renderDashboard();renderCondition();renderManager();renderWeek();renderSchool();renderCourses();renderTests();renderReport();renderHike();
+migrateV21();migrateV23();migrateV30();renderDashboard();renderCondition();renderManager();renderWeek();renderSchool();renderLectures();renderCourses();renderTests();renderReport();renderHike();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 
@@ -696,6 +1112,7 @@ function dailyReport(date=selected){
   c.symptoms?.length?`기타 상태: ${c.symptoms.join(', ')}`:'',
   '',
   `9모 전 완주 검증: ${finish.label}`,
+  `남은 인강: ${lectureFinishPressure().remaining}강 · 9모 전 하루 ${lectureFinishPressure().perDay.toFixed(1)}강 필요`,
   finish.detail,
   '',
   '완료 과제:',
