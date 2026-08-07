@@ -1,4 +1,4 @@
-const VERSION='4.0';
+const VERSION='4.1';
 const EXAM_DATE=new Date('2026-09-02T09:00:00');
 const SUBJECTS=['국어','수학','영어','사회문화','경제'];
 const PRIORITY_LABEL={must:'필수',should:'권장',extra:'여유'};
@@ -198,7 +198,7 @@ function renderCourseBox(sel,arr,key){
    const deadline=prompt(`${c.name} 목표 완료일 (YYYY-MM-DD)`,c.deadline||'2026-08-31');if(deadline===null)return;
    const daily=prompt(`${c.name} 하루 현실 기준량`,c.dailyTarget||1);if(daily===null)return;
    c.done=Number(done||0);c.total=Number(total||0);c.deadline=deadline;c.dailyTarget=Number(daily||0);
-   const all=courseData();all[key]=arr;set('p11122_v2_courses',all);syncLectureStateFromCourseProgress(c);renderCourses();if($('#lectures'))renderLectures()
+   const all=courseData();all[key]=arr;set('p11122_v2_courses',all);syncLectureStateFromCourseProgress(c);renderCourses();if($('#lectures'))renderLearningVending()
  })
 }
 
@@ -814,8 +814,21 @@ function addNextLectures(key,count){
  }
  saveLectureCart(cart);renderLearningVending()
 }
+
+function renderRegisteredLectureOverview(){
+ if(!$('#registeredLectureOverview'))return;
+ const courses=lectureCourses();
+ $('#registeredLectureOverview').innerHTML=`<div class="registered-overview-head"><b>등록된 인강 ${courses.length}개 강좌</b><span>총 ${courses.reduce((s,c)=>s+c.total,0)}강 · 완료 강의도 기본 표시</span></div><div class="registered-course-chips">${courses.map(c=>`<button class="registered-course-chip" data-course-key="${c.key}"><b>${esc(c.display)}</b><span>${lectureCourseDone(c)}/${c.total}강</span></button>`).join('')}</div>`;
+ $$('.registered-course-chip').forEach(b=>b.onclick=()=>{
+  $('#lectureSubjectFilter').value='all';
+  fillLectureCourseFilter();
+  $('#lectureCourseFilter').value=b.dataset.courseKey;
+  renderLearningVending()
+ })
+}
+
 function renderLectures(){
- if(!$('#lectureCatalog'))return;
+ if(!$('#lectureCatalog'))return;renderRegisteredLectureOverview();
  reconcileLecturePlans();fillLectureCourseFilter();
  const pressure=lectureFinishPressure(),cart=lectureCart(),subject=$('#lectureSubjectFilter').value,courseFilter=$('#lectureCourseFilter').value,incomplete=$('#lectureIncompleteOnly').checked;
  $('#lectureTotal').textContent=pressure.total+'강';$('#lectureDone').textContent=pressure.done+'강';$('#lectureRemain').textContent=pressure.remaining+'강';$('#lecturePerDay').textContent=pressure.days?pressure.perDay.toFixed(1)+'강':'-';
@@ -983,7 +996,7 @@ function generatePlanFor(date,showAlert=true){
  suggestions.forEach(s=>{if(!keys.has(s.autoKey)){current.push({id:uid(),...s,done:false});added++}});saveTasks(date,current);selected=date;renderDashboard();renderManager();if(showAlert)alert(`${date}에 ${added}개 계획을 추가했습니다.`);return added
 }
 function renderManager(){
- if(!$('#managerDate'))return;renderFeasibility();renderReverseRoadmap();renderUndoList();$('#managerDate').value=$('#managerDate').value||nextDateString(ymd(now()),1);
+ if(!$('#managerDate'))return;renderMaterials();renderFeasibility();renderReverseRoadmap();renderUndoList();$('#managerDate').value=$('#managerDate').value||nextDateString(ymd(now()),1);
  const date=$('#managerDate').value||nextDateString(ymd(now()),1),preview=managerSuggestions(date);
  $('#managerPreview').innerHTML=preview.map(x=>`<div class="manager-preview-item"><span class="priority ${x.priority}">${PRIORITY_LABEL[x.priority]}</span><span class="subject">${x.subject}</span><b>${esc(x.name)}</b><div class="task-meta">${esc(x.material)} · ${esc(x.duration)} · ${esc(x.note)}</div></div>`).join('');
  renderPrescriptions();refreshDailyReportText()

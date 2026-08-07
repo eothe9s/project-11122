@@ -206,3 +206,16 @@
 .book-mode-select{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0;padding:11px;border:1px solid var(--line);border-radius:11px;background:#f7f8fb}.book-mode-select label{margin:0}.block-checks{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0}.cart-kind{display:inline-block;padding:3px 6px;border-radius:99px;font-size:8px;font-weight:900;margin-right:5px}.cart-kind.lecture{background:var(--soft);color:var(--accent)}.cart-kind.book{background:var(--warnSoft);color:var(--warn)}.learning-overflow{color:var(--bad);font-weight:850}
 @media(max-width:900px){.saturday-grid{grid-template-columns:repeat(3,1fr)}.timeline-summary{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.settings-gear{right:12px;bottom:12px}.timeline-block{grid-template-columns:80px 1fr}.timeline-actions{grid-column:1/-1;justify-content:flex-start}.saturday-grid{grid-template-columns:1fr 1fr}.subunit-grid{grid-template-columns:1fr 1fr}}
+
+/* v4.1 restoration */
+.registered-course-overview{margin:0 0 14px;padding:12px;border-radius:13px;background:#f4f6fa}
+.registered-overview-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}
+.registered-overview-head b{font-size:11px}
+.registered-overview-head span{font-size:9px;color:var(--muted)}
+.registered-course-chips{display:flex;gap:6px;flex-wrap:wrap}
+.registered-course-chip{border:1px solid var(--line);border-radius:10px;background:#fff;padding:7px 9px;cursor:pointer;text-align:left}
+.registered-course-chip b{display:block;font-size:9px}
+.registered-course-chip span{display:block;margin-top:2px;font-size:8px;color:var(--muted)}
+.restored-materials-card{margin-top:16px}
+.restored-school-guide{margin-top:16px}
+.restored-school-guide summary{cursor:pointer;font-size:11px}

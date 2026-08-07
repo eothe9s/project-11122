@@ -1,7 +1,7 @@
 {
-  "name": "PROJECT 11122 FINAL v4",
+  "name": "PROJECT 11122 FINAL v4.1",
   "short_name": "11122",
-  "description": "11122 목표 통합 시간표·학습 자판기·문제집·수면·실모 관리 앱",
+  "description": "기존 기능을 보존한 통합 시간표·학습 자판기 입시 관리 앱",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
