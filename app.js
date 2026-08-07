@@ -1,4 +1,4 @@
-const VERSION='3.0';
+const VERSION='4.0';
 const EXAM_DATE=new Date('2026-09-02T09:00:00');
 const SUBJECTS=['국어','수학','영어','사회문화','경제'];
 const PRIORITY_LABEL={must:'필수',should:'권장',extra:'여유'};
@@ -54,11 +54,12 @@ function phase(date){if(date<='2026-08-01')return'사관학교 집중';if(date<=
 let selected=ymd(now())<'2026-08-02'?'2026-08-02':ymd(now());
 
 $$('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));
-function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const nav=$(`nav button[data-page="${page}"]`);if(nav)$('#pageTitle').textContent=nav.textContent;if(page==='manager')renderManager();if(page==='condition')renderCondition();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='lectures')renderLectures();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
+$('#settingsGear')?.addEventListener('click',()=>navigate('data'));
+function navigate(page){$$('.section').forEach(s=>s.classList.toggle('active',s.id===page));$$('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));const nav=$(`nav button[data-page="${page}"]`);$('#pageTitle').textContent=nav?nav.textContent:(page==='data'?'설정·백업':'PROJECT 11122');if(page==='manager')renderManager();if(page==='condition')renderCondition();if(page==='week')renderWeek();if(page==='school')renderSchool();if(page==='lectures')renderLearningVending();if(page==='courses')renderCourses();if(page==='tests')renderTests();if(page==='report')renderReport();if(page==='hike')renderHike()}
 
 function renderDashboard(){const ts=tasksFor(selected),slots=scheduleFor(selected),done=ts.filter(t=>t.done).length,rate=ts.length?Math.round(done/ts.length*100):0;$('#phaseBadge').textContent=phase(selected);const info=INITIAL_WEEK[selected],st=settings(),mode=info?.mode||(parse(selected).getDay()===0?'일요일 회복':'학기 모드');$('#modeText').textContent=mode;const goalOverrides=get('p11122_v23_goals',{});$('#goalHours').textContent=(goalOverrides[selected]??info?.goal??(parse(selected).getDay()===0?4.5:st.schoolGoal)).toFixed(1);$('#todayRate').textContent=rate+'%';$('#todayBar').style.width=rate+'%';const h=get('p11122_v2_hours',{});$('#hoursInput').value=h[selected]||'';const[ws,we]=weekBounds(parse(selected));let wh=0;for(let d=new Date(ws);d<=we;d.setDate(d.getDate()+1))wh+=Number(h[ymd(d)]||0);$('#weekStudy').textContent=wh.toFixed(1);renderTasks(ts);renderSchedule(slots);renderConditionQuick();renderFeasibilityQuick();renderMinimumSuccess()}
-function renderTasks(ts){const box=$('#todayTasks');box.innerHTML='';ts.forEach(t=>{const e=document.createElement('div');e.className='task'+(t.done?' done':'');e.innerHTML=`<div class="task-main"><input type="checkbox" ${t.done?'checked':''}><div><div><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.name)}</span></div><div class="task-meta">${esc(t.material)}${t.duration?' · '+esc(t.duration):''}${t.note?' · '+esc(t.note):''}</div></div><div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div></div>`;e.querySelector('input').onchange=x=>{t.done=x.target.checked;if(t.done&&Array.isArray(t.lectureIds))markLecturesCompleted(t.lectureIds,true);saveTasks(selected,ts);renderDashboard();if($('#lectures')?.classList.contains('active'))renderLectures()};e.querySelector('.edit').onclick=()=>openTask(t);e.querySelector('.del').onclick=()=>{if(confirm('삭제할까요?')){saveTasks(selected,ts.filter(x=>x.id!==t.id));renderDashboard()}};box.appendChild(e)})}
-function renderSchedule(slots){const box=$('#todaySchedule');box.innerHTML=slots.length?'':'<div class="note">시간표가 없습니다.</div>';slots.forEach(s=>{const e=document.createElement('div');e.className='slot'+(s.done?' done':'');e.innerHTML=`<div class="time">${esc(s.time)}</div><div class="school">${esc(s.school)}</div><div class="study">${esc(s.study)}</div><div class="slot-actions"><label><input type="checkbox" ${s.done?'checked':''}> 완료</label></div>`;e.querySelector('input').onchange=x=>{s.done=x.target.checked;saveSchedules(selected,slots);renderDashboard()};box.appendChild(e)})}
+function renderTasks(ts){const box=$('#todayTasks');box.innerHTML='';ts.forEach(t=>{const e=document.createElement('div');e.className='task'+(t.done?' done':'');e.innerHTML=`<div class="task-main"><input type="checkbox" ${t.done?'checked':''}><div><div><span class="priority ${t.priority}">${PRIORITY_LABEL[t.priority]}</span><span class="subject">${esc(t.subject)}</span><span class="task-title">${esc(t.name)}</span></div><div class="task-meta">${esc(t.material)}${t.duration?' · '+esc(t.duration):''}${t.note?' · '+esc(t.note):''}</div></div><div class="task-actions"><button class="btn ghost small edit">수정</button><button class="btn danger small del">삭제</button></div></div>`;e.querySelector('input').onchange=x=>{t.done=x.target.checked;if(t.done&&Array.isArray(t.lectureIds))markLecturesCompleted(t.lectureIds,true);if(t.done&&t.bookItem?.mode==='subunit'&&t.bookItem.subunit)markBookSubunitCompleted(t.bookItem.bookId,t.bookItem.subunit,true);saveTasks(selected,ts);renderDashboard();if($('#lectures')?.classList.contains('active'))renderLearningVending()};e.querySelector('.edit').onclick=()=>openTask(t);e.querySelector('.del').onclick=()=>{if(confirm('삭제할까요?')){saveTasks(selected,ts.filter(x=>x.id!==t.id));renderDashboard()}};box.appendChild(e)})}
+function renderSchedule(slots){const box=$('#todaySchedule');box.innerHTML=slots.length?'':'<div class="note">시간표가 없습니다.</div>';slots.forEach(s=>{const e=document.createElement('div');e.className='slot'+(s.done?' done':'');const study=genericStudyText(s);e.innerHTML=`<div class="time">${esc(s.time||'')}</div><div class="school">${s.locked?'🔒 ':''}${esc(s.name||s.school||'')}</div><div class="study">${esc(study||(s.selfStudy?'할 일 미배정':s.study||''))}</div><div class="slot-actions">${s.selfStudy?'<button class="btn ghost small slot-edit-study">수정</button>':''}<label><input type="checkbox" ${s.done?'checked':''}> 완료</label></div>`;const chk=e.querySelector('input');if(chk)chk.onchange=x=>{s.done=x.target.checked;saveTimeline(selected,slots);renderDashboard()};const edit=e.querySelector('.slot-edit-study');if(edit)edit.onclick=()=>{const v=prompt('이 블록에서 할 일을 입력하세요.',study);if(v===null)return;s.study=v.trim();saveTimeline(selected,slots);renderDashboard()};box.appendChild(e)})}
 $('#newTask').onclick=()=>openTask();
 function openTask(t=null){$('#taskModalTitle').textContent=t?'할 일 수정':'할 일 추가';$('#taskId').value=t?.id||'';$('#taskSubject').value=t?.subject||'국어';$('#taskPriority').value=t?.priority||'must';$('#taskDuration').value=t?.duration||'';$('#taskName').value=t?.name||'';$('#taskMaterial').value=t?.material||'';$('#taskNote').value=t?.note||'';$('#taskModal').classList.add('show')}
 $('#saveTask').onclick=()=>{const ts=tasksFor(selected),id=$('#taskId').value,obj={id:id||uid(),subject:$('#taskSubject').value,priority:$('#taskPriority').value,duration:$('#taskDuration').value,name:$('#taskName').value.trim()||'새 할 일',material:$('#taskMaterial').value.trim(),note:$('#taskNote').value.trim(),done:false};const i=ts.findIndex(t=>t.id===id);if(i>=0){obj.done=ts[i].done;ts[i]=obj}else ts.push(obj);saveTasks(selected,ts);$('#taskModal').classList.remove('show');renderDashboard()};
@@ -71,99 +72,48 @@ $('#selectedDate').onchange=e=>{selected=e.target.value;updateSelectedSummary()}
 function updateSelectedSummary(){const info=INITIAL_WEEK[selected],ts=tasksFor(selected);$('#selectedSummary').innerHTML=`<b>${selected} · ${info?.mode||phase(selected)}</b><br>${ts.filter(t=>t.priority==='must').length}개 필수, ${ts.filter(t=>t.priority==='should').length}개 권장, ${ts.filter(t=>t.priority==='extra').length}개 여유 과제`}
 $('#openSelected').onclick=()=>{navigate('dashboard');renderDashboard()};$('#printPlan').onclick=()=>window.print();
 
-const SCHOOL_PERIOD_TIMES={
- 1:'08:40~09:50',2:'10:00~11:10',3:'11:20~12:30',
- 4:'13:30~14:40',5:'14:50~15:50',6:'16:00~17:00',7:'7교시'
-};
 const SCHOOL_TIMETABLE={
- '1':[
-  ['물리학Ⅱ',false,false],['인공지능수학',false,false],['지구과학Ⅱ',false,false],
-  ['진로',true,true],['언어와매체',false,false],['미적분',false,false],['공강',true,true]
- ],
- '2':[
-  ['지구과학Ⅱ',false,false],['과학과제연구',true,true],['화학Ⅱ',false,false],
-  ['사회문제탐구',true,true],['정보과제연구',true,true],['물리학Ⅱ',false,false],['생명과학Ⅱ',true,false]
- ],
- '3':[
-  ['미적분',false,false],['정보과제연구',true,true],['스포츠생활',false,false],
-  ['화학Ⅱ',false,false],['과학융합',true,true],['공강',true,true],['공강',true,true]
- ],
- '4':[
-  ['지구과학Ⅱ',false,false],['사회문제탐구',true,true],['미적분',false,false],
-  ['생명과학Ⅱ',true,false],['과학융합',true,true],['물리학Ⅱ',false,false],['언어와매체',false,false]
- ],
- '5':[
-  ['환경',true,true],['과학과제연구',true,true],['인공지능수학',false,false],
-  ['화학Ⅱ',false,false],['공강',true,true],['공강',true,true],['생명과학Ⅱ',true,false]
- ]
+ '1':[['물리학Ⅱ',false,false],['인공지능수학',false,false],['지구과학Ⅱ',true,false],['진로',true,true],['언어와매체',false,false],['미적분',false,false],['공강',true,true]],
+ '2':[['지구과학Ⅱ',true,false],['과학과제연구',true,false],['화학Ⅱ',false,false],['사회문제탐구',true,true],['정보과제연구',true,true],['물리학Ⅱ',false,false],['생명과학Ⅱ',true,false]],
+ '3':[['미적분',false,false],['정보과제연구',true,true],['스포츠생활',false,false],['화학Ⅱ',false,false],['과학융합',true,true],['공강',true,true],['공강',true,true]],
+ '4':[['지구과학Ⅱ',true,false],['사회문제탐구',true,true],['미적분',false,false],['생명과학Ⅱ',true,false],['과학융합',true,true],['물리학Ⅱ',false,false],['언어와매체',false,false]],
+ '5':[['환경',true,true],['과학과제연구',true,false],['인공지능수학',false,false],['화학Ⅱ',false,false],['공강',true,true],['공강',true,true],['생명과학Ⅱ',true,false]]
 };
-const DAY_NAMES={1:'월요일',2:'화요일',3:'수요일',4:'목요일',5:'금요일'};
-
-function fixedSchoolMap(){
- const out={};
- Object.entries(SCHOOL_TIMETABLE).forEach(([day,rows])=>{
-  out[day]=rows.map((r,i)=>({
-   id:`school-${day}-${i+1}`,
-   period:i+1,time:SCHOOL_PERIOD_TIMES[i+1],
-   school:r[0],selfStudy:r[1],device:r[2],
-   study:r[1]?(r[2]?'전자기기 자습':'종이 자습'):'학교 수업'
-  }))
- });
- return out
-}
+const DAY_NAMES={0:'일요일',1:'월요일',2:'화요일',3:'수요일',4:'목요일',5:'금요일',6:'토요일'};
+const SATURDAY_BLOCKS=[['08:40','09:50','1교시'],['10:00','11:10','2교시'],['11:20','12:30','3교시'],['13:30','14:40','4교시'],['14:50','15:50','5교시'],['16:00','17:00','6교시']];
+function fixedSchoolMap(){const out={};Object.entries(SCHOOL_TIMETABLE).forEach(([day,rows])=>out[day]=rows.map((r,i)=>({id:`school-${day}-${i+1}`,period:i+1,time:`${i+1}교시`,school:r[0],selfStudy:Boolean(r[1]),device:Boolean(r[2]),study:r[1]?(r[2]?'전자기기 자습':'종이 자습'):'학교 수업'})));return out}
 function schoolMap(){return get('p11122_v2_school',fixedSchoolMap())}
-function schoolScheduleForDate(date){
- const day=parse(date).getDay(),arr=schoolMap()[String(day)]||[];
- return arr.map(p=>({
-  id:`date-${date}-p${p.period}`,
-  period:p.period,time:p.time,
-  school:`${p.period}교시 · ${p.school}${p.selfStudy?' · 자습':''}${p.selfStudy?(p.device?' · 전자기기 가능':' · 전자기기 불가'):''}`,
-  study:p.study||(p.selfStudy?(p.device?'전자기기 자습':'종이 자습'):'학교 수업'),
-  selfStudy:Boolean(p.selfStudy),device:Boolean(p.device),done:false
- }))
+function baseTimelineForDate(date){
+ const day=parse(date).getDay(),blocks=[];
+ if(day>=1&&day<=5){
+  (schoolMap()[String(day)]||[]).forEach(p=>blocks.push({id:`${date}-regular-${p.period}`,order:p.period,time:`${p.period}교시`,start:'',end:'',name:p.school,type:p.selfStudy?'self':'class',school:p.school,selfStudy:p.selfStudy,device:p.device,study:p.selfStudy?'':'학교 수업',locked:false,done:false,regular:true,v4Timeline:true}));
+  const afterName=day<=3?'방과후 자습':day===4?'나혜주 선생님 영어 독해':'문두열 선생님 수학Ⅰ·수학Ⅱ·미적분(상)',afterSelf=day<=3;
+  blocks.push({id:`${date}-after`,order:20,time:'16:45~17:45',start:'16:45',end:'17:45',name:afterName,type:afterSelf?'self':'class',school:afterName,selfStudy:afterSelf,device:afterSelf,study:afterSelf?'':'방과후 수업',locked:!afterSelf,done:false,v4Timeline:true});
+  blocks.push({id:`${date}-dinner`,order:21,time:'17:45~18:40',start:'17:45',end:'18:40',name:'석식',type:'meal',school:'석식',selfStudy:false,device:false,study:'식사·휴식',locked:true,done:false,v4Timeline:true});
+  blocks.push({id:`${date}-night1`,order:22,time:'18:40~20:20',start:'18:40',end:'20:20',name:'야간자율학습 1',type:'self',school:'야간자율학습 1',selfStudy:true,device:true,study:'',locked:false,done:false,v4Timeline:true});
+  blocks.push({id:`${date}-break`,order:23,time:'20:20~20:30',start:'20:20',end:'20:30',name:'쉬는 시간',type:'break',school:'쉬는 시간',selfStudy:false,device:false,study:'휴식',locked:true,done:false,v4Timeline:true});
+  blocks.push({id:`${date}-night2`,order:24,time:'20:30~22:00',start:'20:30',end:'22:00',name:'야간자율학습 2',type:'self',school:'야간자율학습 2',selfStudy:true,device:true,study:'',locked:false,done:false,v4Timeline:true})
+ }else if(day===6){
+  SATURDAY_BLOCKS.forEach((b,i)=>blocks.push({id:`${date}-sat-${i+1}`,order:i+1,time:`${b[0]}~${b[1]}`,start:b[0],end:b[1],name:b[2],type:'self',school:`토요일 ${b[2]}`,selfStudy:true,device:true,study:'',locked:false,done:false,v4Timeline:true}))
+ }
+ return blocks
 }
-function renderSchoolWeekGrid(){
- const map=schoolMap(),days=['1','2','3','4','5'];
- let self=0,device=0,paper=0;
- days.forEach(d=>(map[d]||[]).forEach(p=>{if(p.selfStudy){self++;if(p.device)device++;else paper++}}));
- $('#schoolSelfStudyCount').textContent=self;$('#schoolDeviceCount').textContent=device;$('#schoolPaperCount').textContent=paper;
- $('#schoolWeekGrid').innerHTML=[1,2,3,4,5,6,7].map(period=>{
-  const cells=days.map(day=>{
-   const p=(map[day]||[]).find(x=>Number(x.period)===period)||{};
-   return `<td><div class="school-cell"><div class="period-time">${esc(p.time||'')}</div><strong>${esc(p.school||'')}</strong><div class="school-cell-tags">${p.selfStudy?'<span class="school-tag self">자습</span>':''}${p.selfStudy?(p.device?'<span class="school-tag device">전자기기</span>':'<span class="school-tag paper">종이</span>'):''}</div></div></td>`
-  }).join('');
-  return `<tr><th>${period}교시</th>${cells}</tr>`
- }).join('')
-}
-function renderSchool(){
- renderSchoolWeekGrid();
- const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||[];
- $('#schoolEditor').innerHTML=arr.map((p,i)=>`<div class="school-editor-slot" data-i="${i}">
-   <div><b>${p.period}교시</b><div class="task-meta">${esc(p.time)}</div></div>
-   <div><b>${esc(p.school)}</b><div class="school-editor-meta">${p.selfStudy?'<span class="school-tag self">자습 가능</span>':''}${p.selfStudy?(p.device?'<span class="school-tag device">전자기기 가능</span>':'<span class="school-tag paper">전자기기 불가</span>'):''}</div></div>
-   <input class="input school-study-input" value="${esc(p.study||'')}" ${p.selfStudy?'':'disabled'} placeholder="${p.selfStudy?'실제 자습 내용':'학교 수업'}">
-  </div>`).join('');
- $$('#schoolEditor .school-editor-slot').forEach(row=>{
-  const i=Number(row.dataset.i),inp=row.querySelector('.school-study-input');
-  if(inp)inp.onchange=()=>{arr[i].study=inp.value;map[day]=arr;set('p11122_v2_school',map)}
- })
-}
-$('#schoolDay').onchange=renderSchool;
-$('#restoreSchool')?.addEventListener('click',()=>{
- if(!confirm('학교 시간표와 기본 자습 표시를 확정본으로 복원할까요?'))return;
- set('p11122_v2_school',fixedSchoolMap());renderSchool()
-});
-$('#autoArrange').onclick=()=>{
- const day=$('#schoolDay').value,map=schoolMap(),arr=map[day]||[];
- const next=nextUnfinishedLectureLabels(12);
- let li=0,paperOrder=['경제 마더텅','사회문화 실모·오답 분석','국어 기출 적용','수학 종이 문제풀이'],pi=0;
- arr.forEach(p=>{
-  if(!p.selfStudy)return;
-  if(p.device)p.study=next[li++]||'전자기기 자습';
-  else p.study=paperOrder[pi++%paperOrder.length]
- });
- map[day]=arr;set('p11122_v2_school',map);renderSchool()
-};
+function timelineForDate(date){const all=allSchedules();if(!all[date]||!all[date].some(x=>x.v4Timeline)){const old=Array.isArray(all[date])?all[date]:[],base=baseTimelineForDate(date);old.forEach(o=>{let t=null;const m=String(o.school||'').match(/(\d+)교시/);if(m)t=base.find(x=>x.regular&&x.order===Number(m[1]));if(!t&&o.time)t=base.find(x=>x.time===o.time);if(t&&o.study&&!['학교 수업','전자기기 자습','종이 자습'].includes(o.study))t.study=o.study});all[date]=base;set('p11122_v2_schedules',all)}return all[date].sort((a,b)=>(a.order??99)-(b.order??99))}
+function scheduleFor(date){return timelineForDate(date)}
+function saveTimeline(date,blocks){const all=allSchedules();all[date]=blocks.map(x=>({...x,v4Timeline:true}));set('p11122_v2_schedules',all)}
+function timeMinutes(start,end){if(!start||!end)return 0;const [sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);let a=sh*60+sm,b=eh*60+em;if(b<a)b+=1440;return Math.max(0,b-a)}
+function genericStudyText(b){if(!b.selfStudy)return b.study||'';if(b.study&&!['전자기기 자습','종이 자습'].includes(b.study))return b.study;return ''}
+function renderSchoolWeekGrid(){const map=schoolMap(),days=['1','2','3','4','5'];let self=0,device=0,paper=0;days.forEach(d=>(map[d]||[]).forEach(p=>{if(p.selfStudy){self++;p.device?device++:paper++}}));$('#schoolSelfStudyCount').textContent=self;$('#schoolDeviceCount').textContent=device;$('#schoolPaperCount').textContent=paper;$('#schoolWeekGrid').innerHTML=[1,2,3,4,5,6,7].map(period=>`<tr><th>${period}교시</th>${days.map(day=>{const p=(map[day]||[]).find(x=>Number(x.period)===period)||{};return `<td><div class="school-cell"><div class="period-time">${period}교시</div><strong>${esc(p.school||'')}</strong><div class="school-cell-tags">${p.selfStudy?'<span class="school-tag self">자습</span>':''}${p.selfStudy?(p.device?'<span class="school-tag device">전자기기</span>':'<span class="school-tag paper">종이</span>'):''}</div></div></td>`}).join('')}</tr>`).join('')}
+function renderTimelineSummary(date,blocks){if(!$('#availableStudySummary'))return;const self=blocks.filter(x=>x.selfStudy),regular=self.filter(x=>x.regular).length,known=self.reduce((s,x)=>s+timeMinutes(x.start,x.end),0),device=self.filter(x=>x.device).length,assigned=self.filter(x=>genericStudyText(x)).length;$('#availableStudySummary').innerHTML=`<div class="timeline-stat"><span>정규 자습</span><b>${regular}교시</b></div><div class="timeline-stat"><span>시각 확정 자습</span><b>${known}분</b></div><div class="timeline-stat"><span>전자기기 가능</span><b>${device}블록</b></div><div class="timeline-stat"><span>할 일 배정</span><b>${assigned}/${self.length}</b></div>`}
+function renderTimelineEditor(){if(!$('#dailyTimelineEditor'))return;const date=$('#timelineDate').value||selected,blocks=timelineForDate(date);$('#timelineDate').value=date;renderTimelineSummary(date,blocks);$('#dailyTimelineEditor').innerHTML=blocks.length?blocks.map(b=>`<div class="timeline-block ${b.locked?'locked':''} ${b.done?'done':''}"><div class="timeline-time">${esc(b.time||b.name)}</div><div><div class="timeline-name">${b.locked?'🔒 ':''}${esc(b.name||b.school||'시간 블록')}</div><div class="timeline-study ${genericStudyText(b)?'':'timeline-empty-study'}">${esc(genericStudyText(b)||(b.selfStudy?'할 일 미배정':b.study||''))}</div><div class="timeline-tags">${b.selfStudy?'<span class="school-tag self">자습</span>':''}${b.selfStudy?(b.device?'<span class="school-tag device">전자기기</span>':'<span class="school-tag paper">종이</span>'):''}</div></div><div class="timeline-actions">${b.selfStudy?`<button class="btn ghost small assign-block" data-id="${b.id}">할 일 수정</button>`:''}<button class="btn ghost small edit-block" data-id="${b.id}">블록 설정</button><label><input class="timeline-done" data-id="${b.id}" type="checkbox" ${b.done?'checked':''}> 완료</label></div></div>`).join(''):'<div class="note">기본 시간표가 없습니다. 집 공부나 시간 블록을 추가할 수 있습니다.</div>';$$('.assign-block').forEach(btn=>btn.onclick=()=>{const b=blocks.find(x=>x.id===btn.dataset.id),v=prompt('이 블록에서 할 일을 입력하세요. 비우면 미배정입니다.',genericStudyText(b));if(v===null)return;b.study=v.trim();saveTimeline(date,blocks);renderTimelineEditor();if(date===selected)renderDashboard()});$$('.edit-block').forEach(btn=>btn.onclick=()=>openTimeBlockModal(date,blocks.find(x=>x.id===btn.dataset.id)));$$('.timeline-done').forEach(ch=>ch.onchange=()=>{const b=blocks.find(x=>x.id===ch.dataset.id);if(b)b.done=ch.checked;saveTimeline(date,blocks);if(date===selected)renderDashboard()})}
+function renderSchool(){renderSchoolWeekGrid();renderTimelineEditor()}
+$('#timelineDate')?.addEventListener('change',renderTimelineEditor);
+function openTimeBlockModal(date,b=null,home=false){$('#timeBlockModalTitle').textContent=b?'시간 블록 수정':home?'집 공부 추가':'시간 블록 추가';$('#timeBlockId').value=b?.id||'';$('#timeBlockDate').value=date;$('#timeBlockName').value=b?.name||(home?'집 공부':'');$('#timeBlockType').value=b?.type||'self';$('#timeBlockStart').value=b?.start||(home?'22:20':'');$('#timeBlockEnd').value=b?.end||(home?'23:00':'');$('#timeBlockStudy').value=genericStudyText(b||{})||'';$('#timeBlockSelfStudy').checked=b?Boolean(b.selfStudy):true;$('#timeBlockDevice').checked=b?Boolean(b.device):true;$('#timeBlockLocked').checked=b?Boolean(b.locked):false;$('#deleteTimeBlock').style.display=b&&!b.regular?'inline-flex':'none';$('#timeBlockModal').classList.add('show')}
+$('#addHomeStudy')?.addEventListener('click',()=>openTimeBlockModal($('#timelineDate').value||selected,null,true));
+$('#addCustomBlock')?.addEventListener('click',()=>openTimeBlockModal($('#timelineDate').value||selected,null,false));
+$('#saveTimeBlock')?.addEventListener('click',()=>{const date=$('#timeBlockDate').value,blocks=timelineForDate(date),id=$('#timeBlockId').value;let b=id?blocks.find(x=>x.id===id):null;if(!b){b={id:uid(),order:80+blocks.length,v4Timeline:true,regular:false,done:false};blocks.push(b)}const start=$('#timeBlockStart').value,end=$('#timeBlockEnd').value;b.name=$('#timeBlockName').value.trim()||'시간 블록';b.type=$('#timeBlockType').value;b.start=start;b.end=end;b.time=start&&end?`${start}~${end}`:b.time||b.name;b.school=b.name;b.study=$('#timeBlockStudy').value.trim();b.selfStudy=$('#timeBlockSelfStudy').checked;b.device=b.selfStudy&&$('#timeBlockDevice').checked;b.locked=$('#timeBlockLocked').checked;saveTimeline(date,blocks);$('#timeBlockModal').classList.remove('show');renderTimelineEditor();if(date===selected)renderDashboard()});
+$('#deleteTimeBlock')?.addEventListener('click',()=>{const date=$('#timeBlockDate').value,id=$('#timeBlockId').value,blocks=timelineForDate(date),b=blocks.find(x=>x.id===id);if(!b||b.regular||!confirm('이 시간 블록을 삭제할까요?'))return;saveTimeline(date,blocks.filter(x=>x.id!==id));$('#timeBlockModal').classList.remove('show');renderTimelineEditor();if(date===selected)renderDashboard()});
+$('#resetTimeline')?.addEventListener('click',()=>{const date=$('#timelineDate').value||selected;if(!confirm(`${date} 시간표를 기본 구조로 복원할까요?`))return;const all=allSchedules();all[date]=baseTimelineForDate(date);set('p11122_v2_schedules',all);renderTimelineEditor();if(date===selected)renderDashboard()});
 
 const COURSE_META={
  'Origin':{deadline:'2026-08-10',dailyTarget:3},
@@ -269,7 +219,7 @@ $('#carryBtn').onclick=()=>{const list=missed();$('#carryList').innerHTML=list.l
 function carryOne(from,id,action){const m=allTasks(),task=m[from]?.find(t=>t.id===id);if(!task)return;m[from]=m[from].filter(t=>t.id!==id);if(action!=='delete'){let dest;if(action==='today')dest=ymd(now());if(action==='next'){const d=parse(from);d.setDate(d.getDate()+1);dest=ymd(d)}if(action==='sunday'){const d=now(),add=(7-d.getDay())%7||7;d.setDate(d.getDate()+add);dest=ymd(d)}task.id=uid();task.done=false;(m[dest]||(m[dest]=[])).push(task)}set('p11122_v2_tasks',m);renderDashboard()}
 
 function exportData(){const data={app:'PROJECT11122',version:VERSION,exportedAt:new Date().toISOString(),storage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('p11122'))data.storage[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PROJECT11122_backup_${ymd(now())}.json`;a.click();URL.revokeObjectURL(a.href)}
-$('#exportData').onclick=$('#backupQuick').onclick=exportData;$('#importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=='PROJECT11122')throw Error();if(!confirm('현재 기록을 백업으로 덮어쓸까요?'))return;Object.entries(d.storage).forEach(([k,v])=>localStorage.setItem(k,v));location.reload()}catch{alert('PROJECT 11122 백업 파일이 아닙니다.')}};
+$('#exportData').onclick=exportData;if($('#backupQuick'))$('#backupQuick').onclick=exportData;$('#importData').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.app!=='PROJECT11122')throw Error();if(!confirm('현재 기록을 백업으로 덮어쓸까요?'))return;Object.entries(d.storage).forEach(([k,v])=>localStorage.setItem(k,v));location.reload()}catch{alert('PROJECT 11122 백업 파일이 아닙니다.')}};
 $('#vacationGoal').value=settings().vacationGoal;$('#schoolGoal').value=settings().schoolGoal;if($('#lectureDailyCap'))$('#lectureDailyCap').value=settings().lectureDailyCap||5;$('#saveSettings').onclick=()=>{const st=settings();st.vacationGoal=Number($('#vacationGoal').value||10.8);st.schoolGoal=Number($('#schoolGoal').value||9.5);st.lectureDailyCap=Number($('#lectureDailyCap')?.value||5);set('p11122_v2_settings',st);alert('저장했습니다.');renderDashboard()};$('#resetAll').onclick=()=>{if(prompt('전체 기록을 지우려면 RESET을 입력하세요.')==='RESET'){Object.keys(localStorage).filter(k=>k.startsWith('p11122')).forEach(k=>localStorage.removeItem(k));location.reload()}};
 
 
@@ -854,7 +804,7 @@ function toggleLectureCartId(id){
  if(lectureCompleted(id))return;
  const cart=lectureCart(),i=cart.indexOf(id);
  if(i>=0)cart.splice(i,1);else cart.push(id);
- saveLectureCart(cart);renderLectures()
+ saveLectureCart(cart);renderLearningVending()
 }
 function addNextLectures(key,count){
  const c=lectureCourse(key),cart=lectureCart();let added=0;
@@ -862,7 +812,7 @@ function addNextLectures(key,count){
   const id=lectureId(key,n);
   if(!lectureCompleted(id)&&!cart.includes(id)){cart.push(id);added++}
  }
- saveLectureCart(cart);renderLectures()
+ saveLectureCart(cart);renderLearningVending()
 }
 function renderLectures(){
  if(!$('#lectureCatalog'))return;
@@ -897,7 +847,7 @@ function renderLectures(){
 
  $$('.lecture-btn[data-id]').forEach(b=>b.onclick=e=>{if(e.target.closest('.lecture-complete-toggle'))return;toggleLectureCartId(b.dataset.id)});
  $$('.lecture-complete-toggle').forEach(b=>b.onclick=e=>{
-  e.stopPropagation();const id=b.dataset.completeId;markLecturesCompleted([id],!lectureCompleted(id));renderCourses();renderLectures();renderFeasibility()
+  e.stopPropagation();const id=b.dataset.completeId;markLecturesCompleted([id],!lectureCompleted(id));renderCourses();renderLearningVending();renderFeasibility()
  });
  $$('.next-lecture-btn').forEach(b=>b.onclick=()=>addNextLectures(b.dataset.key,Number(b.dataset.count)));
  $$('.delete-custom-course').forEach(b=>b.onclick=e=>{
@@ -906,7 +856,7 @@ function renderLectures(){
   if(!c||!confirm(`${c.display} 강좌와 관련된 완료·계획 표시를 삭제할까요?`))return;
   const custom=customLectureCourses().filter(x=>x.key!==key);set('p11122_v30_custom_lectures',custom);
   const st=lectureState();Object.keys(st).filter(id=>id.startsWith(key+'::')).forEach(id=>delete st[id]);set('p11122_v30_lecture_state',st);
-  saveLectureCart(lectureCart().filter(id=>!id.startsWith(key+'::')));renderLectures()
+  saveLectureCart(lectureCart().filter(id=>!id.startsWith(key+'::')));renderLearningVending()
  });
 
  $('#lectureCartCount').textContent=cart.length+'강';
@@ -917,11 +867,11 @@ function renderLectures(){
  const day=parse(date).getDay(),deviceSlots=day>=1&&day<=5?(schoolMap()[String(day)]||[]).filter(p=>p.selfStudy&&p.device).length:0;
  $('#lectureCartSchoolHint').textContent=day>=1&&day<=5?`${DAY_NAMES[day]} 전자기기 가능 자습 ${deviceSlots}교시 · 장바구니 ${cart.length}강`:'주말·비등교일은 오늘 할 일에만 추가합니다.'
 }
-$('#lectureSubjectFilter')?.addEventListener('change',()=>{fillLectureCourseFilter();renderLectures()});
-$('#lectureCourseFilter')?.addEventListener('change',renderLectures);
-$('#lectureIncompleteOnly')?.addEventListener('change',renderLectures);
-$('#lecturePlanDate')?.addEventListener('change',renderLectures);
-$('#clearLectureCart')?.addEventListener('click',()=>{saveLectureCart([]);renderLectures()});
+$('#lectureSubjectFilter')?.addEventListener('change',()=>{fillLectureCourseFilter();renderLearningVending()});
+$('#lectureCourseFilter')?.addEventListener('change',renderLearningVending);
+$('#lectureIncompleteOnly')?.addEventListener('change',renderLearningVending);
+$('#lecturePlanDate')?.addEventListener('change',renderLearningVending);
+$('#clearLectureCart')?.addEventListener('click',()=>{saveLectureCart([]);saveBookCart([]);renderLearningVending()});
 
 function sortLectureIds(ids){
  return [...ids].sort((a,b)=>{
@@ -942,45 +892,7 @@ function rangeLabel(nums){
  if(nums.length===1)return`${nums[0]}강`;
  return`${nums[0]}~${nums.at(-1)}강`
 }
-function buildLecturePlan(){
- const date=$('#lecturePlanDate').value||selected,cart=lectureCart().filter(id=>!lectureCompleted(id));
- if(!cart.length){alert('장바구니에 강의를 먼저 담아 주세요.');return}
- const existing=tasksFor(date),existingIds=new Set(existing.flatMap(t=>t.lectureIds||[]));
- const fresh=cart.filter(id=>!existingIds.has(id)),groups=groupLectureIds(fresh);
- groups.forEach(g=>{
-  const c=g.course;
-  existing.push({
-   id:uid(),subject:c.subject,priority:'must',
-   name:`${c.display} ${rangeLabel(g.numbers)}`,
-   material:`${c.provider} · ${c.series}`,
-   note:'인강 자판기에서 담은 강의 · 수강 완료 시 강좌 진도 자동 반영',
-   duration:`${g.ids.length}강`,done:false,lectureIds:g.ids
-  })
- });
- saveTasks(date,existing);
-
- const state=lectureState();fresh.forEach(id=>state[id]={...(state[id]||{}),completed:false,plannedDate:date});set('p11122_v30_lecture_state',state);
-
- const day=parse(date).getDay();
- let placed=0;
- if(day>=1&&day<=5){
-  const school=schoolMap()[String(day)]||[],m=allSchedules();
-  let slots=schoolScheduleForDate(date);
-  const candidates=slots.filter(s=>s.selfStudy&&s.device);
-  sortLectureIds(fresh).forEach((id,i)=>{
-   if(i>=candidates.length)return;
-   const x=lectureInfo(id),slot=candidates[i];
-   slot.study=`${x.provider} ${x.display} ${x.n}강`;slot.lectureIds=[id];placed++
-  });
-  m[date]=slots;set('p11122_v2_schedules',m)
- }
- saveLectureCart([]);
- selected=date;
- renderDashboard();renderWeek();renderLectures();renderCourses();renderFeasibility();
- navigate('dashboard');
- const left=fresh.length-placed;
- alert(`${date}에 ${fresh.length}강을 추가했습니다.${placed?`\n전자기기 자습 ${placed}교시에 자동 배치했습니다.`:''}${left>0?`\n나머지 ${left}강은 오늘 할 일에 추가했습니다.`:''}`)
-}
+function buildLecturePlan(){const date=$('#lecturePlanDate').value||selected,lcart=lectureCart().filter(id=>!lectureCompleted(id)),bcart=bookCart();if(!lcart.length&&!bcart.length){alert('장바구니에 학습 항목을 먼저 담아 주세요.');return}const existing=tasksFor(date),existingIds=new Set(existing.flatMap(t=>t.lectureIds||[])),fresh=lcart.filter(id=>!existingIds.has(id));groupLectureIds(fresh).forEach(g=>{const c=g.course;existing.push({id:uid(),subject:c.subject,priority:'must',name:`${c.display} ${rangeLabel(g.numbers)}`,material:`${c.provider} · ${c.series}`,note:'학습 자판기 · 인강',duration:`${g.ids.length}강`,done:false,lectureIds:g.ids,taskKind:'lecture'})});bcart.forEach(x=>existing.push({id:uid(),subject:x.subject,priority:'must',name:x.label,material:x.bookName,note:`학습 자판기 · 문제집 · ${x.mode==='problems'?'문제 수 기준':'소단원 기준'}`,duration:`${x.minutes}분`,done:false,bookItem:{...x},taskKind:'book'}));saveTasks(date,existing);const state=lectureState();fresh.forEach(id=>state[id]={...(state[id]||{}),completed:false,plannedDate:date});set('p11122_v30_lecture_state',state);const blocks=timelineForDate(date),free=blocks.filter(b=>b.selfStudy&&!b.locked&&!genericStudyText(b)),device=free.filter(b=>b.device),paper=free.filter(b=>!b.device);let placedLecture=0,placedBook=0;sortLectureIds(fresh).forEach(id=>{const slot=device.find(b=>!genericStudyText(b));if(!slot)return;const x=lectureInfo(id);slot.study=`${x.provider} ${x.display} ${x.n}강`;slot.lectureIds=[id];placedLecture++});bcart.forEach(x=>{const slot=paper.find(b=>!genericStudyText(b))||device.find(b=>!genericStudyText(b));if(!slot)return;slot.study=x.label;slot.bookCartItemId=x.id;placedBook++});saveTimeline(date,blocks);saveLectureCart([]);saveBookCart([]);selected=date;renderDashboard();renderWeek();renderLearningVending();renderCourses();renderFeasibility();if($('#timelineDate'))$('#timelineDate').value=date;renderTimelineEditor();navigate('dashboard');const total=fresh.length+bcart.length,placed=placedLecture+placedBook;alert(`${date}에 학습 ${total}개를 추가했습니다.\n시간표 자동배치 ${placed}개${total>placed?` · 초과 ${total-placed}개는 오늘 할 일에만 추가`:''}`)}
 
 $('#addCustomLectureCourse')?.addEventListener('click',()=>{
  const subject=(prompt('과목명을 입력하세요. 예: 수학')||'').trim();if(!subject)return;
@@ -991,13 +903,39 @@ $('#addCustomLectureCourse')?.addEventListener('click',()=>{
  const key='custom-'+Date.now().toString(36);
  custom.push({key,subject,provider,series:subject,name:display,display,courseName:'',total,custom:true});
  set('p11122_v30_custom_lectures',custom);
- $('#lectureSubjectFilter').value='all';$('#lectureCourseFilter').value='all';renderLectures();
+ $('#lectureSubjectFilter').value='all';$('#lectureCourseFilter').value='all';renderLearningVending();
 });
 
 $('#buildLecturePlan')?.addEventListener('click',buildLecturePlan);
 
+let currentLearningTab='all';
+function problemBooks(){return get('p11122_v40_problem_books',[])}
+function saveProblemBooks(v){set('p11122_v40_problem_books',v)}
+function bookCart(){return get('p11122_v40_book_cart',[])}
+function saveBookCart(v){set('p11122_v40_book_cart',v)}
+function bookState(){return get('p11122_v40_book_state',{})}
+function bookSubunitKey(bookId,subunit){return `${bookId}::${subunit}`}
+function bookSubunitCompleted(bookId,subunit){return Boolean(bookState()[bookSubunitKey(bookId,subunit)]?.completed)}
+function markBookSubunitCompleted(bookId,subunit,completed=true){const st=bookState(),key=bookSubunitKey(bookId,subunit);st[key]={...(st[key]||{}),completed:Boolean(completed)};set('p11122_v40_book_state',st)}
+function renderLearningTabs(){$$('.learning-tab').forEach(b=>b.classList.toggle('active',b.dataset.learningTab===currentLearningTab));$('#lectureVendingPanel')?.classList.toggle('hidden-by-tab',currentLearningTab==='book');$('#bookVendingPanel')?.classList.toggle('hidden-by-tab',currentLearningTab==='lecture')}
+$$('.learning-tab').forEach(b=>b.onclick=()=>{currentLearningTab=b.dataset.learningTab;renderLearningTabs()});
+function openProblemBookModal(book=null){$('#problemBookId').value=book?.id||'';$('#problemBookSubject').value=book?.subject||'수학';$('#problemBookName').value=book?.name||'';$('#problemBookSubunits').value=(book?.subunits||[]).join('\n');$('#problemBookModal').classList.add('show')}
+$('#addProblemBook')?.addEventListener('click',()=>openProblemBookModal());
+$('#saveProblemBook')?.addEventListener('click',()=>{const id=$('#problemBookId').value||uid(),name=$('#problemBookName').value.trim(),subject=$('#problemBookSubject').value;if(!name){alert('교재명을 입력해 주세요.');return}const subunits=$('#problemBookSubunits').value.split(/\n|,/).map(x=>x.trim()).filter(Boolean),list=problemBooks(),idx=list.findIndex(x=>x.id===id),obj={id,subject,name,subunits};if(idx>=0)list[idx]=obj;else list.push(obj);saveProblemBooks(list);$('#problemBookModal').classList.remove('show');renderProblemBooks()});
+function toggleBookTaskMode(){const mode=$('input[name="bookTaskMode"]:checked')?.value||'problems';$('#bookProblemFields').classList.toggle('hidden',mode!=='problems');$('#bookSubunitFields').classList.toggle('hidden',mode!=='subunit')}
+$$('input[name="bookTaskMode"]').forEach(r=>r.onchange=toggleBookTaskMode);
+function openBookTaskModal(book,mode='problems',subunit=''){const options='<option value="">전체/미지정</option>'+(book.subunits||[]).map(x=>`<option>${esc(x)}</option>`).join('');$('#bookTaskBookId').value=book.id;$('#bookTaskBookName').textContent=book.name;$('#bookProblemSubunit').innerHTML=options;$('#bookSubunitSelect').innerHTML=(book.subunits||[]).map(x=>`<option>${esc(x)}</option>`).join('')||'<option value="">소단원 미등록</option>';if(subunit){$('#bookProblemSubunit').value=subunit;$('#bookSubunitSelect').value=subunit}$$('input[name="bookTaskMode"]').forEach(r=>r.checked=r.value===mode);toggleBookTaskMode();$('#bookTaskModal').classList.add('show')}
+$('#addBookTaskToCart')?.addEventListener('click',()=>{const book=problemBooks().find(x=>x.id===$('#bookTaskBookId').value);if(!book)return;const mode=$('input[name="bookTaskMode"]:checked')?.value||'problems',minutes=Math.max(5,Number($('#bookTaskMinutes').value||30));let item;if(mode==='problems'){const start=Math.max(1,Number($('#bookProblemStart').value||1)),count=Math.max(1,Number($('#bookProblemCount').value||10)),end=start+count-1,subunit=$('#bookProblemSubunit').value;item={id:uid(),kind:'book',mode,bookId:book.id,subject:book.subject,bookName:book.name,subunit,start,count,end,minutes,label:`${book.name}${subunit?' · '+subunit:''} ${start}~${end}번`}}else{const subunit=$('#bookSubunitSelect').value;if(!subunit){alert('소단원을 먼저 등록해 주세요.');return}item={id:uid(),kind:'book',mode,bookId:book.id,subject:book.subject,bookName:book.name,subunit,minutes,label:`${book.name} · ${subunit}`}}const cart=bookCart();cart.push(item);saveBookCart(cart);$('#bookTaskModal').classList.remove('show');renderLearningVending()});
+function renderProblemBooks(){if(!$('#problemBookCatalog'))return;const list=problemBooks();$('#problemBookCatalog').innerHTML=list.length?list.map(book=>`<section class="book-card"><div class="book-card-head"><div><h4>${esc(book.subject)} · ${esc(book.name)}</h4><div class="book-meta">소단원 ${(book.subunits||[]).length}개 · 문제 수/소단원 방식 지원</div></div><div class="book-actions"><button class="btn primary small book-problem-task" data-id="${book.id}">문제 수로 담기</button><button class="btn ghost small edit-book" data-id="${book.id}">편집</button><button class="btn danger small delete-book" data-id="${book.id}">삭제</button></div></div><div class="subunit-grid">${(book.subunits||[]).length?(book.subunits||[]).map(s=>`<button class="subunit-chip ${bookSubunitCompleted(book.id,s)?'completed':''}" data-book="${book.id}" data-subunit="${esc(s)}"><b>${esc(s)}</b><span>${bookSubunitCompleted(book.id,s)?'완료 · 클릭해서 다시 담기':'클릭 → 소단원으로 담기'}</span></button>`).join(''):'<div class="note">소단원이 없습니다. 편집에서 추가하세요.</div>'}</div></section>`).join(''):'<div class="note">등록된 문제집이 없습니다. `+ 문제집 등록`에서 시작하세요.</div>';$$('.book-problem-task').forEach(b=>b.onclick=()=>{const book=list.find(x=>x.id===b.dataset.id);if(book)openBookTaskModal(book,'problems')});$$('.subunit-chip').forEach(b=>b.onclick=()=>{const book=list.find(x=>x.id===b.dataset.book);if(book)openBookTaskModal(book,'subunit',b.dataset.subunit)});$$('.edit-book').forEach(b=>b.onclick=()=>{const book=list.find(x=>x.id===b.dataset.id);if(book)openProblemBookModal(book)});$$('.delete-book').forEach(b=>b.onclick=()=>{const book=list.find(x=>x.id===b.dataset.id);if(!book||!confirm(`${book.name}을 삭제할까요?`))return;saveProblemBooks(list.filter(x=>x.id!==book.id));saveBookCart(bookCart().filter(x=>x.bookId!==book.id));renderLearningVending()})}
+function combinedCartCount(){return lectureCart().length+bookCart().length}
+function renderCombinedLearningCart(){if(!$('#lectureCartList'))return;const rows=[];lectureCart().forEach(id=>{const x=lectureInfo(id);if(x)rows.push(`<div class="cart-lecture"><div><b><span class="cart-kind lecture">인강</span>${esc(x.display)} ${x.n}강</b><span>${esc(x.provider)} · ${esc(x.subject)}</span></div><button class="cart-remove" data-lecture-id="${id}">×</button></div>`)});bookCart().forEach(x=>rows.push(`<div class="cart-lecture"><div><b><span class="cart-kind book">문제집</span>${esc(x.label)}</b><span>${esc(x.subject)} · ${x.minutes}분 · ${x.mode==='problems'?x.count+'문제':'소단원'}</span></div><button class="cart-remove" data-bookcart-id="${x.id}">×</button></div>`));$('#lectureCartCount').textContent=combinedCartCount()+'개';$('#lectureCartList').innerHTML=rows.length?rows.join(''):'<div class="cart-empty">인강이나 문제집 할 일을 담아 주세요.</div>';$$('[data-lecture-id]').forEach(b=>b.onclick=()=>toggleLectureCartId(b.dataset.lectureId));$$('[data-bookcart-id]').forEach(b=>b.onclick=()=>{saveBookCart(bookCart().filter(x=>x.id!==b.dataset.bookcartId));renderLearningVending()})}
+function renderLearningVending(){renderLearningTabs();renderLectures();renderProblemBooks();renderCombinedLearningCart();const date=$('#lecturePlanDate').value||selected;$('#lecturePlanDate').value=date;const blocks=timelineForDate(date),open=blocks.filter(b=>b.selfStudy&&!b.locked),device=open.filter(b=>b.device).length,paper=open.filter(b=>!b.device).length;$('#lectureCartSchoolHint').innerHTML=`${DAY_NAMES[parse(date).getDay()]} · 사용 가능한 자습 ${open.length}블록 · 전자기기 ${device} · 종이 ${paper} · 장바구니 ${combinedCartCount()}개${combinedCartCount()>open.length?'<br><span class="learning-overflow">블록보다 할 일이 많아 초과분은 오늘 할 일에만 추가됩니다.</span>':''}`}
+
+
+function migrateV40(){if(get('p11122_v40_migrated',false))return;set('p11122_v2_school',fixedSchoolMap());const all=allSchedules(),today=ymd(now());Object.keys(all).filter(d=>d>=today).forEach(d=>delete all[d]);set('p11122_v2_schedules',all);set('p11122_v40_migrated',true)}
+
 $('#todayLabel').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});const dday=Math.ceil((EXAM_DATE-now())/86400000);$('#dday').textContent=dday>=0?'D-'+dday:'종료';
-migrateV21();migrateV23();migrateV30();renderDashboard();renderCondition();renderManager();renderWeek();renderSchool();renderLectures();renderCourses();renderTests();renderReport();renderHike();
+migrateV21();migrateV23();migrateV30();migrateV40();if($('#timelineDate'))$('#timelineDate').value=selected;renderDashboard();renderCondition();renderManager();renderWeek();renderSchool();renderLearningVending();renderCourses();renderTests();renderReport();renderHike();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 
@@ -1048,7 +986,7 @@ function renderManager(){
  if(!$('#managerDate'))return;renderFeasibility();renderReverseRoadmap();renderUndoList();$('#managerDate').value=$('#managerDate').value||nextDateString(ymd(now()),1);
  const date=$('#managerDate').value||nextDateString(ymd(now()),1),preview=managerSuggestions(date);
  $('#managerPreview').innerHTML=preview.map(x=>`<div class="manager-preview-item"><span class="priority ${x.priority}">${PRIORITY_LABEL[x.priority]}</span><span class="subject">${x.subject}</span><b>${esc(x.name)}</b><div class="task-meta">${esc(x.material)} · ${esc(x.duration)} · ${esc(x.note)}</div></div>`).join('');
- renderPrescriptions();renderMaterials();refreshDailyReportText()
+ renderPrescriptions();refreshDailyReportText()
 }
 $('#managerDate')?.addEventListener('change',renderManager);
 $('#generatePlan')?.addEventListener('click',()=>generatePlanFor($('#managerDate').value));
