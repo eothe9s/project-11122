@@ -7,15 +7,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="11122">
-<link rel="manifest" href="./manifest.webmanifest">
+<link rel="manifest" href="./manifest-v51.webmanifest?v=511">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./styles.css">
-<title>PROJECT 11122 v5.0</title>
+<link rel="stylesheet" href="./styles-v51-fixed.css?v=511">
+<title>PROJECT 11122 v5.1</title>
 </head>
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v5.0 · COMPLETE</span></div>
+  <div class="brand"><h1>PROJECT 11122</h1><p>한 달을 설계하는 입시 매니저</p><span>v5.1 · FIXED</span></div>
   <nav>
     <button class="active" data-page="dashboard">오늘</button>
     <button data-page="manager">계획 검증·보고</button>
@@ -56,15 +56,7 @@
     <article class="card metric"><small>이번 주 순공</small><strong><span id="weekStudy">0.0</span>h</strong><p>직접 입력 기준</p></article>
   </div>
   <article class="card goals-card"><div class="card-head"><h3>11122 목표</h3><span id="phaseBadge" class="badge"></span></div><div class="goals"><div><b>국어</b><strong>1</strong></div><div><b>수학</b><strong>1</strong></div><div><b>영어</b><strong>1</strong></div><div><b>사회문화</b><strong>2</strong></div><div><b>경제</b><strong>2</strong></div></div></article>
-  <article class="card minimum-card">
-    <div class="card-head">
-      <div><h3>오늘 최소 성공선</h3><div class="task-meta">필수 과제만 끝내도 오늘은 무너지지 않은 날입니다.</div></div>
-      <span id="minimumBadge" class="badge">0/0</span>
-    </div>
-    <div class="progress minimum-progress"><i id="minimumBar"></i></div>
-    <div id="minimumSuccessList" class="minimum-list"></div>
-  </article>
-  <div class="grid g2">
+<div class="grid g2">
     <article class="card"><div class="card-head"><h3>오늘 할 일</h3><button id="newTask" class="btn primary small">+ 직접 추가</button></div><div id="todayTasks" class="task-list"></div></article>
     <article class="card"><div class="card-head"><h3>오늘 시간표</h3><button id="togglePlanLock" class="btn ghost small">오늘 계획 확정</button></div><div id="todaySchedule" class="schedule"></div><label class="mini-label">실제 순공시간</label><div class="row"><input id="hoursInput" class="input short" type="number" min="0" max="16" step=".1"><button id="saveHours" class="btn primary">저장</button></div></article>
   </div>
@@ -364,7 +356,7 @@
 <section id="data" class="section"><div class="settings-page-head"><span class="settings-big-icon">⚙</span><div><h3>설정·백업</h3><div class="task-meta">평소에는 숨겨두고 오른쪽 아래 톱니바퀴로 엽니다.</div></div></div>
   <div class="grid g2"><article class="card"><h3>백업·복원</h3><div class="note">업데이트 전 JSON 백업을 저장하면 새 버전에서도 기록을 그대로 복원할 수 있습니다.</div><div class="row"><button id="exportData" class="btn primary">전체 기록 내보내기</button><label class="btn ghost file-label">기록 불러오기<input id="importData" class="hidden" type="file" accept=".json,application/json"></label></div></article><article class="card"><h3>기본 설정</h3><label>방학 목표 순공시간<input id="vacationGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>학기 중 목표 순공시간<input id="schoolGoal" class="input" type="number" step=".1" min="1" max="16"></label><label>하루 인강 계획 상한<input id="lectureDailyCap" class="input" type="number" step="1" min="1" max="12"><span class="task-meta">9모 완주 검증용 개인 기준값입니다.</span></label><button id="saveSettings" class="btn primary">설정 저장</button></article></div><article class="card"><h3>위험 작업</h3><button id="resetAll" class="btn danger">전체 기록 초기화</button></article>
 </section>
-<div class="footer">PROJECT 11122 v5.0 · GitHub Pages/PWA · 기록은 이 브라우저에 저장됩니다.</div>
+<div class="footer">PROJECT 11122 v5.1 · FIXED · <span id="runtimeBuild">코드 연결 확인 중…</span> · 기록은 이 브라우저에 저장됩니다.</div>
 </main>
 </div>
 
@@ -449,9 +441,8 @@
 
     <section class="close-step active" data-close-step="1">
       <h4>1. 과제 확인</h4>
-      <div class="note">완료한 과제를 체크합니다. 최소 성공선도 여기서 바로 확인됩니다.</div>
+      <div class="note">완료한 과제를 체크하면 오늘 할 일과 시간표에 함께 반영됩니다.</div>
       <div id="closeTaskList" class="close-task-list"></div>
-      <div id="closeMinimumState" class="condition-advice"></div>
     </section>
 
     <section class="close-step" data-close-step="2">
@@ -501,6 +492,6 @@
   </div>
 </div>
 
-<script src="./app.js"></script>
+<script src="./app-v51-fixed.js?v=511"></script>
 </body>
 </html>
