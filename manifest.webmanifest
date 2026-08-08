@@ -1,7 +1,7 @@
 {
-  "name": "PROJECT 11122 FINAL v4.1",
+  "name": "PROJECT 11122 v5.0 COMPLETE",
   "short_name": "11122",
-  "description": "기존 기능을 보존한 통합 시간표·학습 자판기 입시 관리 앱",
+  "description": "시간표·할 일 양방향 동기화, 학습 자판기, 반복 자동화, 대기함을 통합한 입시 관리 PWA",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
