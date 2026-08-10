@@ -1,0 +1,21 @@
+{
+  "name": "PROJECT 11122 v6.6",
+  "short_name": "11122",
+  "description": "수능 11111 학습 운영",
+  "start_url": "./index.html?v=660",
+  "display": "standalone",
+  "background_color": "#f6f3f1",
+  "theme_color": "#171925",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
