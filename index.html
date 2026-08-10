@@ -7,10 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="11122">
-<link rel="manifest" href="./manifest-v64.webmanifest?v=640">
+<link rel="manifest" href="./manifest-v65.webmanifest?v=650">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./styles-v64.css?v=640">
-<title>PROJECT 11122 v6.4</title>
+<link rel="stylesheet" href="./styles-v65.css?v=650">
+<title>PROJECT 11122 v6.5</title>
 </head>
 <body>
 <div class="app-shell">
@@ -18,7 +18,7 @@
     <div class="brand">
       <h1>PROJECT 11122</h1>
       <p>9모 11122 → 수능 11111</p>
-      <span>v6.4 · CSAT EDITION</span>
+      <span>v6.5 · CSAT EDITION</span>
     </div>
     <nav id="mainNav">
       <button class="active" data-page="dashboard">오늘</button>
@@ -149,7 +149,7 @@
             <div class="planner-toolbar">
               <span id="plannerModeHint" class="muted">보기 모드</span>
               <div class="row wrap">
-                <button id="sleepModeBtn" class="btn ghost small">☾ 취침</button>
+                <button id="sleepModeBtn" class="btn ghost small">☽ 취침</button>
                 <button id="addGridBlockBtn" class="btn primary small">10분 격자로 추가</button>
                 <button id="addDirectBlockBtn" class="btn ghost small">시간 직접 입력</button>
               </div>
@@ -419,7 +419,7 @@
   <div class="check-row">
     <label><input id="blockSelfStudy" type="checkbox"> 자습</label>
     <label><input id="blockDevice" type="checkbox"> 전자기기 가능</label>
-    <label><input id="blockLocked" type="checkbox"> 🔒 자동배치 잠금</label>
+    <label><input id="blockLocked" type="checkbox"> 자동배치 잠금</label>
   </div>
   <div id="blockLinkedTasks" class="linked-tasks"></div>
   <div class="row"><button id="chooseBlockTasks" class="btn ghost">할 일 선택</button></div>
@@ -431,8 +431,8 @@
   <h3>예상 취침/기상</h3>
   <input id="sleepDate" type="hidden">
   <div class="grid g2">
-    <label>☾ 예상 취침<input id="sleepBed" class="input" type="time"></label>
-    <label>☼ 예상 기상<input id="sleepWake" class="input" type="time"></label>
+    <label>☽ 취침<input id="sleepBed" class="input" type="time"></label>
+    <label>○ 기상<input id="sleepWake" class="input" type="time"></label>
   </div>
   <div class="micro-label" id="sleepSummaryText">취침 · 기상</div>
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="clearSleepPlan" class="btn ghost">지우기</button><button id="saveSleepPlan" class="btn primary">저장</button></div>
@@ -529,6 +529,6 @@
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="confirmCloseDay" class="btn primary">마감 완료</button></div>
 </div></div>
 
-<script src="./app-v64.js?v=640" defer></script>
+<script src="./app-v65.js?v=650" defer></script>
 </body>
 </html>
