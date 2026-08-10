@@ -1,0 +1,11 @@
+v6.3 배포 파일
+- index.html
+- app-v63.js
+- styles-v63.css
+- sw-v63.js
+- manifest-v63.webmanifest
+- icon-192.png
+- icon-512.png
+- .nojekyll
+
+기존 앱에서 캐시가 꼬이면 홈화면 앱 삭제 후 다시 추가하세요.
