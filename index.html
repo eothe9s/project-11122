@@ -143,16 +143,27 @@
           </div>
         </div>
         <div id="plannerStats" class="mini-stat-grid"></div>
-        <div id="unknownRegularStrip" class="unknown-regular-strip"></div>
-        <div class="planner-toolbar">
-          <span id="plannerModeHint" class="muted">보기 모드</span>
-          <div class="row">
-            <button id="addGridBlockBtn" class="btn primary small">10분 격자로 추가</button>
-            <button id="addDirectBlockBtn" class="btn ghost small">시간 직접 입력</button>
+        <div class="planner-board">
+          <div class="planner-main">
+            <div id="unknownRegularStrip" class="unknown-regular-strip"></div>
+            <div class="planner-toolbar">
+              <span id="plannerModeHint" class="muted">보기 모드</span>
+              <div class="row wrap">
+                <button id="sleepModeBtn" class="btn ghost small">☾ 취침 입력</button>
+                <button id="addGridBlockBtn" class="btn primary small">10분 격자로 추가</button>
+                <button id="addDirectBlockBtn" class="btn ghost small">시간 직접 입력</button>
+              </div>
+            </div>
+            <div id="tenMinutePlanner" class="ten-planner"></div>
+            <div id="plannerLegend" class="subject-legend"></div>
           </div>
+          <aside class="planner-side">
+            <article class="planner-side-card">
+              <h4>격자 보조 패널</h4>
+              <div id="plannerQuickPanel"></div>
+            </article>
+          </aside>
         </div>
-        <div id="tenMinutePlanner" class="ten-planner"></div>
-        <div id="plannerLegend" class="subject-legend"></div>
       </article>
     </section>
 
@@ -413,6 +424,18 @@
   <div id="blockLinkedTasks" class="linked-tasks"></div>
   <div class="row"><button id="chooseBlockTasks" class="btn ghost">할 일 선택</button></div>
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="deleteBlock" class="btn danger">삭제</button><button id="saveBlock" class="btn primary">저장</button></div>
+</div></div>
+
+<!-- SLEEP MODAL -->
+<div id="sleepModal" class="modal-back"><div class="modal">
+  <h3>예상 취침/기상</h3>
+  <input id="sleepDate" type="hidden">
+  <div class="grid g2">
+    <label>☾ 예상 취침<input id="sleepBed" class="input" type="time"></label>
+    <label>☀ 예상 기상<input id="sleepWake" class="input" type="time"></label>
+  </div>
+  <div class="muted" id="sleepSummaryText">예상 수면 시간을 계산합니다.</div>
+  <div class="row end"><button class="btn ghost modal-close">취소</button><button id="clearSleepPlan" class="btn ghost">지우기</button><button id="saveSleepPlan" class="btn primary">저장</button></div>
 </div></div>
 
 <!-- LECTURE MODAL -->

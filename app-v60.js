@@ -1,7 +1,7 @@
-/* PROJECT 11122 v6.0 · CSAT EDITION */
+/* PROJECT 11122 v6.1 · CSAT EDITION */
 'use strict';
 
-const APP_VERSION='6.0';
+const APP_VERSION='6.1';
 const SCHEMA_VERSION=6;
 const BUILD='2026-08-10';
 const EXAM9='2026-09-02';
@@ -65,7 +65,7 @@ function defaultDB(){
   schema:SCHEMA_VERSION,createdAt:Date.now(),
   settings:{lectureDailyCap:5,periodTimes,hikeEnabled:false},
   tasks:{},schedules:{},customLectures:[],lectureState:{},books:[],bookState:{},
-  automations:[],automationSkips:{},automationConflicts:[],waiting:[],tests:[],condition:{},
+  automations:[],automationSkips:{},automationConflicts:[],waiting:[],tests:[],condition:{},plannerMeta:{},
   studyOverrides:{},planLocks:{},recentLearning:[],trash:[],closeHistory:[]
  }
 }
@@ -260,6 +260,15 @@ function autoActualStudy(date){
  return Math.round(minutes)
 }
 function finalStudy(date){return DB.studyOverrides[date]!=null?Number(DB.studyOverrides[date]):autoActualStudy(date)}
+function planMeta(date){if(!DB.plannerMeta)DB.plannerMeta={};return DB.plannerMeta[date]||(DB.plannerMeta[date]={bed:'',wake:''})}
+function sleepSpanLabel(bed,wake){if(!bed||!wake)return '미설정';return calcSleep(bed,wake)||'미설정'}
+function nextSelfStudyBlock(date){return ensureSchedule(date).find(b=>b.selfStudy&&!b.done)||null}
+function plannerLegendHTML(){return ['<span class="legend-chip sub-kor">국어</span>','<span class="legend-chip sub-math">수학</span>','<span class="legend-chip sub-eng">영어</span>','<span class="legend-chip sub-soc">사회문화</span>','<span class="legend-chip sub-eco">경제</span>','<span class="legend-chip block-meal">식사</span>','<span class="legend-chip block-break">휴식</span>','<span class="legend-chip block-class">수업</span>','<span class="legend-chip sleep">☾ 취침 · ☀ 기상</span>'].join('')}
+function regularTimeLabel(b){
+ if(b.regular&&b.period&&b.start&&b.end)return `<span class="period-label">${b.period}교시</span><span class="clock-label">${b.start}~${b.end}</span>`;
+ if(b.regular&&b.period)return `<span class="period-label">${b.period}교시</span>`;
+ return `<span class="clock-label">${b.start&&b.end?`${b.start}~${b.end}`:'시간 미설정'}</span>`
+}
 function remainingStudyToday(date){
  const now=new Date(),isToday=date===ymd(now);let m=0;
  ensureSchedule(date).filter(b=>b.selfStudy&&b.start&&b.end&&!b.done).forEach(b=>{
@@ -330,6 +339,7 @@ let plannerDragStart=null;
 let plannerDragEnd=null;
 let plannerDragging=false;
 let pendingAssignBlock=null;
+let plannerSleepMode=false;
 
 function showModal(id){$('#'+id)?.classList.add('show')}
 function hideModal(id){$('#'+id)?.classList.remove('show')}
@@ -424,9 +434,9 @@ function renderCompactSchedule(){
  const box=$('#todayScheduleList'),blocks=ensureSchedule(selected);
  if(!blocks.length){box.innerHTML='<div class="muted">시간 블록이 없습니다. 시간표에서 10분 격자로 빠르게 추가할 수 있습니다.</div>';return}
  box.innerHTML=blocks.map(b=>{
-  const names=(b.taskIds||[]).map(id=>taskById(selected,id)?.name).filter(Boolean),unknown=b.selfStudy&&!(b.start&&b.end);
+  const names=(b.taskIds||[]).map(id=>taskById(selected,id)?.name).filter(Boolean);
   return `<div class="schedule-row ${b.done?'done':''} ${b.selfStudy&&!names.length?'empty-self':''}">
-   <div class="time">${b.start&&b.end?`${b.start}~${b.end}`:(b.regular?`${b.period}교시`:'시간 미설정')}</div>
+   <div class="time">${regularTimeLabel(b)}</div>
    <div><div class="name">${b.locked?'🔒 ':''}${esc(b.name)}</div><div class="assigned">${names.length?names.map(esc).join(' + '):(b.selfStudy?'할 일 미배정':b.type==='meal'?'식사·휴식':'')}</div></div>
    <div class="row">${b.selfStudy?`<button class="btn ghost small quick-assign" data-id="${b.id}">할 일 선택</button>`:''}<label class="inline"><input class="block-done" data-id="${b.id}" type="checkbox" ${b.done?'checked':''}>완료</label></div>
   </div>`
@@ -434,6 +444,7 @@ function renderCompactSchedule(){
  $$('.quick-assign').forEach(b=>b.onclick=()=>openAssignModal(selected,b.dataset.id));
  $$('.block-done').forEach(x=>x.onchange=()=>{setBlockDone(selected,x.dataset.id,x.checked);renderDashboard()})
 }
+
 function openTaskModal(t=null){
  $('#taskModalTitle').textContent=t?'할 일 수정':'할 일 추가';$('#taskId').value=t?.id||'';$('#taskSubject').value=t?.subject||'국어';$('#taskPriority').value=t?.priority||'must';$('#taskMinutes').value=t?.minutes||'';$('#taskName').value=t?.name||'';$('#taskMaterial').value=t?.material||'';$('#taskNote').value=t?.note||'';showModal('taskModal')
 }
@@ -472,14 +483,31 @@ function renderPlanner(){
  const blocks=ensureSchedule(selected),pb=plannedStudy(selected),auto=autoActualStudy(selected);
  $('#plannerStats').innerHTML=`<div><span>계획 자습</span><b>${minuteLabel(pb.minutes)}</b></div><div><span>자동 실제</span><b>${minuteLabel(auto)}</b></div><div><span>최종 기록</span><b>${minuteLabel(finalStudy(selected))}</b></div><div><span>미배정 자습</span><b>${blocks.filter(b=>b.selfStudy&&!(b.taskIds||[]).length).length}개</b></div>`;
  $('#plannerModeBtn').textContent=plannerEdit?'보기 모드로':'편집 모드';
- $('#plannerModeHint').textContent=plannerEdit?'편집 모드 · 빈 10분 칸을 터치/드래그해서 블록을 만듭니다.':'보기 모드 · 블록을 눌러 상세를 확인합니다.';
+ $('#plannerModeHint').textContent=plannerSleepMode?'취침 입력 모드 · 격자에서 잠잘 시간을 한 번 누르세요.':(plannerEdit?'편집 모드 · 빈 10분 칸을 터치/드래그해서 블록을 만듭니다.':'보기 모드 · 블록을 눌러 상세를 확인합니다.');
  $('#addGridBlockBtn').disabled=!plannerEdit;
+ $('#sleepModeBtn').classList.toggle('primary',plannerSleepMode);
  const unknown=blocks.filter(b=>b.regular&&!(b.start&&b.end));
  $('#unknownRegularStrip').innerHTML=unknown.length?`<div class="muted" style="width:100%">정규수업 시각 미설정. 톱니바퀴에서 교시 시각을 입력하면 아래 격자에 들어갑니다.</div>`+unknown.map(b=>`<span class="regular-chip ${b.selfStudy?'self':''}">${b.period}교시 ${esc(b.name)}${b.selfStudy?` · 자습${b.device?'·기기':'·종이'}`:''}</span>`).join(''):'';
+ $('#plannerLegend').innerHTML=plannerLegendHTML();
+ renderPlannerQuickPanel();
  renderTenGrid()
 }
+function renderPlannerQuickPanel(){
+ const meta=planMeta(selected),next=nextSelfStudyBlock(selected),current=currentBlock(selected),unfinished=tasksFor(selected).filter(t=>!t.done).length;
+ $('#plannerQuickPanel').innerHTML=`<div class="planner-quick-grid">
+   <div class="planner-quick-item"><span>현재 블록</span><b>${current?esc(current.name):'없음'}</b></div>
+   <div class="planner-quick-item"><span>다음 자습</span><b>${next?`${esc(next.name)}${next.start&&next.end?` · ${next.start}`:''}`:'없음'}</b></div>
+   <div class="planner-quick-item"><span>미완료 할 일</span><b>${unfinished}개</b></div>
+ </div>
+ <div style="margin-top:10px">
+   <div class="planner-sleep-row"><span>☾ 예상 취침</span><b>${meta.bed||'미설정'}</b></div>
+   <div class="planner-sleep-row"><span>☀ 예상 기상</span><b>${meta.wake||'미설정'}</b></div>
+   <div class="planner-sleep-row"><span>예상 수면</span><b>${sleepSpanLabel(meta.bed,meta.wake)}</b></div>
+   <div class="planner-sleep-note">취침 입력 버튼을 누른 뒤 격자를 한 번 탭하면 빠르게 취침 시각을 고를 수 있습니다.</div>
+ </div>`
+}
 function renderTenGrid(){
- const box=$('#tenMinutePlanner'),blocks=ensureSchedule(selected),mapped=new Map();
+ const box=$('#tenMinutePlanner'),blocks=ensureSchedule(selected),mapped=new Map(),meta=planMeta(selected),sleepIdx=meta.bed?plannerIndexForTime(meta.bed):null,wakeIdx=meta.wake?plannerIndexForTime(meta.wake):null;
  blocks.filter(b=>b.start&&b.end).forEach(b=>{
   let s=plannerIndexForTime(b.start),e=plannerIndexForTime(b.end);if(s==null||e==null)return;if(e<=s)e+=144;
   for(let i=Math.max(0,s);i<Math.min(120,e);i++){if(!mapped.has(i))mapped.set(i,b)}
@@ -488,14 +516,27 @@ function renderTenGrid(){
  for(let h=5;h<25;h++){
   const hour=h%24;html+=`<div class="ten-hour"><div class="hour-label">${String(hour).padStart(2,'0')}:00</div>`;
   for(let k=0;k<6;k++){
-   const idx=(h-5)*6+k,b=mapped.get(idx),prev=mapped.get(idx-1),first=b&&(!prev||prev.id!==b.id),cls=b?`${blockColorClass(selected,b)} block-cell`:'';
-   const label=first?`<span class="cell-label">${esc(b.name)}</span>`:'';
-   html+=`<div class="ten-cell ${plannerEdit&&!b?'editable':''} ${cls}" data-index="${idx}" ${b?`data-block="${b.id}"`:''}>${label}</div>`
+   const idx=(h-5)*6+k,b=mapped.get(idx),prev=mapped.get(idx-1),first=b&&(!prev||prev.id!==b.id),isSleep=sleepIdx===idx,isWake=wakeIdx===idx,cls=[plannerEdit&&!b?'editable':'',b?`${blockColorClass(selected,b)} block-cell`:'',isSleep?'sleep-marker':''].filter(Boolean).join(' ');
+   let label='';
+   if(first)label=`<span class="cell-label">${esc(b.name)}</span>`;
+   if(isSleep)label=`<span class="cell-label">☾ 예상 취침</span>`+(isWake?`<span class="sleep-wake-marker">☀</span>`:'');
+   else if(isWake)label=`<span class="sleep-wake-marker">☀ 예상 기상</span>`+(label||'');
+   html+=`<div class="ten-cell ${cls}" data-index="${idx}" ${b?`data-block="${b.id}"`:''}>${label}</div>`
   }html+='</div>'
  }
  box.innerHTML=html;box.classList.toggle('planner-mode-edit',plannerEdit);
- $$('.ten-cell[data-block]').forEach(c=>c.onclick=e=>{e.stopPropagation();openBlockModal(selected,c.dataset.block)});
- if(plannerEdit)bindPlannerSelection()
+ $$('.ten-cell[data-block]').forEach(c=>c.onclick=e=>{if(plannerSleepMode)return;e.stopPropagation();openBlockModal(selected,c.dataset.block)});
+ $$('.ten-cell').forEach(c=>c.addEventListener('click',()=>{if(!plannerSleepMode)return;const idx=Number(c.dataset.index);openSleepModal(selected,plannerIndexToTime(idx));plannerSleepMode=false;renderPlanner()}));
+ if(plannerEdit&&!plannerSleepMode)bindPlannerSelection()
+}
+function openSleepModal(date,time=''){
+ const meta=planMeta(date);$('#sleepDate').value=date;$('#sleepBed').value=time||meta.bed||'00:30';$('#sleepWake').value=meta.wake||'06:30';$('#sleepSummaryText').textContent=`예상 수면 ${sleepSpanLabel($('#sleepBed').value,$('#sleepWake').value)}`;showModal('sleepModal')
+}
+function saveSleepModal(){
+ const date=$('#sleepDate').value||selected,meta=planMeta(date);meta.bed=$('#sleepBed').value;meta.wake=$('#sleepWake').value;saveDB();hideModal('sleepModal');selected=date;renderPlanner();
+}
+function clearSleepModal(){
+ const date=$('#sleepDate').value||selected;if(DB.plannerMeta&&DB.plannerMeta[date])DB.plannerMeta[date]={bed:'',wake:''};saveDB();hideModal('sleepModal');selected=date;renderPlanner();
 }
 function clearPlannerSelection(){plannerSelectStart=null;plannerDragStart=null;plannerDragEnd=null;plannerDragging=false;$$('.ten-cell').forEach(c=>c.classList.remove('selected-cell'))}
 function highlightRange(a,b){const lo=Math.min(a,b),hi=Math.max(a,b);$$('.ten-cell').forEach(c=>{const i=Number(c.dataset.index);c.classList.toggle('selected-cell',i>=lo&&i<=hi&&!c.dataset.block)})}
@@ -916,8 +957,8 @@ function bindEvents(){
  $('#nextMonth').onclick=()=>{const [y,m]=displayMonth.split('-').map(Number),d=new Date(y,m,1);displayMonth=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;renderMonth()};
  $('#monthPicker').onchange=()=>{displayMonth=$('#monthPicker').value;renderMonth()};
  $('#plannerDate').onchange=()=>{selected=$('#plannerDate').value;renderPlanner();$('#topDate').textContent=fmtDate(selected)};
- $('#plannerModeBtn').onclick=()=>{plannerEdit=!plannerEdit;clearPlannerSelection();renderPlanner()};$('#addGridBlockBtn').onclick=()=>{if(!plannerEdit)return;$('#plannerModeHint').textContent='빈 칸에서 시작 칸을 누르고 마지막 칸을 누르거나 드래그하세요.'};$('#addDirectBlockBtn').onclick=()=>openBlockModal(selected);
- $('#saveBlock').onclick=saveBlockModal;$('#deleteBlock').onclick=deleteBlockModal;$('#chooseBlockTasks').onclick=()=>{const id=$('#blockId').value;if(!id){alert('블록을 먼저 저장하세요.');return}hideModal('blockModal');openAssignModal($('#blockDate').value,id)};
+ $('#plannerModeBtn').onclick=()=>{plannerSleepMode=false;plannerEdit=!plannerEdit;clearPlannerSelection();renderPlanner()};$('#sleepModeBtn').onclick=()=>{plannerSleepMode=!plannerSleepMode;clearPlannerSelection();renderPlanner()};$('#addGridBlockBtn').onclick=()=>{if(!plannerEdit)return;plannerSleepMode=false;$('#plannerModeHint').textContent='빈 칸에서 시작 칸을 누르고 마지막 칸을 누르거나 드래그하세요.'};$('#addDirectBlockBtn').onclick=()=>openBlockModal(selected);
+ $('#saveBlock').onclick=saveBlockModal;$('#deleteBlock').onclick=deleteBlockModal;$('#chooseBlockTasks').onclick=()=>{const id=$('#blockId').value;if(!id){alert('블록을 먼저 저장하세요.');return}hideModal('blockModal');openAssignModal($('#blockDate').value,id)};$('#sleepBed').onchange=()=>$('#sleepSummaryText').textContent=`예상 수면 ${sleepSpanLabel($('#sleepBed').value,$('#sleepWake').value)}`;$('#sleepWake').onchange=()=>$('#sleepSummaryText').textContent=`예상 수면 ${sleepSpanLabel($('#sleepBed').value,$('#sleepWake').value)}`;$('#saveSleepPlan').onclick=saveSleepModal;$('#clearSleepPlan').onclick=clearSleepModal;
  $('#assignSearch').oninput=renderAssignList;$('#saveAssignments').onclick=saveAssignments;$('#clearAssignments').onclick=()=>{$$('.assign-check').forEach(x=>x.checked=false);updateAssignCount()};
  $$('.learning-tab').forEach(b=>b.onclick=()=>{vendingTab=b.dataset.vtab;renderVending()});$('#learningSearch').oninput=applyVendingSearch;$('#incompleteOnly').onchange=renderLectureCatalog;$('#addLectureBtn').onclick=openLectureModal;$('#saveLecture').onclick=saveLectureModal;$('#addBookBtn').onclick=()=>openBookModal();$('#saveBook').onclick=saveBookModal;$('#addProblemsToCart').onclick=addProblemsCart;$('#cartDate').onchange=renderCart;$('#buildCartPlan').onclick=buildCartPlan;$('#clearCart').onclick=()=>{cart=[];renderVending()};
  $('#addAutomationBtn').onclick=()=>openAutomationModal();$('#saveAutomation').onclick=saveAutomationModal;
@@ -929,6 +970,6 @@ function bindEvents(){
 }
 function init(){
  cleanupTrash();saveDB();selected=ymd();displayMonth=selected.slice(0,7);$('#cartDate').value=selected;$('#plannerDate').value=selected;$('#conditionDate').value=selected;$('#analysisMonth').value=displayMonth;bindEvents();runAutomationForDate(selected);renderVersionStatus();renderDashboard();
- if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw-v60.js?v=600').catch(()=>{});
+ if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw-v60.js?v=610').catch(()=>{});
 }
 document.addEventListener('DOMContentLoaded',init);
