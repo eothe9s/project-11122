@@ -1,0 +1,27 @@
+PROJECT 11122 v6.2 배포 파일
+
+업로드할 파일:
+- index.html
+- app-v62.js
+- styles-v62.css
+- sw-v62.js
+- manifest-v62.webmanifest
+- icon-192.png
+- icon-512.png
+- README.md
+- .nojekyll
+
+기존 파일은 v6.2 index.html에서 전혀 참조하지 않으므로 남아 있어도 실행에는 관여하지 않습니다.
+정리하고 싶다면 v6.2 정상 작동 확인 후 아래 구형 파일을 GitHub에서 삭제해도 됩니다:
+- app.js
+- app-v51-fixed.js
+- app-v60.js
+- styles.css
+- styles-v51-fixed.css
+- styles-v60.css
+- sw.js
+- sw-v51.js
+- sw-v60.js
+- manifest.webmanifest
+- manifest-v51.webmanifest
+- manifest-v60.webmanifest
