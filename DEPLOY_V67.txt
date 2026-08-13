@@ -1,0 +1,15 @@
+v6.7 배포 파일
+- index.html
+- app-v67.js
+- styles-v67.css
+- sw-v67.js
+- manifest-v67.webmanifest
+- icon-192.png
+- icon-512.png
+- .nojekyll
+
+권장 배포:
+1. 위 파일들을 저장소 루트에 업로드합니다.
+2. 기존 v66 이하 자산 파일은 v6.7 정상 작동 확인 후 삭제해도 됩니다.
+3. 앱 하단에 HTML 6.7 · JS 6.7 · SW 6.7이 보이는지 확인합니다.
+4. 기존 데이터 저장소 p11122_v60_db는 그대로 유지합니다.

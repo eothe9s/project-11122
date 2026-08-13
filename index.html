@@ -7,10 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="11122">
-<link rel="manifest" href="./manifest-v66.webmanifest?v=660">
+<link rel="manifest" href="./manifest-v67.webmanifest?v=670">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./styles-v66.css?v=660">
-<title>PROJECT 11122 v6.6</title>
+<link rel="stylesheet" href="./styles-v67.css?v=670">
+<title>PROJECT 11122 v6.7</title>
 </head>
 <body>
 <div class="app-shell">
@@ -18,7 +18,7 @@
     <div class="brand">
       <h1>PROJECT 11122</h1>
       <p>9모 11122 → 수능 11111</p>
-      <span>v6.6 · CSAT EDITION</span>
+      <span>v6.7 · CSAT EDITION</span>
     </div>
     <nav id="mainNav">
       <button class="active" data-page="dashboard">오늘</button>
@@ -82,7 +82,7 @@
 
       <div class="grid g2">
         <article class="card">
-          <div class="card-head"><h3>오늘 할 일</h3><div class="row"><button id="addTaskBtn" class="btn ghost small">+ 직접 추가</button><button id="openWaitingBtn" class="btn ghost small">대기함</button></div></div>
+          <div class="card-head"><h3>오늘 할 일</h3><div class="row"><select id="taskSortMode" class="input task-sort-select" aria-label="오늘 할 일 정렬"><option value="timeline">시간순</option><option value="subject">과목순</option></select><button id="addTaskBtn" class="btn ghost small">+ 직접 추가</button><button id="openWaitingBtn" class="btn ghost small">대기함</button></div></div>
           <div id="todayTasks" class="task-list"></div>
         </article>
 
@@ -284,8 +284,8 @@
       <article class="card">
         <div class="card-head"><h3>수면·컨디션</h3><input id="conditionDate" class="input short" type="date"></div>
         <div class="form-grid">
-          <label>취침<input id="bedTime" class="input" type="time"></label>
-          <label>기상<input id="wakeTime" class="input" type="time"></label>
+          <label>전날 밤 취침<input id="bedTime" class="input" type="time"></label>
+          <label>오늘 기상<input id="wakeTime" class="input" type="time"></label>
           <label>총 수면<input id="sleepTotal" class="input" readonly></label>
           <label>수면 만족도<select id="sleepQuality" class="input"><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
           <label>아침 피로<select id="fatigue" class="input"><option value="">선택</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
@@ -305,9 +305,16 @@
           <label><input class="symptomCheck" type="checkbox" value="근육통">근육통</label>
           <label><input class="symptomCheck" type="checkbox" value="생리통">생리통</label>
         </div>
-        <label class="inline"><input id="vitaminTaken" type="checkbox"> 비타민 복용</label>
+        <div class="vitamin-section">
+          <div class="vitamin-head"><b>비타민</b><div class="row"><input id="vitaminName" class="input vitamin-name" placeholder="종류/제품 추가"><button id="addVitaminBtn" class="btn ghost small" type="button">추가</button></div></div>
+          <div id="vitaminPicker" class="vitamin-picker"></div>
+        </div>
         <label>메모<textarea id="conditionMemo" class="input" rows="4"></textarea></label>
         <button id="saveCondition" class="btn primary">저장</button>
+      </article>
+      <article class="card">
+        <h3>수면·컨디션 분석</h3>
+        <div id="conditionAnalysis"></div>
       </article>
     </section>
 
@@ -379,7 +386,7 @@
       </article>
     </section>
 
-    <footer>PROJECT 11122 · HTML 6.2 · JS <span id="runtimeStatus">확인 중</span></footer>
+    <footer>PROJECT 11122 · HTML 6.7 · JS <span id="runtimeStatus">확인 중</span></footer>
   </main>
 </div>
 
@@ -428,11 +435,11 @@
 
 <!-- SLEEP MODAL -->
 <div id="sleepModal" class="modal-back"><div class="modal">
-  <h3>예상 취침/기상</h3>
+  <h3>취침/기상</h3>
   <input id="sleepDate" type="hidden">
   <div class="grid g2">
-    <label>☽ 취침<input id="sleepBed" class="input" type="time"></label>
-    <label>☼︎ 기상<input id="sleepWake" class="input" type="time"></label>
+    <label>☽ 오늘 밤 취침<input id="sleepBed" class="input" type="time"></label>
+    <label>☼︎ 다음 날 기상<input id="sleepWake" class="input" type="time"></label>
   </div>
   <div class="micro-label" id="sleepSummaryText">취침 · 기상</div>
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="clearSleepPlan" class="btn ghost">지우기</button><button id="saveSleepPlan" class="btn primary">저장</button></div>
@@ -529,6 +536,6 @@
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="confirmCloseDay" class="btn primary">마감 완료</button></div>
 </div></div>
 
-<script src="./app-v66.js?v=660" defer></script>
+<script src="./app-v67.js?v=670" defer></script>
 </body>
 </html>
