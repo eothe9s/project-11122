@@ -1,0 +1,20 @@
+PROJECT 11122 v6.8 배포
+
+업로드 파일
+- index.html
+- app-v68.js
+- styles-v68.css
+- sw-v68.js
+- manifest-v68.webmanifest
+- icon-192.png
+- icon-512.png
+- .nojekyll
+
+권장 절차
+1. 위 파일을 저장소 루트에 업로드합니다.
+2. index.html이 v68 자산만 참조하는지 확인합니다.
+3. 배포 후 앱 하단의 HTML 6.8 / JS 6.8 / SW 6.8 표시를 확인합니다.
+4. v6.8 정상 작동 확인 후 v67 및 그 이전의 사용하지 않는 app/styles/sw/manifest 파일은 삭제해도 됩니다.
+5. 기존 데이터 키 p11122_v60_db는 삭제하지 않습니다.
+
+v6.8 서비스워커는 project-11122-* 구형 캐시를 활성화 단계에서 정리합니다.
