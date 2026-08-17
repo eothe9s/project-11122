@@ -7,10 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="11122">
-<link rel="manifest" href="./manifest-v68.webmanifest?v=680">
+<link rel="manifest" href="./manifest-v69.webmanifest?v=690">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./styles-v68.css?v=680">
-<title>PROJECT 11122 v6.8</title>
+<link rel="stylesheet" href="./styles-v69.css?v=690">
+<title>PROJECT 11122 v6.9</title>
 </head>
 <body>
 <div id="updateBanner" class="update-banner hidden"><span>새 버전이 준비되었습니다.</span><button id="reloadUpdate" class="btn primary small">새로고침</button></div>
@@ -19,7 +19,7 @@
     <div class="brand">
       <h1>PROJECT 11122</h1>
       <p>9모 11122 → 수능 11111</p>
-      <span>v6.8 · CSAT EDITION</span>
+      <span>v6.9 · SCHEDULE EDITION</span>
     </div>
     <nav id="mainNav">
       <button class="active" data-page="dashboard">오늘</button>
@@ -143,6 +143,10 @@
             <input id="plannerDate" class="input short" type="date">
             <button id="plannerModeBtn" class="btn ghost small">편집 모드</button>
           </div>
+        </div>
+        <div class="schedule-profile-bar">
+          <div class="schedule-profile-main"><span class="micro-label">이 날짜 시간표</span><select id="scheduleModeSelect" class="input"><option value="default">평일 기본</option><option value="saturday">토요일 시종</option><option value="off">학교 없음</option></select><button id="applyScheduleMode" class="btn primary small">적용</button><span id="scheduleModeBadge" class="badge">평일 기본</span></div>
+          <div class="row wrap"><button id="restoreScheduleBlocks" class="btn ghost small" disabled>삭제 블록 복원</button><button id="openScheduleTemplates" class="btn ghost small">저장 시간표</button></div>
         </div>
         <div id="plannerStats" class="mini-stat-grid"></div>
         <div class="planner-board">
@@ -405,7 +409,7 @@
       </article>
     </section>
 
-    <footer>PROJECT 11122 · HTML 6.8 · JS <span id="runtimeStatus">확인 중</span></footer>
+    <footer>PROJECT 11122 · HTML 6.9 · JS <span id="runtimeStatus">확인 중</span></footer>
   </main>
 </div>
 
@@ -450,6 +454,14 @@
   <div id="blockLinkedTasks" class="linked-tasks"></div>
   <div class="row"><button id="chooseBlockTasks" class="btn ghost">할 일 선택</button></div>
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="deleteBlock" class="btn danger">삭제</button><button id="saveBlock" class="btn primary">저장</button></div>
+</div></div>
+
+<!-- SCHEDULE TEMPLATE MODAL -->
+<div id="scheduleTemplateModal" class="modal-back"><div class="modal wide">
+  <div class="card-head"><div><h3>저장 시간표</h3><div class="micro-label"><span id="templateTargetDate"></span> · 현재 날짜 시간표를 이름 붙여 다시 사용</div></div><button id="saveCurrentTemplate" class="btn primary small">현재 시간표 저장</button></div>
+  <div id="scheduleTemplateList" class="schedule-template-list"></div>
+  <div class="micro-label">적용하면 해당 날짜의 시간표 구조만 바뀝니다. 할 일은 삭제되지 않고 기존 시간표 배정만 해제됩니다.</div>
+  <div class="row end"><button class="btn ghost modal-close">닫기</button></div>
 </div></div>
 
 <!-- SLEEP MODAL -->
@@ -555,6 +567,6 @@
   <div class="row end"><button class="btn ghost modal-close">취소</button><button id="confirmCloseDay" class="btn primary">마감 완료</button></div>
 </div></div>
 
-<script src="./app-v68.js?v=680" defer></script>
+<script src="./app-v69.js?v=690" defer></script>
 </body>
 </html>

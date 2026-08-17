@@ -1,0 +1,20 @@
+PROJECT 11122 v6.9 배포
+
+업로드 파일
+- index.html
+- app-v69.js
+- styles-v69.css
+- sw-v69.js
+- manifest-v69.webmanifest
+- icon-192.png
+- icon-512.png
+- .nojekyll
+
+권장 절차
+1. 위 파일을 저장소 루트에 업로드합니다.
+2. index.html이 v69 자산만 참조하는지 확인합니다.
+3. 배포 후 앱 하단의 HTML 6.9 / JS 6.9 / SW 6.9 표시를 확인합니다.
+4. v6.9 정상 작동 확인 후 이전 app/styles/sw/manifest 자산은 정리해도 됩니다.
+5. 기존 데이터 키 `p11122_v60_db`는 삭제하지 않습니다.
+
+v6.9 서비스워커는 `project-11122-*` 구형 캐시를 활성화 단계에서 정리합니다.
